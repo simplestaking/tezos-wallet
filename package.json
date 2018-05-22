@@ -1,0 +1,22 @@
+{
+  "name": "tezos-wallet",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./lib/client.js",
+  "types": "./lib/client.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bip39": "^2.4.0",
+    "bip39": "^2.5.0",
+    "bs58check": "2.1.1",
+    "buffer": "5.1.0",
+    "libsodium": "^0.7.3",
+    "libsodium-wrappers": "0.7.3",
+    "rxjs": "6.1.0",
+    "xmlhttprequest-ssl": "1.5.5"
+  }
+}
