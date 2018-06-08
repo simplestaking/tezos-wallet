@@ -35,10 +35,14 @@ export const concatKeys = (privateKey: any, publicKey: any) => {
 
 // sign operation 
 export const signOperation = (state: Operation) => {
+    // TODO: change secretKey name to privateKey
 
     let operation = sodium.from_hex(state.operation);
     let secretKey = bs58checkDecode(prefix.edsk32, state.secretKey);
     let publicKey = bs58checkDecode(prefix.edpk, state.publicKey);
+
+    // remove publicKey
+    if (secretKey.length > 32) secretKey = secretKey.slice(0, 32)
 
     // ed25516
     let sig = sodium.crypto_sign_detached(
@@ -71,7 +75,7 @@ export const amount = (amount: number) => {
 export const keys = (mnemonic?: any): Wallet => {
 
     mnemonic = mnemonic ? mnemonic : bip39.generateMnemonic(160)
-    
+
     let seed = bip39.mnemonicToSeed(mnemonic, '').slice(0, 32)
     // ED25516 
     let keyPair = sodium.crypto_sign_seed_keypair(seed, 'uint8array')
