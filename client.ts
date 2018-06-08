@@ -116,11 +116,12 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
     }).pipe(
       // add operation to state 
       map((response: any) => ({ ...state, operation: response.operation })),
-      // add signature to state 
-      map(state => utils.signOperation(state)),
-
     )
   ),
+
+  // add signature to state 
+  // TODO: move and just keep signOperation and create logic inside utils  
+  flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
   // get new head and counter
   head(),
