@@ -12,6 +12,6 @@ export declare const signOperation: (state: Operation) => {
     publicKey: string;
     publicKeyHash: string;
 };
-export declare const signOperationTrezor: (state: any) => Promise<{}>;
+export declare const signOperationTrezor: (state: any) => any;
 export declare const amount: (amount: number) => string | 0;
 export declare const keys: (mnemonic?: any) => Wallet;
