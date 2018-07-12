@@ -45,26 +45,51 @@ export const origination = () => (source: Observable<any>) => source.pipe(
  */
 export const transfer = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  // 
   map(state => fn(state)),
 
+  // get contract counter
+  counter(),
+
+  // get contract managerKey
+  managerKey(),
+
   // display transaction info to console
-  tap(state =>
+  tap(state => {
     console.log('[+] transfer: ' + state.amount + ' ꜩ ' + 'from "' + state.publicKeyHash + '" to "' + state.to + '"')
-  ),
+  }),
 
   // prepare config for operation
-  map(state => ({
-    ...state,
-    "operations": [{
-      "kind": "reveal",
-      "public_key": state.publicKey,
-    }, {
+  map(state => {
+    const operations = []
+    if (state.key === 'undefined') {
+      operations.push({
+        "kind": "reveal",
+        "public_key": state.publicKey,
+        "source": state.publicKeyHash,
+        "fee": "0",
+        "gas_limit": "200",
+        "storage_limit": "0",
+        "counter": (++state.counter).toString(),
+      })
+    }
+
+    operations.push({
       "kind": "transaction",
-      "amount": utils.amount(state.amount),
+      "source": state.publicKeyHash,
       "destination": state.to,
-    }]
-  })),
+      "amount": "1", //utils.amount(state.amount),
+      "fee": "0",
+      "gas_limit": "200",
+      "storage_limit": "0",
+      "counter": (++state.counter).toString(),
+    })
+
+    return {
+      ...state,
+      "operations": operations
+    }
+
+  }),
   // create operation 
   operation(),
 
@@ -104,18 +129,20 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   // get head and counter
   head(),
 
+  // get contract counter
+  counter(),
+
+  // get contract managerKey
+  managerKey(),
+
   // create operation
   flatMap((state: any) =>
-    rpc('/blocks/head/proto/helpers/forge/operations', {
+    rpc('/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations', {
       "branch": state.head.hash,
-      "kind": "manager",
-      "source": state.publicKeyHash,
-      "fee": 0,
-      "counter": state.counter + 1,
-      "operations": state.operations,
+      "contents": state.operations,
     }).pipe(
       // add operation to state 
-      map((response: any) => ({ ...state, operation: response.operation })),
+      map((response: any) => ({ ...state, operation: response })),
     )
   ),
 
@@ -123,14 +150,14 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   // TODO: move and just keep signOperation and create logic inside utils  
   flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
-  // get new head and counter
-  head(),
+  //get counter
+  counter(),
 
   // apply & inject operation
   applyAndInjectOperation(),
 
   // wait until operation is confirmed & moved from mempool to head
-  confirmOperation(),
+  // confirmOperation(),
 
 )
 
@@ -141,36 +168,66 @@ export const head = () => (source: Observable<any>) => source.pipe(
 
   // get head
   flatMap(state =>
-    rpc('/blocks/head', {}).pipe(
+    rpc('/chains/main/blocks/head').pipe(
       // add head to state 
       map(response => ({ ...state, head: response })),
     )
   ),
 
+)
+
+/**
+ * Get counter for contract  
+ */
+export const counter = () => (source: Observable<any>) => source.pipe(
+
   // get counter for contract
   flatMap((state: any) =>
-    rpc('/blocks/head/proto/context/contracts/' + state.publicKeyHash + '/counter', {}).pipe(
+    rpc('/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/counter').pipe(
       // add counter to state 
-      map(response => ({ ...state, counter: response.counter })),
+      map(response => ({ ...state, counter: response })),
+      //tap(state => console.log('[+][counter]', state.counter))
+    )
+  ),
+
+)
+
+/**
+* Get manager key for contract 
+*/
+export const managerKey = () => (source: Observable<any>) => source.pipe(
+
+  // get manager key for contract 
+  flatMap((state: any) =>
+    rpc('/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/manager_key').pipe(
+      // add counter to state 
+      map(response => ({
+        ...state,
+        manger: response.manager ? response.manager : undefined,
+        key: response.key ? response.manager : undefined,
+      })),
+      //tap(state => console.log('[+][managerKey]', state))
     )
   )
+
 )
+
 
 /**
  * Apply and inject operation into node
  */
 export const applyAndInjectOperation = () => (source: Observable<any>) => source.pipe(
 
-  // apply operation
+  // preapply operation
   flatMap((state: any) =>
-    rpc('/blocks/head/proto/helpers/apply_operation', {
-      "pred_block": state.head.predecessor,
-      "operation_hash": state.operationHash,
-      "forged_operation": state.operation,
+    rpc('/chains/main/blocks/head/helpers/preapply/operations', [{
+      "protocol": "PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY",
+      "branch": state.head.hash,
+      "contents": state.operations,
       "signature": state.signature
-    }).pipe(
+    }]).pipe(
       catchError(error => { console.log('[-] [catchError]', error); return of('') }),
-      tap((response: any) => console.log("[+] operation: apply ", response)),
+      tap((response: any) => console.log("[+] operation: preapply ", response)),
       // add operation confirmation 
       map(response => ({ ...state, ...response })),
     )
@@ -178,12 +235,11 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 
   // inject operation
   flatMap((state: any) =>
-    rpc('/inject_operation', {
-      "signedOperationContents": state.signedOperationContents,
-    }).pipe(
+    rpc('/injection/operation', '"' + state.signedOperationContents + '"',
+    ).pipe(
       tap((response: any) => console.log("[+] operation: inject ", response)),
-      map(response => ({ ...state, ...response })),
-      tap((state: any) => console.log("[+] operation: http://tzscan.io/" + state.injectedOperation))
+      map(response => ({ ...state, injectionOperation: response })),
+      tap((state: any) => console.log("[+] operation: http://tzscan.io/" + state.injectionOperation))
     )
   ),
 

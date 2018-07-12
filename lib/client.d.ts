@@ -21,6 +21,14 @@ export declare const operation: () => <T>(source: Observable<Wallet>) => Observa
  */
 export declare const head: () => (source: Observable<any>) => Observable<any>;
 /**
+ * Get counter for contract
+ */
+export declare const counter: () => (source: Observable<any>) => Observable<any>;
+/**
+* Get manager key for contract
+*/
+export declare const managerKey: () => (source: Observable<any>) => Observable<any>;
+/**
  * Apply and inject operation into node
  */
 export declare const applyAndInjectOperation: () => (source: Observable<any>) => Observable<any>;

@@ -44,24 +44,26 @@ export const signOperation = (state: Operation) => {
     let secretKey = bs58checkDecode(prefix.edsk32, state.secretKey);
     let publicKey = bs58checkDecode(prefix.edpk, state.publicKey);
 
-    console.log('[secretKey]', secretKey)
-    console.log('[publicKey]', publicKey)
-    console.log('[operation]', operation)
+    //console.log('[secretKey]', secretKey)
+    //console.log('[publicKey]', publicKey)
+    //console.log('[operation]', operation)
 
     // remove publicKey
     if (secretKey.length > 32) secretKey = secretKey.slice(0, 32)
+    //debugger;
 
+    // TODO: add all watermarks
     // ed25516
     let sig = sodium.crypto_sign_detached(
-        sodium.crypto_generichash(32, operation),
+        sodium.crypto_generichash(32, concatKeys(new Uint8Array([3]), operation)),
         concatKeys(secretKey, publicKey),
         'uint8array'
     );
 
-    console.log('[sig]', sig)
+    //console.log('[sig]', sig)
 
     let signature = bs58checkEncode(prefix.edsig, sig);
-    console.log('[signature]', signature)
+    //console.log('[signature]', signature)
 
     let signedOperationContents = state.operation + sodium.to_hex(sig);
 
