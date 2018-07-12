@@ -28,7 +28,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
   // prepare config for operation
   map(state => {
     const operations = []
-    if (state.key === 'undefined') {
+    if (state.key === undefined) {
       operations.push({
         "kind": "reveal",
         "public_key": state.publicKey,
@@ -84,7 +84,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
   // prepare config for operation
   map(state => {
     const operations = []
-    if (state.key === 'undefined') {
+    if (state.key === undefined) {
       operations.push({
         "kind": "reveal",
         "public_key": state.publicKey,
@@ -140,7 +140,7 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
   // prepare config for operation
   map(state => {
     const operations = []
-    if (state.key === 'undefined') {
+    if (state.key === undefined) {
       operations.push({
         "kind": "reveal",
         "public_key": state.publicKey,

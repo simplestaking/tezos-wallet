@@ -33,13 +33,15 @@ walletObservable.pipe(
     })),
 
     // send small amount to new wallet and wait for block creation
-    // transfer((state: any) => ({
-    //     'secretKey': wallet.secretKey,
-    //     'publicKey': wallet.publicKey,
-    //     'publicKeyHash': wallet.publicKeyHash,
-    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-    //     'amount': '0.000001',
-    // })),
+    transfer((state: any) => ({
+        'secretKey': wallet.secretKey,
+        'publicKey': wallet.publicKey,
+        //'publicKeyHash': wallet.publicKeyHash,
+        'publicKeyHash': 'KT1QUswUywUe5WPuukjyK61prvjWvJPeZRHh',
+        //'to': 'KT1QUswUywUe5WPuukjyK61prvjWvJPeZRHh',
+        'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+        'amount': '0.000001',
+    })),
 
     // change delegate
     // setDelegation((state: any) => ({
@@ -50,13 +52,13 @@ walletObservable.pipe(
     // })),
 
     // originate delegatable contract   
-    originate((state: any) => ({
-        'secretKey': wallet.secretKey,
-        'publicKey': wallet.publicKey,
-        'publicKeyHash': wallet.publicKeyHash,
-        'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-        'amount': '0.000001',
-    })),
+    // originate((state: any) => ({
+    //     'secretKey': wallet.secretKey,
+    //     'publicKey': wallet.publicKey,
+    //     'publicKeyHash': wallet.publicKeyHash,
+    //     'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    //     'amount': '0.000001',
+    // })),
 
 ).subscribe(
     data => console.log('[+] ok'),
