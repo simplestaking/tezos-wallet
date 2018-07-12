@@ -227,7 +227,7 @@ export const getWallet = (fn?: (params: any) => PublicAddress) => <T>(source: Ob
 
     // get contract info balance 
     flatMap((state: any) =>
-      rpc('/blocks/head/proto/context/contracts/' + state.publicKeyHash + '/', {}).pipe(
+      rpc('/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/').pipe(
         // add contract info to state 
         map(response => ({ ...state, ...response })),
         // show account and balance 
