@@ -4,7 +4,7 @@ import { tap, map, flatMap } from 'rxjs/operators';
 // support for node.js
 import './node'
 
-import { initialize, origination, delegation, transfer, newWallet, getWallet } from './client'
+import { initialize, origination, setDelegation, transfer, newWallet, getWallet } from './client'
 
 console.log('[+] tezos wallet client')
 
@@ -28,18 +28,25 @@ walletObservable.pipe(
     //newWallet(),
 
     // get more details for new wallet
-    // getWallet(state => ({
-    //     'publicKeyHash': state.publicKeyHash,
-    //     //'publicKeyHash': baseWallet.publicKeyHash,
-    // })),
+    getWallet(state => ({
+        'publicKeyHash': state.publicKeyHash,
+    })),
 
     // send small amount to new wallet and wait for block creation
-    transfer((state: any) => ({
+    // transfer((state: any) => ({
+    //     'secretKey': wallet.secretKey,
+    //     'publicKey': wallet.publicKey,
+    //     'publicKeyHash': wallet.publicKeyHash,
+    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    //     'amount': '0.000001',
+    // })),
+
+    // change delegate
+    setDelegation((state: any) => ({
         'secretKey': wallet.secretKey,
         'publicKey': wallet.publicKey,
         'publicKeyHash': wallet.publicKeyHash,
         'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-        'amount': '0.000001',
     })),
 
     // // originate delegatable contract   
@@ -58,11 +65,6 @@ walletObservable.pipe(
     //     'amount': 0,
     // })),
     // origination(),
-
-    //balance(),
-
-    // // change delegate
-    // delegation(),
 
 ).subscribe(
     data => console.log('[+] ok'),

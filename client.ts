@@ -90,6 +90,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
     }
 
   }),
+
   // create operation 
   operation(),
 
@@ -98,24 +99,53 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
 /**
  *  Set delegation rights to tezos address
  */
-export const delegation = () => (source: Observable<any>) => source.pipe(
+export const setDelegation = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  // get wallet balance, only wallet with balance > 0 can create delegatable contract 
-  // getWalletInfo(state => ({
-  //   publicKeyHash: state.publicKeyHash,
-  // })),
+  map(state => fn(state)),
+
+  // get contract counter
+  counter(),
+
+  // get contract managerKey
+  managerKey(),
+
+  // display transaction info to console
+  tap(state => {
+    console.log('[+] setDelegate: from "' + state.publicKeyHash + '" to "' + state.to + '"')
+  }),
 
   // prepare config for operation
-  map((state: any) => ({
-    ...state,
-    "operations": [{
-      "kind": "reveal",
-      "public_key": state.publicKey,
-    }, {
+  map(state => {
+    const operations = []
+    if (state.key === 'undefined') {
+      operations.push({
+        "kind": "reveal",
+        "public_key": state.publicKey,
+        "source": state.publicKeyHash,
+        "fee": "0",
+        "gas_limit": "200",
+        "storage_limit": "0",
+        "counter": (++state.counter).toString(),
+      })
+    }
+
+    operations.push({
       "kind": "delegation",
-      "delegate": state.delegate,
-    }]
-  })),
+      "source": state.publicKeyHash,
+      "fee": "0",
+      "gas_limit": "200",
+      "storage_limit": "0",
+      "counter": (++state.counter).toString(),
+      "delegate": state.to,
+    })
+
+    return {
+      ...state,
+      "operations": operations
+    }
+
+  }),
+  
   // create operation 
   operation(),
 
@@ -148,7 +178,8 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
 
   // add signature to state 
   // TODO: move and just keep signOperation and create logic inside utils  
-  flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
+  flatMap(state => [utils.signOperation(state)]),
+  //flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
   //get counter
   counter(),

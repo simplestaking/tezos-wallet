@@ -11,6 +11,9 @@ declare var TrezorConnect: any;
 
 const prefix = {
     tz1: new Uint8Array([6, 161, 159]),
+    tz2: new Uint8Array([6, 161, 161]),
+    tz3: new Uint8Array([6, 161, 164]),
+    KT: new Uint8Array([2,90,121]),
     edpk: new Uint8Array([13, 15, 37, 217]),
     edsk64: new Uint8Array([43, 246, 78, 7]),
     edsk32: new Uint8Array([13, 15, 58, 7]),
