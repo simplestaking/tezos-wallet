@@ -4,7 +4,7 @@ import { tap, map, flatMap } from 'rxjs/operators';
 // support for node.js
 import './node'
 
-import { initialize, origination, setDelegation, transfer, newWallet, getWallet } from './client'
+import { initialize, originate, setDelegation, transfer, newWallet, getWallet } from './client'
 
 console.log('[+] tezos wallet client')
 
@@ -42,29 +42,21 @@ walletObservable.pipe(
     // })),
 
     // change delegate
-    setDelegation((state: any) => ({
+    // setDelegation((state: any) => ({
+    //     'secretKey': wallet.secretKey,
+    //     'publicKey': wallet.publicKey,
+    //     'publicKeyHash': wallet.publicKeyHash,
+    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    // })),
+
+    // originate delegatable contract   
+    originate((state: any) => ({
         'secretKey': wallet.secretKey,
         'publicKey': wallet.publicKey,
         'publicKeyHash': wallet.publicKeyHash,
-        'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+        'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+        'amount': '0.000001',
     })),
-
-    // // originate delegatable contract   
-    // map(state => ({
-    //     ...state.newWallet,
-    //     'newWallet': state.newWallet,
-    // })),
-    // balance(),
-
-    // // create/originate new delegateble wallet with delegate
-    // // this is only posible for wallet with transaction history 
-    // map((state: any) => ({
-    //     ...state,
-    //     'delegate': 'tz1btz5Av9BdpoTPnS9zGyPvpgAovmaZ23iN',
-    //     // 'delegate': state.newWallet.publicKeyHash,
-    //     'amount': 0,
-    // })),
-    // origination(),
 
 ).subscribe(
     data => console.log('[+] ok'),

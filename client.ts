@@ -8,39 +8,6 @@ import sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 
 /**
- * Originate new delegateble contract from wallet  
- */
-export const origination = () => (source: Observable<any>) => source.pipe(
-
-  // prepare config for operation
-  map((state: any) => ({
-    ...state,
-    "operations": [{
-      "kind": "reveal",
-      "public_key": state.publicKey,
-    }, {
-      "kind": "origination",
-      "balance": utils.amount(state.amount),
-      "managerPubkey": state.publicKeyHash,
-      "spendable": true,
-      "delegatable": true,
-      "delegate": state.delegate,
-      // "script":{
-      //    "code":"",
-      //   "storage":"",
-      // }
-    }],
-  })),
-
-  tap((state: any) => console.log('[+] origination:  ', state)),
-  // create operation 
-  operation(),
-  tap((state: any) => console.log('[+] origination: http://tzscan.io/' + state.contracts[0])),
-
-)
-
-
-/**
  *  Transfer token's from one wallet to another
  */
 export const transfer = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
@@ -145,11 +112,73 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
     }
 
   }),
-  
+
   // create operation 
   operation(),
 
 )
+
+
+/**
+ * Originate new delegateble contract from wallet  
+ */
+export const originate = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
+
+  map(state => fn(state)),
+
+  // get contract counter
+  counter(),
+
+  // get contract managerKey
+  managerKey(),
+
+  // display transaction info to console
+  tap(state => {
+    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"')
+  }),
+
+  // prepare config for operation
+  map(state => {
+    const operations = []
+    if (state.key === 'undefined') {
+      operations.push({
+        "kind": "reveal",
+        "public_key": state.publicKey,
+        "source": state.publicKeyHash,
+        "fee": "0",
+        "gas_limit": "200",
+        "storage_limit": "0",
+        "counter": (++state.counter).toString(),
+      })
+    }
+
+    operations.push({
+      "kind": "origination",
+      "source": state.publicKeyHash,
+      "managerPubkey": state.publicKeyHash,
+      "fee": "0",
+      "balance": "1", // state.amount,
+      "gas_limit": "200",
+      "storage_limit": "0",
+      "counter": (++state.counter).toString(),
+      "spendable": true,
+      "delegatable": true,
+      // "delegate": state.delegate, 
+    })
+
+    return {
+      ...state,
+      "operations": operations
+    }
+
+  }),
+
+  tap((state: any) => console.log('[+] origination:  ', state)),
+  // create operation 
+  operation(),
+
+)
+
 
 /**
  * Create operation in blocchain
