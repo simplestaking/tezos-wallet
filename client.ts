@@ -14,6 +14,11 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
 
   map(state => fn(state)),
 
+  // display transaction info to console
+  tap(state => {
+    console.log('[debug][+] transfer: ',  state)
+  }),
+
   // get contract counter
   counter(),
 
@@ -207,8 +212,8 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
 
   // add signature to state 
   // TODO: move and just keep signOperation and create logic inside utils  
-  flatMap(state => [utils.signOperation(state)]),
-  //flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
+  // flatMap(state => [utils.signOperation(state)]),
+  flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
   //get counter
   counter(),

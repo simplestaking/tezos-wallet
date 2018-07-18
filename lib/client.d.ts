@@ -1,17 +1,17 @@
 import { Observable } from 'rxjs';
 import { Wallet, PublicAddress } from './types';
 /**
- * Originate new delegateble contract from wallet
- */
-export declare const origination: () => (source: Observable<any>) => Observable<any>;
-/**
  *  Transfer token's from one wallet to another
  */
 export declare const transfer: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
 /**
  *  Set delegation rights to tezos address
  */
-export declare const delegation: () => (source: Observable<any>) => Observable<{}>;
+export declare const setDelegation: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
+/**
+ * Originate new delegateble contract from wallet
+ */
+export declare const originate: (fn: (state: any) => any) => (source: Observable<any>) => Observable<{}>;
 /**
  * Create operation in blocchain
  */

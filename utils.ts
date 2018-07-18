@@ -13,7 +13,8 @@ const prefix = {
     tz1: new Uint8Array([6, 161, 159]),
     tz2: new Uint8Array([6, 161, 161]),
     tz3: new Uint8Array([6, 161, 164]),
-    KT: new Uint8Array([2,90,121]),
+    KT: new Uint8Array([2, 90, 121]),
+    B: new Uint8Array([1, 52]),
     edpk: new Uint8Array([13, 15, 37, 217]),
     edsk64: new Uint8Array([43, 246, 78, 7]),
     edsk32: new Uint8Array([13, 15, 58, 7]),
@@ -86,51 +87,92 @@ export const signOperation = (state: Operation) => {
 
 // sign operation 
 export const signOperationTrezor = (state: any) => {
-    let trezorPopup
-    // let trezorPopup = new Promise(function (resolve: any, reject: any) {
 
-    //     // console.log('[TREZOR][signOperationTrezor]', state)
+    let trezorPopup = new Promise(function (resolve: any, reject: any) {
 
-    //     // tezos address
-    //     let xtzPath = "m/44'/1729'/0'/0'/0'"
+        console.log('[TREZOR][signOperationTrezor]', state)
 
-    //     try {
-    //         // open popup
-    //         TrezorConnect.open((response: any) => {
-    //             try {
-    //                 // get address and ask for confirmation
-    //                 TrezorConnect.tezosSignTx(
-    //                     xtzPath, state.to, state.fee, state.amount, state.operation, (response: any) => {
+        let xtzPath = "m/44'/1729'/0'/0'/0'"
 
-    //                         let signature = bs58checkEncode(prefix.edsig, sodium.from_hex(response.signature));
-    //                         let signedOperationContents = state.operation + response.signature;
+        console.log('[to]', bs58checkDecode(prefix.tz1, state.to) )
+        console.log('[from]', bs58checkDecode(prefix.tz1, state.publicKeyHash) )
+        console.log('[to]', bs58checkDecode(prefix.B, state.head.hash) )
 
-    //                         console.log("[+] trezor: signature ", signature)
+        let hash = bs58checkDecode(prefix.B, state.head.hash)
+        let source = concatKeys(new Uint8Array([0]),bs58checkDecode(prefix.tz1, state.publicKeyHash))
+        let to = concatKeys(new Uint8Array([0]),bs58checkDecode(prefix.tz1, state.to))
 
-    //                         let operationHash = bs58checkEncode(
-    //                             prefix.operation,
-    //                             // blake2b
-    //                             sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
-    //                         );
+        TrezorConnect.tezosSignTx({
+            path: xtzPath,
+            curve: 0,
+            operation: {
+                branch: hash,
+                tag: 8, // transaction
+                source: source,
+                fee: 0,
+                counter: (++state.counter).toString(),
+                gas_limit: 0,
+                storage_limit: 0,
+            },
+            transaction: {
+                amount: 1,
+                destination: to , 
+            },
+        }).then(response => {
+            console.warn('[signXTZ]', response.payload)
 
-    //                         resolve({
-    //                             ...state,
-    //                             signature: signature,
-    //                             signedOperationContents: signedOperationContents,
-    //                             operationHash: operationHash,
-    //                         })
+            resolve({
+                ...state,
+                signature: response.payload.signature,
+                signedOperationContents: response.payload.sig_op_contents,
+                operationHash: response.payload.operation_hash,
+            })
 
-    //                     })
-    //             }
-    //             catch (error) {
-    //                 // error happens usualy when user trys to open multiple trezor connect windows
-    //                 console.error("[TrezorConnect] sign transaction ", error)
-    //             }
-    //         })
-    //     } catch (errorOpen) {
-    //         console.error('[TrezorConnect] open', errorOpen)
-    //     }
-    // });
+        })
+
+
+
+        //     // tezos address
+        //     let xtzPath = "m/44'/1729'/0'/0'/0'"
+
+        //     try {
+        //         // open popup
+        //         TrezorConnect.open((response: any) => {
+        //             try {
+        //                 // get address and ask for confirmation
+        //                 TrezorConnect.tezosSignTx(
+        //                     xtzPath, state.to, state.fee, state.amount, state.operation, (response: any) => {
+
+        //                         let signature = bs58checkEncode(prefix.edsig, sodium.from_hex(response.signature));
+        //                         let signedOperationContents = state.operation + response.signature;
+
+        //                         console.log("[+] trezor: signature ", signature)
+
+        //                         let operationHash = bs58checkEncode(
+        //                             prefix.operation,
+        //                             // blake2b
+        //                             sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
+        //                         );
+
+        //                         resolve({
+        //                             ...state,
+        //                             signature: signature,
+        //                             signedOperationContents: signedOperationContents,
+        //                             operationHash: operationHash,
+        //                         })
+
+        //                     })
+        //             }
+        //             catch (error) {
+        //                 // error happens usualy when user trys to open multiple trezor connect windows
+        //                 console.error("[TrezorConnect] sign transaction ", error)
+        //             }
+        //         })
+        //     } catch (errorOpen) {
+        //         console.error('[TrezorConnect] open', errorOpen)
+        //     }
+        // });
+    })
 
     // wait until promise is resolved 
     return trezorPopup
