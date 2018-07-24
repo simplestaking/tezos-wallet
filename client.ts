@@ -286,7 +286,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   // preapply operation
   flatMap((state: any) =>
     rpc('/chains/main/blocks/head/helpers/preapply/operations', [{
-      "protocol": "PtCJ7pwoxe8JasnHY8YonnLYjcVHmhiARPJvqcC6VfHT5s8k8sY",
+      "protocol": "PsYLVpVvgbLhAhoqAkMFUo6gudkJ9weNXhUYCiLDzcUpFpkk8Wt",
       "branch": state.head.hash,
       "contents": state.operations,
       "signature": state.signature
