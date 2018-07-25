@@ -162,7 +162,7 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
       "source": state.publicKeyHash,
       "managerPubkey": state.publicKeyHash,
       "fee": "0",
-      "balance": "1", // state.amount,
+      "balance": "0", // state.amount,
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
@@ -178,9 +178,10 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
 
   }),
 
-  tap((state: any) => console.log('[+] origination:  ', state)),
   // create operation 
   operation(),
+
+  tap((state: any) => console.log('[+] origination:  ', state)),
 
 )
 
@@ -294,7 +295,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
       catchError(error => { console.log('[-] [catchError]', error); return of('') }),
       tap((response: any) => console.log("[+] operation: preapply ", response)),
       // add operation confirmation 
-      map(response => ({ ...state, ...response })),
+      map(response => ({ ...state, operations: response })),
     )
   ),
 
@@ -304,7 +305,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
     ).pipe(
       tap((response: any) => console.log("[+] operation: inject ", response)),
       map(response => ({ ...state, injectionOperation: response })),
-      tap((state: any) => console.log("[+] operation: http://tzscan.io/" + state.injectionOperation))
+      tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
     )
   ),
 

@@ -11,7 +11,7 @@ export declare const setDelegation: (fn: (state: any) => any) => (source: Observ
 /**
  * Originate new delegateble contract from wallet
  */
-export declare const originate: (fn: (state: any) => any) => (source: Observable<any>) => Observable<{}>;
+export declare const originate: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
 /**
  * Create operation in blocchain
  */
