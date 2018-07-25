@@ -16,7 +16,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
 
   // display transaction info to console
   tap(state => {
-    console.log('[debug][+] transfer: ',  state)
+    console.log('[debug][+] transfer: ', state)
   }),
 
   // get contract counter
@@ -49,7 +49,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
       "kind": "transaction",
       "source": state.publicKeyHash,
       "destination": state.to,
-      "amount": "1", //utils.amount(state.amount),
+      "amount": utils.amount(state.amount),
       "fee": "0",
       "gas_limit": "200",
       "storage_limit": "0",
@@ -286,7 +286,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   // preapply operation
   flatMap((state: any) =>
     rpc('/chains/main/blocks/head/helpers/preapply/operations', [{
-      "protocol": "PsYLVpVvgbLhAhoqAkMFUo6gudkJ9weNXhUYCiLDzcUpFpkk8Wt",
+      "protocol": state.head.protocol,
       "branch": state.head.hash,
       "contents": state.operations,
       "signature": state.signature
