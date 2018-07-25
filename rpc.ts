@@ -3,6 +3,7 @@ import { map, filter } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
 const config = {
+    //api: 'http://zeronet.simplestaking.com:3000',
     api: 'https://node2.simplestaking.com:3000',
     header: { 'Content-Type': 'application/json' }
 }
