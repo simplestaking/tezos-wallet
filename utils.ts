@@ -16,6 +16,8 @@ const prefix = {
     KT: new Uint8Array([2, 90, 121]),
     B: new Uint8Array([1, 52]),
     edpk: new Uint8Array([13, 15, 37, 217]),
+    sppk: new Uint8Array([3, 254, 226, 86]),
+    p2pk: new Uint8Array([3, 178, 139, 127]),
     edsk64: new Uint8Array([43, 246, 78, 7]),
     edsk32: new Uint8Array([13, 15, 58, 7]),
     edsig: new Uint8Array([9, 245, 205, 134, 18]),
@@ -38,6 +40,62 @@ export const concatKeys = (privateKey: any, publicKey: any) => {
     n.set(privateKey);
     n.set(publicKey, privateKey.length);
     return n;
+}
+
+// convert publicKeyHash to buffer and elliptic curve
+export const publicKeyHash2buffer = (publicKeyHash: any) => {
+
+    switch (publicKeyHash.substr(0, 3)) {
+        case 'tz1':
+            return {
+                curve: 0,
+                hash: concatKeys(new Uint8Array([0]), bs58checkDecode(prefix.tz1, publicKeyHash))
+            }
+        case 'tz2':
+            return {
+                curve: 1,
+                hash: concatKeys(new Uint8Array([1]), bs58checkDecode(prefix.tz2, publicKeyHash))
+            }
+        case 'tz3':
+            return {
+                curve: 2,
+                hash: concatKeys(new Uint8Array([2]), bs58checkDecode(prefix.tz3, publicKeyHash))
+            }
+        default:
+            return {
+                curve: -1,
+                hash: null,
+            }
+    }
+
+}
+
+// convert publicKeyHash to buffer and elliptic curve
+export const publicKey2buffer = (publicKey: any) => {
+
+    switch (publicKey.substr(0, 4)) {
+        case 'edpk':
+            return {
+                curve: 0,
+                hash: concatKeys(new Uint8Array([0]), bs58checkDecode(prefix.edpk, publicKey))
+            }
+        case 'sppk':
+            return {
+                curve: 1,
+                hash: concatKeys(new Uint8Array([1]), bs58checkDecode(prefix.sppk, publicKey))
+            }
+        case 'p2pk':
+            return {
+                curve: 2,
+                hash: concatKeys(new Uint8Array([2]), bs58checkDecode(prefix.p2pk, publicKey))
+            }
+        default:
+            return {
+                curve: -1,
+                hash: null,
+            }
+    }
+
 }
 
 // sign operation 
@@ -90,35 +148,51 @@ export const signOperationTrezor = (state: any) => {
 
     let trezorPopup = new Promise(function (resolve: any, reject: any) {
 
-        console.log('[TREZOR][signOperationTrezor]', state)
+        // prepare params for tezosSignTx
+        let params = {
+            xtzPath: "m/44'/1729'/0'/0'/0'",
+            hash: bs58checkDecode(prefix.B, state.head.hash),
+            curve: publicKeyHash2buffer(state.manager).curve,
+            publicKey: publicKey2buffer(state.publicKey).hash,
+            source: {
+                tag: 0,
+                hash: publicKeyHash2buffer(state.publicKeyHash).hash,
+            },
+            destination: {
+                tag: 0,
+                hash: publicKeyHash2buffer(state.to).hash,
+            }
+        }
 
-        let xtzPath = "m/44'/1729'/0'/0'/0'"
-
-        console.log('[to]', bs58checkDecode(prefix.tz1, state.to) )
-        console.log('[from]', bs58checkDecode(prefix.tz1, state.publicKeyHash) )
-        console.log('[to]', bs58checkDecode(prefix.B, state.head.hash) )
-
-        let hash = bs58checkDecode(prefix.B, state.head.hash)
-        let source = concatKeys(new Uint8Array([0]),bs58checkDecode(prefix.tz1, state.publicKeyHash))
-        let to = concatKeys(new Uint8Array([0]),bs58checkDecode(prefix.tz1, state.to))
+        console.log('[TREZOR][signOperationTrezor]', state, params)
 
         TrezorConnect.tezosSignTx({
-            path: xtzPath,
-            curve: 0,
-            operation: {
-                branch: hash,
-                tag: 8, // transaction
-                source: source,
+            path: params.xtzPath,
+            curve: params.curve,
+            branch: params.hash,
+            reveal: {
+                publicKey: params.publicKey,
                 fee: 0,
-                counter: (++state.counter).toString(),
+                //counter: (++state.counter).toString(),
                 gas_limit: 0,
                 storage_limit: 0,
             },
             transaction: {
+                source: {
+                    tag: params.source.tag,
+                    hash: params.source.hash,
+                },
+                destination: {
+                    tag: params.destination.tag,
+                    hash: params.destination.hash,
+                },
                 amount: 1,
-                destination: to , 
+                fee: 0,
+                counter: (parseInt(state.counter) + 1).toString(),
+                gas_limit: 0,
+                storage_limit: 0,
             },
-        }).then(response => {
+        }).then((response: any) => {
             console.warn('[signXTZ]', response.payload)
 
             resolve({
@@ -130,48 +204,6 @@ export const signOperationTrezor = (state: any) => {
 
         })
 
-
-
-        //     // tezos address
-        //     let xtzPath = "m/44'/1729'/0'/0'/0'"
-
-        //     try {
-        //         // open popup
-        //         TrezorConnect.open((response: any) => {
-        //             try {
-        //                 // get address and ask for confirmation
-        //                 TrezorConnect.tezosSignTx(
-        //                     xtzPath, state.to, state.fee, state.amount, state.operation, (response: any) => {
-
-        //                         let signature = bs58checkEncode(prefix.edsig, sodium.from_hex(response.signature));
-        //                         let signedOperationContents = state.operation + response.signature;
-
-        //                         console.log("[+] trezor: signature ", signature)
-
-        //                         let operationHash = bs58checkEncode(
-        //                             prefix.operation,
-        //                             // blake2b
-        //                             sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
-        //                         );
-
-        //                         resolve({
-        //                             ...state,
-        //                             signature: signature,
-        //                             signedOperationContents: signedOperationContents,
-        //                             operationHash: operationHash,
-        //                         })
-
-        //                     })
-        //             }
-        //             catch (error) {
-        //                 // error happens usualy when user trys to open multiple trezor connect windows
-        //                 console.error("[TrezorConnect] sign transaction ", error)
-        //             }
-        //         })
-        //     } catch (errorOpen) {
-        //         console.error('[TrezorConnect] open', errorOpen)
-        //     }
-        // });
     })
 
     // wait until promise is resolved 

@@ -268,7 +268,7 @@ export const managerKey = () => (source: Observable<any>) => source.pipe(
       // add counter to state 
       map(response => ({
         ...state,
-        manger: response.manager ? response.manager : undefined,
+        manager: response.manager ? response.manager : undefined,
         key: response.key ? response.manager : undefined,
       })),
       //tap(state => console.log('[+][managerKey]', state))

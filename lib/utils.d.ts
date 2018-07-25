@@ -2,6 +2,14 @@ import { Wallet, Operation } from './types';
 export declare const bs58checkEncode: (prefix: any, payload: any) => string;
 export declare const bs58checkDecode: (prefix: any, enc: any) => string;
 export declare const concatKeys: (privateKey: any, publicKey: any) => any;
+export declare const publicKeyHash2buffer: (publicKeyHash: any) => {
+    curve: number;
+    hash: any;
+};
+export declare const publicKey2buffer: (publicKey: any) => {
+    curve: number;
+    hash: any;
+};
 export declare const signOperation: (state: Operation) => {
     signature: string;
     signedOperationContents: string;
