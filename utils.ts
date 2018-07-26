@@ -24,6 +24,12 @@ const prefix = {
     operation: new Uint8Array([5, 116]),
 }
 
+export const string2buffer = (payload: any) => {
+    let n: any = new Uint8Array(payload.length);
+    n.set(payload);
+    return new Buffer(n, 'hex');
+}
+
 export const bs58checkEncode = (prefix: any, payload: any) => {
     let n: any = new Uint8Array(prefix.length + payload.length);
     n.set(prefix);
@@ -223,11 +229,11 @@ export const signOperationTrezor = (state: any) => {
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
                         spendable: operation.spendable,
                         delegatable: operation.delegatable,
                         delegate:  publicKeyHash2buffer(operation.delegate).hash,
-                        script: operation.script,
+                        //script: string2buffer(JSON.stringify(operation.script)),
                     },
                 }
             }

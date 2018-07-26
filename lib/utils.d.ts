@@ -1,4 +1,6 @@
+import { Buffer } from 'buffer';
 import { Wallet, Operation } from './types';
+export declare const string2buffer: (payload: any) => Buffer;
 export declare const bs58checkEncode: (prefix: any, payload: any) => string;
 export declare const bs58checkDecode: (prefix: any, enc: any) => string;
 export declare const concatKeys: (privateKey: any, publicKey: any) => any;
