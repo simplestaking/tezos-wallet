@@ -25,6 +25,7 @@ const prefix = {
 }
 
 export const string2buffer = (payload: any) => {
+    debugger
     let n: any = new Uint8Array(payload.length);
     n.set(payload);
     return new Buffer(n, 'hex');
@@ -232,8 +233,9 @@ export const signOperationTrezor = (state: any) => {
                         storage_limit: parseInt(operation.storage_limit),
                         spendable: operation.spendable,
                         delegatable: operation.delegatable,
-                        delegate:  publicKeyHash2buffer(operation.delegate).hash,
-                        //script: string2buffer(JSON.stringify(operation.script)),
+                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        // find format 
+                        //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                     },
                 }
             }
@@ -241,26 +243,26 @@ export const signOperationTrezor = (state: any) => {
 
         })
 
-        console.log('[TREZOR][signOperationTrezor]', state, message)
+console.log('[TREZOR][signOperationTrezor]', state, message)
 
-        // number's must be ints otherwise it fails
-        TrezorConnect.tezosSignTx(message)
-            .then((response: any) => {
-                console.warn('[signXTZ]', response.payload)
+// number's must be ints otherwise it fails
+TrezorConnect.tezosSignTx(message)
+    .then((response: any) => {
+        console.warn('[signXTZ]', response.payload)
 
-                resolve({
-                    ...state,
-                    signature: response.payload.signature,
-                    signedOperationContents: response.payload.sig_op_contents,
-                    operationHash: response.payload.operation_hash,
-                })
-
-            })
+        resolve({
+            ...state,
+            signature: response.payload.signature,
+            signedOperationContents: response.payload.sig_op_contents,
+            operationHash: response.payload.operation_hash,
+        })
 
     })
 
-    // wait until promise is resolved 
-    return trezorPopup
+    })
+
+// wait until promise is resolved 
+return trezorPopup
 }
 
 export const amount = (amount: any) => {
