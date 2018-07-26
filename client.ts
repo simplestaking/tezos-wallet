@@ -49,13 +49,12 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
       "kind": "transaction",
       "source": state.publicKeyHash,
       "destination": state.to,
-      "amount": utils.amount(state.amount),
+      "amount": utils.amount(state.amount).toString(),
       "fee": "0",
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
     })
-
     return {
       ...state,
       "operations": operations
@@ -210,7 +209,6 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
       map((response: any) => ({ ...state, operation: response })),
     )
   ),
-
   // add signature to state 
   // TODO: move and just keep signOperation and create logic inside utils  
   // flatMap(state => [utils.signOperation(state)]),

@@ -147,52 +147,118 @@ export const signOperation = (state: Operation) => {
 export const signOperationTrezor = (state: any) => {
 
     let trezorPopup = new Promise(function (resolve: any, reject: any) {
-
-        // prepare params for tezosSignTx
-        let params = {
-            xtzPath: "m/44'/1729'/0'/0'/0'",
-            hash: bs58checkDecode(prefix.B, state.head.hash),
-            curve: publicKeyHash2buffer(state.manager).curve,
-            publicKey: publicKey2buffer(state.publicKey).hash,
-            source: {
-                tag: 0,
-                hash: publicKeyHash2buffer(state.publicKeyHash).hash,
-            },
-            destination: {
-                tag: 0,
-                hash: publicKeyHash2buffer(state.to).hash,
-            }
+        type message = {
+            path: string,
+            curve: number,
+            branch: any,
+            reveal?: any,
+            transaction?: any,
+            origination?: any,
+            delegation?: any,
         }
 
-        console.log('[TREZOR][signOperationTrezor]', state, params)
+        // set basic config
+        let message: message = {
+            path: "m/44'/1729'/0'/0'/0'",
+            curve: publicKeyHash2buffer(state.manager).curve,
+            branch: bs58checkDecode(prefix.B, state.head.hash)
+        }
 
-        TrezorConnect.tezosSignTx({
-            path: params.xtzPath,
-            curve: params.curve,
-            branch: params.hash,
-            reveal: {
-                publicKey: params.publicKey,
-                fee: 0,
-                //counter: (++state.counter).toString(),
-                gas_limit: 0,
-                storage_limit: 0,
-            },
-            transaction: {
-                source: {
-                    tag: params.source.tag,
-                    hash: params.source.hash,
-                },
-                destination: {
-                    tag: params.destination.tag,
-                    hash: params.destination.hash,
-                },
-                amount: 1,
-                fee: 0,
-                counter: (parseInt(state.counter) + 1).toString(),
-                gas_limit: 0,
-                storage_limit: 0,
-            },
-        }).then((response: any) => {
+        // add operations to message 
+        state.operations.map((operation: any) => {
+
+            console.log('[utils]', operation)
+
+            if (operation.kind === 'reveal') {
+                message = {
+                    ...message,
+                    // add reveal to operation 
+                    reveal: {
+                        source: {
+                            tag: 0,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        public_key: publicKey2buffer(operation.public_key).hash,
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
+                    },
+                }
+            }
+
+            if (operation.kind === 'transaction') {
+                message = {
+                    ...message,
+                    // add transactoin to operation
+                    transaction: {
+                        source: {
+                            tag: 0,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        destination: {
+                            tag: 0,
+                            hash: publicKeyHash2buffer(operation.destination).hash,
+                        },
+                        amount: parseInt(operation.amount),
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.gas_limit),
+                    },
+                }
+            }
+
+
+        })
+
+        console.log('[TREZOR][signOperationTrezor]', state, message)
+
+        // number must be ints otherwise it fails
+        TrezorConnect.tezosSignTx(message
+            //     {
+
+            //     reveal: {
+            //         publicKey: params.publicKey,
+            //         fee: 0,
+            //         //counter: (++state.counter).toString(),
+            //         gas_limit: 0,
+            //         storage_limit: 0,
+            //     },
+            //     // origination: {
+            //     //     source: {
+            //     //         tag: params.source.tag,
+            //     //         hash: params.source.hash,
+            //     //     },
+            //     //     fee: 0,
+            //     //     counter: (parseInt(state.counter) + 1).toString(),
+            //     //     gas_limit: 200,
+            //     //     storage_limit: 0,
+            //     //     manager_pubkey: '',
+            //     //     balance: 0,
+            //     //     spendable: true,
+            //     //     delegatable: true,
+            //     //     //delegate: '',
+            //     //     script: '',
+            //     // },
+            //     transaction: {
+            //         source: {
+            //             tag: params.source.tag,
+            //             hash: params.source.hash,
+            //         },
+            //         destination: {
+            //             tag: params.destination.tag,
+            //             hash: params.destination.hash,
+            //         },
+            //         amount: parseInt(amount(state.amount)),
+            //         fee: parseInt(state.fee),
+            //         counter: (parseInt(state.counter) + 1),
+            //         gas_limit: parseInt(state.gas_limit),
+            //         storage_limit: parseInt(state.gas_limit),
+            //     },
+            // }
+
+        ).then((response: any) => {
             console.warn('[signXTZ]', response.payload)
 
             resolve({
@@ -210,8 +276,8 @@ export const signOperationTrezor = (state: any) => {
     return trezorPopup
 }
 
-export const amount = (amount: number) => {
-    return amount === 0 ? 0 : "" + (+amount * +1000000) + ""; // 1 000 000 = 1.00 tez
+export const amount = (amount: any) => {
+    return parseInt(amount === 0 ? 0 : (parseFloat(amount) * +1000000)); // 1 000 000 = 1.00 tez
 }
 
 export const keys = (mnemonic?: any): Wallet => {
