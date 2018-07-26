@@ -150,8 +150,8 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
         "public_key": state.publicKey,
         "source": state.publicKeyHash,
         "fee": "0",
-        "gas_limit": "200",
-        "storage_limit": "0",
+        "gas_limit": "10000",
+        "storage_limit": "100",
         "counter": (++state.counter).toString(),
       })
     }
@@ -162,13 +162,28 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
       "managerPubkey": state.publicKeyHash,
       "fee": "0",
       "balance": utils.amount(state.amount).toString(),
-      "gas_limit": "200",
-      "storage_limit": "0",
+      "gas_limit": "10000",
+      "storage_limit": "100",
       "counter": (++state.counter).toString(),
-      //"spendable": true,
-      //"delegatable": true,
-      //"delegate": state.delegate, 
-      //"script":'',
+      "spendable": true,
+      "delegatable": true,
+      "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
+      "script": {
+        "code":
+          [{ "prim": "parameter", "args": [{ "prim": "unit" }] },
+          { "prim": "storage", "args": [{ "prim": "unit" }] },
+          {
+            "prim": "code",
+            "args":
+              [[{ "prim": "CDR" },
+              {
+                "prim": "NIL",
+                "args": [{ "prim": "operation" }]
+              },
+              { "prim": "PAIR" }]]
+          }],
+        "storage": { "prim": "Unit" }
+      },
     })
 
     return {

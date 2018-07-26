@@ -226,7 +226,7 @@ export const signOperationTrezor = (state: any) => {
                         storage_limit: parseInt(operation.gas_limit),
                         spendable: operation.spendable,
                         delegatable: operation.delegatable,
-                        delegate:  operation.delegate,
+                        delegate:  publicKeyHash2buffer(operation.delegate).hash,
                         script: operation.script,
                     },
                 }
