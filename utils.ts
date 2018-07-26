@@ -167,7 +167,7 @@ export const signOperationTrezor = (state: any) => {
         // add operations to message 
         state.operations.map((operation: any) => {
 
-            console.log('[utils]', operation)
+            console.log('[signOperationTrezor] operation', operation)
 
             if (operation.kind === 'reveal') {
                 message = {
@@ -209,66 +209,47 @@ export const signOperationTrezor = (state: any) => {
                 }
             }
 
+            if (operation.kind === 'origination') {
+                message = {
+                    ...message,
+                    // add origination to operation
+                    origination: {
+                        source: {
+                            tag: 0,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        manager_pubkey: publicKeyHash2buffer(operation.managerPubkey).hash,
+                        balance: parseInt(operation.balance),
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.gas_limit),
+                        spendable: operation.spendable,
+                        delegatable: operation.delegatable,
+                        delegate:  operation.delegate,
+                        script: operation.script,
+                    },
+                }
+            }
+
 
         })
 
         console.log('[TREZOR][signOperationTrezor]', state, message)
 
-        // number must be ints otherwise it fails
-        TrezorConnect.tezosSignTx(message
-            //     {
+        // number's must be ints otherwise it fails
+        TrezorConnect.tezosSignTx(message)
+            .then((response: any) => {
+                console.warn('[signXTZ]', response.payload)
 
-            //     reveal: {
-            //         publicKey: params.publicKey,
-            //         fee: 0,
-            //         //counter: (++state.counter).toString(),
-            //         gas_limit: 0,
-            //         storage_limit: 0,
-            //     },
-            //     // origination: {
-            //     //     source: {
-            //     //         tag: params.source.tag,
-            //     //         hash: params.source.hash,
-            //     //     },
-            //     //     fee: 0,
-            //     //     counter: (parseInt(state.counter) + 1).toString(),
-            //     //     gas_limit: 200,
-            //     //     storage_limit: 0,
-            //     //     manager_pubkey: '',
-            //     //     balance: 0,
-            //     //     spendable: true,
-            //     //     delegatable: true,
-            //     //     //delegate: '',
-            //     //     script: '',
-            //     // },
-            //     transaction: {
-            //         source: {
-            //             tag: params.source.tag,
-            //             hash: params.source.hash,
-            //         },
-            //         destination: {
-            //             tag: params.destination.tag,
-            //             hash: params.destination.hash,
-            //         },
-            //         amount: parseInt(amount(state.amount)),
-            //         fee: parseInt(state.fee),
-            //         counter: (parseInt(state.counter) + 1),
-            //         gas_limit: parseInt(state.gas_limit),
-            //         storage_limit: parseInt(state.gas_limit),
-            //     },
-            // }
+                resolve({
+                    ...state,
+                    signature: response.payload.signature,
+                    signedOperationContents: response.payload.sig_op_contents,
+                    operationHash: response.payload.operation_hash,
+                })
 
-        ).then((response: any) => {
-            console.warn('[signXTZ]', response.payload)
-
-            resolve({
-                ...state,
-                signature: response.payload.signature,
-                signedOperationContents: response.payload.sig_op_contents,
-                operationHash: response.payload.operation_hash,
             })
-
-        })
 
     })
 

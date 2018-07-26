@@ -161,13 +161,14 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
       "source": state.publicKeyHash,
       "managerPubkey": state.publicKeyHash,
       "fee": "0",
-      "balance": "0", // state.amount,
+      "balance": utils.amount(state.amount).toString(),
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
-      "spendable": true,
-      "delegatable": true,
-      // "delegate": state.delegate, 
+      //"spendable": true,
+      //"delegatable": true,
+      //"delegate": state.delegate, 
+      //"script":'',
     })
 
     return {
@@ -210,7 +211,8 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
     )
   ),
   // add signature to state 
-  // TODO: move and just keep signOperation and create logic inside utils  
+  // TODO: move and just keep signOperation and create logic inside utils 
+  tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
   flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
