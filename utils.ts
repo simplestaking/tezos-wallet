@@ -177,7 +177,7 @@ export const signOperationTrezor = (state: any) => {
 
         // set basic config
         let message: message = {
-            path: "m/44'/1729'/0'/0'/0'",
+            path: "m/44'/1729'/0'/0'/2'",
             curve: publicKeyHash2buffer(state.manager).curve,
             branch: bs58checkDecode(prefix.B, state.head.hash)
         }
