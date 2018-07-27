@@ -138,7 +138,7 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"')
+    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"', state)
   }),
 
   // prepare config for operation
@@ -159,7 +159,7 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
     operations.push({
       "kind": "origination",
       "source": state.publicKeyHash,
-      "managerPubkey": state.publicKeyHash,
+      "managerPubkey": state.manager,
       "fee": "0",
       "balance": utils.amount(state.amount).toString(),
       "gas_limit": "10000",
