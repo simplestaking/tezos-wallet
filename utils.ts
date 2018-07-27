@@ -251,6 +251,23 @@ export const signOperationTrezor = (state: any) => {
                 }
             }
 
+            if (operation.kind === 'delegation') {
+                message = {
+                    ...message,
+                    // add delegation to operation
+                    delegation: {
+                        source: {
+                            tag: publicKeyHash2buffer(operation.source).originated,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
+                    },
+                }
+            }
 
         })
 
