@@ -6,6 +6,7 @@ export declare const bs58checkDecode: (prefix: any, enc: any) => string;
 export declare const concatKeys: (privateKey: any, publicKey: any) => any;
 export declare const publicKeyHash2buffer: (publicKeyHash: any) => {
     curve: number;
+    originated: number;
     hash: any;
 };
 export declare const publicKey2buffer: (publicKey: any) => {
