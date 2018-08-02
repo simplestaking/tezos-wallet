@@ -1,10 +1,11 @@
-import { of } from 'rxjs'
 import sodium from 'libsodium-wrappers'
 import * as bs58check from 'bs58check'
 import * as bip39 from 'bip39'
 
 import { Buffer } from 'buffer'
 import { Wallet, Operation, } from './types'
+import { Observable, of } from 'rxjs';
+import { tap, map, flatMap, delay, withLatestFrom, catchError } from 'rxjs/operators';
 
 // declare external library
 declare var TrezorConnect: any;
@@ -76,7 +77,7 @@ export const publicKeyHash2buffer = (publicKeyHash: any) => {
             return {
                 curve: -1,
                 originated: 1,
-                hash: concatKeys(bs58checkDecode(prefix.KT1, publicKeyHash),new Uint8Array([0]),)
+                hash: concatKeys(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0]), )
             }
         default:
             return {
@@ -164,137 +165,131 @@ export const signOperation = (state: Operation) => {
 // sign operation 
 export const signOperationTrezor = (state: any) => {
 
-    let trezorPopup = new Promise(function (resolve: any, reject: any) {
-        type message = {
-            path: string,
-            curve: number,
-            branch: any,
-            reveal?: any,
-            transaction?: any,
-            origination?: any,
-            delegation?: any,
+    type message = {
+        path: string,
+        curve: number,
+        branch: any,
+        reveal?: any,
+        transaction?: any,
+        origination?: any,
+        delegation?: any,
+    }
+
+    // set basic config
+    let message: message = {
+        path: "m/44'/1729'/0'/0'/2'",
+        curve: publicKeyHash2buffer(state.manager).curve,
+        branch: bs58checkDecode(prefix.B, state.head.hash)
+    }
+
+    // add operations to message 
+    state.operations.map((operation: any) => {
+
+        console.log('[signOperationTrezor] operation', operation)
+
+        if (operation.kind === 'reveal') {
+            message = {
+                ...message,
+                // add reveal to operation 
+                reveal: {
+                    source: {
+                        tag: publicKeyHash2buffer(operation.source).originated,
+                        hash: publicKeyHash2buffer(operation.source).hash,
+                    },
+                    public_key: publicKey2buffer(operation.public_key).hash,
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
+                },
+            }
         }
 
-        // set basic config
-        let message: message = {
-            path: "m/44'/1729'/0'/0'/2'",
-            curve: publicKeyHash2buffer(state.manager).curve,
-            branch: bs58checkDecode(prefix.B, state.head.hash)
+        if (operation.kind === 'transaction') {
+            message = {
+                ...message,
+                // add transactoin to operation
+                transaction: {
+                    source: {
+                        tag: publicKeyHash2buffer(operation.source).originated,
+                        hash: publicKeyHash2buffer(operation.source).hash,
+                    },
+                    destination: {
+                        tag: publicKeyHash2buffer(operation.destination).originated,
+                        hash: publicKeyHash2buffer(operation.destination).hash,
+                    },
+                    amount: parseInt(operation.amount),
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
+                },
+            }
         }
 
-        // add operations to message 
-        state.operations.map((operation: any) => {
-
-            console.log('[signOperationTrezor] operation', operation)
-
-            if (operation.kind === 'reveal') {
-                message = {
-                    ...message,
-                    // add reveal to operation 
-                    reveal: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        public_key: publicKey2buffer(operation.public_key).hash,
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
+        if (operation.kind === 'origination') {
+            message = {
+                ...message,
+                // add origination to operation
+                origination: {
+                    source: {
+                        tag: publicKeyHash2buffer(operation.source).originated,
+                        hash: publicKeyHash2buffer(operation.source).hash,
                     },
-                }
+                    manager_pubkey: publicKeyHash2buffer(operation.managerPubkey).hash,
+                    balance: parseInt(operation.balance),
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
+                    spendable: operation.spendable,
+                    delegatable: operation.delegatable,
+                    delegate: publicKeyHash2buffer(operation.delegate).hash,
+                    // find encodig format http://doc.tzalpha.net/api/p2p.html
+                    //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
+                },
             }
+        }
 
-            if (operation.kind === 'transaction') {
-                message = {
-                    ...message,
-                    // add transactoin to operation
-                    transaction: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        destination: {
-                            tag: publicKeyHash2buffer(operation.destination).originated,
-                            hash: publicKeyHash2buffer(operation.destination).hash,
-                        },
-                        amount: parseInt(operation.amount),
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
+        if (operation.kind === 'delegation') {
+            message = {
+                ...message,
+                // add delegation to operation
+                delegation: {
+                    source: {
+                        tag: publicKeyHash2buffer(operation.source).originated,
+                        hash: publicKeyHash2buffer(operation.source).hash,
                     },
-                }
+                    delegate: publicKeyHash2buffer(operation.delegate).hash,
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
+                },
             }
-
-            if (operation.kind === 'origination') {
-                message = {
-                    ...message,
-                    // add origination to operation
-                    origination: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        manager_pubkey: publicKeyHash2buffer(operation.managerPubkey).hash,
-                        balance: parseInt(operation.balance),
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
-                        spendable: operation.spendable,
-                        delegatable: operation.delegatable,
-                        delegate: publicKeyHash2buffer(operation.delegate).hash,
-                        // find encodig format http://doc.tzalpha.net/api/p2p.html
-                        //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
-                    },
-                }
-            }
-
-            if (operation.kind === 'delegation') {
-                message = {
-                    ...message,
-                    // add delegation to operation
-                    delegation: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        delegate: publicKeyHash2buffer(operation.delegate).hash,
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
-                    },
-                }
-            }
-
-        })
-
-        console.log('[TREZOR][signOperationTrezor]', state, message)
-
-        // number's must be ints otherwise it fails
-        TrezorConnect.tezosSignTx(message)
-            .then((response: any) => {
-                console.warn('[signXTZ]', response.payload)
-
-                resolve({
-                    ...state,
-                    signature: response.payload.signature,
-                    signedOperationContents: response.payload.sig_op_contents,
-                    operationHash: response.payload.operation_hash,
-                })
-
-            })
+        }
 
     })
 
-    // wait until promise is resolved 
-    return trezorPopup
+    console.log('[TREZOR][signOperationTrezor]', state, message)
+
+    // number's must be ints otherwise it fails
+    return of(TrezorConnect.tezosSignTx(message)).pipe(
+        map(response => ({
+            ...state,
+            signature: response.payload.signature,
+            signedOperationContents: response.payload.sig_op_contents,
+            operationHash: response.payload.operation_hash,
+        })),
+        catchError(error => {
+            console.error('[TrezorConnect.tezosSignTx]', error)
+            return of([])
+        })
+    )
 }
 
-export const amount = (amount: any) => {
-    return parseInt(amount === 0 ? 0 : (parseFloat(amount) * +1000000)); // 1 000 000 = 1.00 tez
+export const amount = (amount: string) => {
+    return amount === '0' ? '0' : (parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
 }
 
 export const keys = (mnemonic?: any): Wallet => {

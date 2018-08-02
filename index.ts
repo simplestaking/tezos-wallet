@@ -33,15 +33,15 @@ walletObservable.pipe(
     })),
 
     // send small amount to new wallet and wait for block creation
-    transfer((state: any) => ({
-        'secretKey': wallet.secretKey,
-        'publicKey': wallet.publicKey,
-        //'publicKeyHash': wallet.publicKeyHash,
-        'publicKeyHash': 'KT1QUswUywUe5WPuukjyK61prvjWvJPeZRHh',
-        //'to': 'KT1QUswUywUe5WPuukjyK61prvjWvJPeZRHh',
-        'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-        'amount': '0.000001',
-    })),
+    // transfer((state: any) => ({
+    //     'secretKey': wallet.secretKey,
+    //     'publicKey': wallet.publicKey,
+    //     'publicKeyHash': wallet.publicKeyHash,
+    //     // 'publicKeyHash': 'tz1L1YBz3nDNypeHPbSXECZbLdYVyJaGhv7w',
+    //     //'to': 'KT1QUswUywUe5WPuukjyK61prvjWvJPeZRHh',
+    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    //     'amount': '0.000001',
+    // })),
 
     // change delegate
     // setDelegation((state: any) => ({

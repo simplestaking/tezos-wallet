@@ -47,4 +47,4 @@ export declare const newWallet: () => <T>(source: Observable<T>) => Observable<W
 /**
  * Wait for sodium to initialize
  */
-export declare const initialize: () => <T>(source: Observable<T>) => Observable<T>;
+export declare const initialize: () => (source: Observable<any>) => Observable<any>;

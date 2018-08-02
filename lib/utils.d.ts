@@ -1,5 +1,6 @@
 import { Buffer } from 'buffer';
 import { Wallet, Operation } from './types';
+import { Observable } from 'rxjs';
 export declare const string2buffer: (payload: any) => Buffer;
 export declare const bs58checkEncode: (prefix: any, payload: any) => string;
 export declare const bs58checkDecode: (prefix: any, enc: any) => string;
@@ -23,6 +24,6 @@ export declare const signOperation: (state: Operation) => {
     publicKey: string;
     publicKeyHash: string;
 };
-export declare const signOperationTrezor: (state: any) => Promise<{}>;
-export declare const amount: (amount: any) => any;
+export declare const signOperationTrezor: (state: any) => Observable<any>;
+export declare const amount: (amount: string) => number | "0";
 export declare const keys: (mnemonic?: any) => Wallet;

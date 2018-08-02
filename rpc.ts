@@ -1,5 +1,5 @@
-import { Observable } from 'rxjs';
-import { map, filter } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, filter, catchError } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
 export const config = () => {
@@ -17,14 +17,24 @@ export const rpc = (url: string, payload?: any) => {
             // if do not have response do not run it
             filter(event => event.response),
             // use only response
-            map(event => event.response)
+            map(event => event.response),
+            // catchError
+            catchError(error => {
+                console.warn('[rpc][ajax.post]', error)
+                return of([error])
+            })
         )
         :
         ajax.get(config().api + url, config().header).pipe(
             // if do not have response do not run it
             filter(event => event.response),
             // use only response
-            map(event => event.response)
+            map(event => event.response),
+             // catchError
+             catchError(error => {
+                console.warn('[rpc][ajax.get]', error)
+                return of([error])
+            })
         )
 
 }

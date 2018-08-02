@@ -1,11 +1,12 @@
 import { Observable, of } from 'rxjs';
 import { tap, map, flatMap, delay, withLatestFrom, catchError } from 'rxjs/operators';
 
+import sodium from 'libsodium-wrappers'
+import * as utils from './utils'
+
 import { Wallet, Contract, Transfer, Operation, PublicAddress } from './types'
 import { rpc } from './rpc'
 
-import sodium from 'libsodium-wrappers'
-import * as utils from './utils'
 
 /**
  *  Transfer token's from one wallet to another
@@ -13,11 +14,6 @@ import * as utils from './utils'
 export const transfer = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
   map(state => fn(state)),
-
-  // display transaction info to console
-  // tap(state => {
-  //   console.log('[debug][+] transfer: ', state)
-  // }),
 
   // get contract counter
   counter(),
@@ -138,7 +134,7 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"', state)
+    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"')
   }),
 
   // prepare config for operation
@@ -238,7 +234,7 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   applyAndInjectOperation(),
 
   // wait until operation is confirmed & moved from mempool to head
-  confirmOperation(),
+  // confirmOperation(),
 
 )
 
@@ -398,10 +394,10 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<Wallet> =>
 /**
  * Wait for sodium to initialize
  */
-export const initialize = () => <T>(source: Observable<T>): Observable<T> => source.pipe(
+export const initialize = () => (source: Observable<any>): Observable<any> => source.pipe(
 
   // wait for sodium to initialize
-  flatMap(state => sodium.ready),
+  flatMap(state => of(sodium.ready)),
   // combine resolved promise with state observable
   withLatestFrom(source),
   // use only state
