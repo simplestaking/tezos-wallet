@@ -234,7 +234,7 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   applyAndInjectOperation(),
 
   // wait until operation is confirmed & moved from mempool to head
-  // confirmOperation(),
+  confirmOperation(),
 
 )
 
@@ -309,38 +309,37 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   // inject operation
   rpc((state: any) => ({
     'url': '/injection/operation',
-    'path': 'injection',
+    'path': 'injectionOperation',
     'payload': '"' + state.signedOperationContents + '"',
   })),
-  tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injection))
+  tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
 )
 
 
 
-// /**
-//  * Wait until operation is confirmed & moved from mempool to head
-//  */
-// export const confirmOperation = () => (source: Observable<any>): any => source.pipe(
+/**
+ * Wait until operation is confirmed & moved from mempool to head
+ */
+export const confirmOperation = () => (source: Observable<any>): any => source.pipe(
 
-//   tap((state: any) => console.log('[-] pending: operation "' + state.injectionOperation + '"')),
+  tap((state: any) => console.log('[-] pending: operation "' + state.injectionOperation + '"')),
 
-//   // wait 5 sec for operation 
-//   delay(5000),
+  // wait 5 sec for operation 
+  delay(5000),
 
-//   // call node and look for operation in mempool
-//   flatMap((state: any) =>
-//     // send request to node 
-//     rpc('/chains/main/mempool').pipe(
+  // call node and look for operation in mempool
+  rpc((state: any) => ({
+    'url': '/chains/main/mempool',
+    'path': 'mempool'
+  })),
 
-//       // if we find operation in mempool call confirmOperation() again
-//       flatMap((response: any) =>
-//         response.applied
-//           .filter((operation: any) => state.injectionOperation === operation.hash)
-//           .length > 0 ? of(state).pipe(confirmOperation()) : source
-//       ),
-//     ),
-//   ),
-// )
+  // if we find operation in mempool call confirmOperation() again
+  flatMap((state: any) =>
+    state.mempool.applied
+      .filter((operation: any) => state.injectionOperation === operation.hash)
+      .length > 0 ? of(state).pipe(confirmOperation()) : source
+  ),
+)
 
 /** 
  * Get wallet details
