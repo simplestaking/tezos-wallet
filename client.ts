@@ -238,7 +238,7 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   applyAndInjectOperation(),
 
   // wait until operation is confirmed & moved from mempool to head
-  // confirmOperation(),
+  confirmOperation(),
 
 )
 
@@ -318,7 +318,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   flatMap((state: any) =>
     rpc('/injection/operation', '"' + state.signedOperationContents + '"',
     ).pipe(
-      tap((response: any) => console.log("[+] operation: inject ", response)),
+      // tap((response: any) => console.log("[+] operation: inject ", response)),
       map(response => ({ ...state, injectionOperation: response })),
       tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
     )
@@ -331,23 +331,22 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
  */
 export const confirmOperation = () => (source: Observable<any>): any => source.pipe(
 
-  tap((state: any) => console.log('[-] pending: operation "' + state.injectedOperation + '"')),
+  tap((state: any) => console.log('[-] pending: operation "' + state.injectionOperation + '"')),
 
   // wait 5 sec for operation 
-  delay(10000),
+  delay(5000),
 
   // call node and look for operation in mempool
   flatMap((state: any) =>
     // send request to node 
-    rpc('/mempool/pending_operations ', {}).pipe(
+    rpc('/chains/main/mempool').pipe(
 
       // if we find operation in mempool call confirmOperation() again
       flatMap((response: any) =>
         response.applied
-          .filter((operation: any) => state.injectedOperation === operation.hash)
+          .filter((operation: any) => state.injectionOperation === operation.hash)
           .length > 0 ? of(state).pipe(confirmOperation()) : source
       ),
-
     ),
   ),
 )
