@@ -5,4 +5,4 @@ export declare const config: () => {
         'Content-Type': string;
     };
 };
-export declare const rpc: (url: string, payload?: any) => Observable<any>;
+export declare const rpc: (fn?: ((params: any) => any) | undefined) => (source: Observable<any>) => Observable<any>;

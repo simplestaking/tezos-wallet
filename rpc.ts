@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { map, filter, catchError } from 'rxjs/operators';
+import { map, filter, catchError, flatMap, tap } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
 export const config = () => {
@@ -10,32 +10,45 @@ export const config = () => {
     }
 }
 
-export const rpc = (url: string, payload?: any) => {
+export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Observable<any> =>
+    source.pipe(
 
-    return payload !== undefined ?
-        ajax.post(config().api + url, payload, config().header).pipe(
-            // if do not have response do not run it
-            filter(event => event.response),
-            // use only response
-            map(event => event.response),
-            // catchError
-            catchError(error => {
-                console.warn('[rpc][ajax.post]', error)
-                return of([error])
-            })
-        )
-        :
-        ajax.get(config().api + url, config().header).pipe(
-            // if do not have response do not run it
-            filter(event => event.response),
-            // use only response
-            map(event => event.response),
-             // catchError
-             catchError(error => {
-                console.warn('[rpc][ajax.get]', error)
-                return of([error])
-            })
-        )
+        // exec calback function
+        map(state => ({ ...state, rpc: fn(state) })),
+        tap(state => console.log(' ')),
+        tap(state => console.log('[rpc][url] : ', state.rpc.url)),
+        tap(state => console.log('[rpc][path] : ', state.rpc.path)),
+        tap(state => console.log('[rpc][payload] : ', state.rpc.payload)),
 
-}
+        flatMap(state =>
+            state.rpc.payload !== undefined ?
+                // post 
+                ajax.post(config().api + state.rpc.url, state.rpc.payload, config().header).pipe(
+                    // without response do not run it
+                    filter(event => event.response),
+                    // use only response
+                    map(event => ({ ...state, [state.rpc.path]: event.response })),
+                    // catchError
+                    catchError(error => {
+                        console.warn('[rpc][ajax.post]', error)
+                        return of([error])
+                    })
+                )
+                :
+                // get 
+                ajax.get(config().api + state.rpc.url, config().header).pipe(
+                    // without response do not run it
+                    filter(event => event.response),
+                    // use only response
+                    map(event => ({ ...state, [state.rpc.path]: event.response })),
+                    // catchError
+                    catchError(error => {
+                        console.warn('[rpc][ajax.get]', error)
+                        return of([error])
+                    })
+                )
+        ),
+        // tap(state => console.log('[rpc][response] : ', state))
+    )
+
 

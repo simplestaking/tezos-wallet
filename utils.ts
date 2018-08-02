@@ -118,8 +118,10 @@ export const publicKey2buffer = (publicKey: any) => {
 }
 
 // sign operation 
-export const signOperation = (state: Operation) => {
+export const signOperation = (state: any) => {
     // TODO: change secretKey name to privateKey
+
+    // console.log('[signOperation]', state)
 
     let operation = sodium.from_hex(state.operation);
     let secretKey = bs58checkDecode(prefix.edsk32, state.secretKey);
@@ -131,7 +133,6 @@ export const signOperation = (state: Operation) => {
 
     // remove publicKey
     if (secretKey.length > 32) secretKey = secretKey.slice(0, 32)
-    //debugger;
 
     // TODO: add all watermarks
     // ed25516

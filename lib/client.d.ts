@@ -5,14 +5,6 @@ import { Wallet, PublicAddress } from './types';
  */
 export declare const transfer: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
 /**
- *  Set delegation rights to tezos address
- */
-export declare const setDelegation: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
-/**
- * Originate new delegateble contract from wallet
- */
-export declare const originate: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
-/**
  * Create operation in blocchain
  */
 export declare const operation: () => <T>(source: Observable<Wallet>) => Observable<T>;
@@ -32,10 +24,6 @@ export declare const managerKey: () => (source: Observable<any>) => Observable<a
  * Apply and inject operation into node
  */
 export declare const applyAndInjectOperation: () => (source: Observable<any>) => Observable<any>;
-/**
- * Wait until operation is confirmed & moved from mempool to head
- */
-export declare const confirmOperation: () => (source: Observable<any>) => any;
 /**
  * Get wallet details
  */
