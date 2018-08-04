@@ -1,15 +1,16 @@
 import { Observable, of } from 'rxjs';
-import { tap, map, flatMap, delay, withLatestFrom, catchError } from 'rxjs/operators';
+import { tap, map, flatMap, delay, withLatestFrom } from 'rxjs/operators';
 
 import sodium from 'libsodium-wrappers'
+
 import * as utils from './utils'
+import { rpc } from './rpc'
 
 import { Wallet, Contract, Transfer, Operation, PublicAddress } from './types'
-import { rpc } from './rpc'
 
 
 /**
- *  Transfer token's from one wallet to another
+ *  Transfer XTZ from one wallet to another
  */
 export const transfer = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
@@ -63,147 +64,12 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
 
 )
 
-// /**
-//  *  Set delegation rights to tezos address
-//  */
-// export const setDelegation = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
-
-//   map(state => fn(state)),
-
-//   // get contract counter
-//   counter(),
-
-//   // get contract managerKey
-//   managerKey(),
-
-//   // display transaction info to console
-//   tap(state => {
-//     console.log('[+] setDelegate: from "' + state.publicKeyHash + '" to "' + state.to + '"')
-//   }),
-
-//   // prepare config for operation
-//   map(state => {
-//     const operations = []
-//     if (state.key === undefined) {
-//       operations.push({
-//         "kind": "reveal",
-//         "public_key": state.publicKey,
-//         "source": state.publicKeyHash,
-//         "fee": "0",
-//         "gas_limit": "200",
-//         "storage_limit": "0",
-//         "counter": (++state.counter).toString(),
-//       })
-//     }
-
-//     operations.push({
-//       "kind": "delegation",
-//       "source": state.publicKeyHash,
-//       "fee": "0",
-//       "gas_limit": "200",
-//       "storage_limit": "0",
-//       "counter": (++state.counter).toString(),
-//       "delegate": state.to,
-//     })
-
-//     return {
-//       ...state,
-//       "operations": operations
-//     }
-
-//   }),
-
-//   // create operation 
-//   operation(),
-
-// )
-
-
-// /**
-//  * Originate new delegateble contract from wallet  
-//  */
-// export const originate = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
-
-//   map(state => fn(state)),
-
-//   // get contract counter
-//   counter(),
-
-//   // get contract managerKey
-//   managerKey(),
-
-//   // display transaction info to console
-//   tap(state => {
-//     console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"')
-//   }),
-
-//   // prepare config for operation
-//   map(state => {
-//     const operations = []
-//     if (state.key === undefined) {
-//       operations.push({
-//         "kind": "reveal",
-//         "public_key": state.publicKey,
-//         "source": state.publicKeyHash,
-//         "fee": "0",
-//         "gas_limit": "10000",
-//         "storage_limit": "100",
-//         "counter": (++state.counter).toString(),
-//       })
-//     }
-
-//     operations.push({
-//       "kind": "origination",
-//       "source": state.publicKeyHash,
-//       "managerPubkey": state.manager,
-//       "fee": "0",
-//       "balance": utils.amount(state.amount).toString(),
-//       "gas_limit": "10000",
-//       "storage_limit": "100",
-//       "counter": (++state.counter).toString(),
-//       "spendable": true,
-//       "delegatable": true,
-//       "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
-//       // "script": {
-//       //   "code":
-//       //     [{ "prim": "parameter", "args": [{ "prim": "unit" }] },
-//       //     { "prim": "storage", "args": [{ "prim": "unit" }] },
-//       //     {
-//       //       "prim": "code",
-//       //       "args":
-//       //         [[{ "prim": "CDR" },
-//       //         {
-//       //           "prim": "NIL",
-//       //           "args": [{ "prim": "operation" }]
-//       //         },
-//       //         { "prim": "PAIR" }]]
-//       //     }],
-//       //   "storage": { "prim": "Unit" }
-//       // },
-//     })
-
-//     return {
-//       ...state,
-//       "operations": operations
-//     }
-
-//   }),
-
-//   // create operation 
-//   operation(),
-
-//   tap((state: any) => console.log('[+] origination:  ', state)),
-
-// )
-
-
 /**
- * Create operation in blocchain
+ *  Set delegation rights to tezos address
  */
-export const operation = () => <T>(source: Observable<Wallet>): Observable<T> => source.pipe(
+export const setDelegation = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  // get head and counter
-  head(),
+  map(state => fn(state)),
 
   // get contract counter
   counter(),
@@ -211,24 +77,132 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   // get contract managerKey
   managerKey(),
 
-  // create operation
-  rpc((state: any) => ({
-    'url': '/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations',
-    'path': 'operation',
-    'payload': {
-      "branch": state.head.hash,
-      "contents": state.operations,
+  // display transaction info to console
+  tap(state => {
+    console.log('[+] setDelegate: from "' + state.publicKeyHash + '" to "' + state.to + '"')
+  }),
+
+  // prepare config for operation
+  map(state => {
+    const operations = []
+    if (state.manager_key.key === undefined) {
+      operations.push({
+        "kind": "reveal",
+        "public_key": state.publicKey,
+        "source": state.publicKeyHash,
+        "fee": "0",
+        "gas_limit": "200",
+        "storage_limit": "0",
+        "counter": (++state.counter).toString(),
+      })
     }
-  })),
 
-  // add signature to state 
-  // TODO: move and just keep signOperation and create logic inside utils 
-  // tap(state => console.log('[operation]', state.walletType, state)),
-  // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
+    operations.push({
+      "kind": "delegation",
+      "source": state.publicKeyHash,
+      "fee": "0",
+      "gas_limit": "200",
+      "storage_limit": "0",
+      "counter": (++state.counter).toString(),
+      "delegate": state.to,
+    })
 
-  //get counter
+    return {
+      ...state,
+      "operations": operations
+    }
+
+  }),
+
+  // create operation 
+  operation(),
+
+)
+
+
+/**
+ * Originate new delegateble contract from wallet  
+ */
+export const originate = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
+
+  map(state => fn(state)),
+
+  // get contract counter
   counter(),
+
+  // get contract managerKey
+  managerKey(),
+
+  // display transaction info to console
+  tap(state => {
+    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"')
+  }),
+
+  // prepare config for operation
+  map(state => {
+    const operations = []
+    if (state.manager_key.key === undefined) {
+      operations.push({
+        "kind": "reveal",
+        "public_key": state.publicKey,
+        "source": state.publicKeyHash,
+        "fee": "0",
+        "gas_limit": "10000",
+        "storage_limit": "100",
+        "counter": (++state.counter).toString(),
+      })
+    }
+
+    operations.push({
+      "kind": "origination",
+      "source": state.publicKeyHash,
+      "managerPubkey": state.manager_key.manager,
+      "fee": "0",
+      "balance": utils.amount(state.amount).toString(),
+      "gas_limit": "10000",
+      "storage_limit": "100",
+      "counter": (++state.counter).toString(),
+      "spendable": true,
+      "delegatable": true,
+      "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
+      // "script": {
+      //   "code":
+      //     [{ "prim": "parameter", "args": [{ "prim": "unit" }] },
+      //     { "prim": "storage", "args": [{ "prim": "unit" }] },
+      //     {
+      //       "prim": "code",
+      //       "args":
+      //         [[{ "prim": "CDR" },
+      //         {
+      //           "prim": "NIL",
+      //           "args": [{ "prim": "operation" }]
+      //         },
+      //         { "prim": "PAIR" }]]
+      //     }],
+      //   "storage": { "prim": "Unit" }
+      // },
+    })
+
+    return {
+      ...state,
+      "operations": operations
+    }
+
+  }),
+
+  // create operation 
+  operation(),
+
+)
+
+
+/**
+ * Create operation in blocchain
+ */
+export const operation = () => <T>(source: Observable<Wallet>): Observable<T> => source.pipe(
+  
+  // create operation
+  forgeOperation(),
 
   // apply & inject operation
   applyAndInjectOperation(),
@@ -275,16 +249,37 @@ export const managerKey = () => (source: Observable<any>) => source.pipe(
     'path': 'manager_key'
   })),
 
-  // add manager to state 
-  // map(state => ({
-  //   ...state,
-  //   manager_key: {
-  //     manager: state.manager ? state.manager : undefined,
-  //     key: state.key ? state.manager : undefined, // ?? manager
-  //   }
-  // })),
+)
 
-  // tap(state => console.log('[+][managerKey]', state))
+/**
+ * Forge operation in blocchain
+ */
+export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<T> => source.pipe(
+
+  // get head and counter
+  head(),
+
+  // get contract counter
+  counter(),
+
+  // get contract managerKey
+  managerKey(),
+
+  // create operation
+  rpc((state: any) => ({
+    'url': '/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations',
+    'path': 'operation',
+    'payload': {
+      "branch": state.head.hash,
+      "contents": state.operations,
+    }
+  })),
+
+  // add signature to state 
+  // TODO: move and just keep signOperation and create logic inside utils 
+  // tap(state => console.log('[operation]', state.walletType, state)),
+  // flatMap(state => [utils.signOperation(state)]),
+  flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
 )
 
@@ -292,6 +287,9 @@ export const managerKey = () => (source: Observable<any>) => source.pipe(
  * Apply and inject operation into node
  */
 export const applyAndInjectOperation = () => (source: Observable<any>) => source.pipe(
+  
+  //get counter
+  counter(),
 
   // preapply operation
   rpc((state: any) => ({
@@ -312,9 +310,10 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
     'path': 'injectionOperation',
     'payload': '"' + state.signedOperationContents + '"',
   })),
-  tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
-)
 
+  tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
+
+)
 
 
 /**
@@ -345,7 +344,7 @@ export const confirmOperation = () => (source: Observable<any>): any => source.p
  * Get wallet details
  */
 // export const getWalletDetail = (fn?: (params: Wallet) => PublicAddress) => (source: Observable<Wallet>): Observable<Contract> =>
-export const getWallet = (fn?: (params: any) => PublicAddress) => <T>(source: Observable<T>): Observable<T> =>
+export const getWallet = (fn?: (params: any) => any) => (source: Observable<any>): Observable<any> =>
   source.pipe(
 
     // exec calback function only if is defined
@@ -354,17 +353,19 @@ export const getWallet = (fn?: (params: any) => PublicAddress) => <T>(source: Ob
     // get contract info balance 
     rpc((state: any) => ({
       url: '/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/',
-    }))
+      path: 'balance',
+    })),
 
+    // show balance
+    tap(state => {
+      console.log('[+] balance: ' + parseInt(state.balance.balance) / 1000000 + ' ꜩ')
+    })
   )
 
 /**
  * Generate new menomonic, private, public key & tezos wallet address 
  */
 export const newWallet = () => <T>(source: Observable<T>): Observable<Wallet> => source.pipe(
-
-  // // wait for sodium to initialize
-  // initialize(),
 
   // create keys
   map(state => utils.keys()),

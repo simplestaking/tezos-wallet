@@ -5,7 +5,7 @@ import { tap, map, flatMap } from 'rxjs/operators';
 import './node'
 
 // import { initialize, originate, setDelegation, transfer, newWallet, getWallet } from './client'
-import { initialize, transfer, newWallet, getWallet } from './client'
+import { initialize, transfer, originate, newWallet, getWallet, setDelegation } from './client'
 
 console.log('[+] tezos wallet client')
 
@@ -32,33 +32,31 @@ walletObservable.pipe(
     getWallet(state => ({
         'publicKeyHash': state.publicKeyHash,
     })),
-    // send small amount to new wallet and wait for block creation
-    transfer((state: any) => ({
-        'secretKey': wallet.secretKey,
-        'publicKey': wallet.publicKey,
-        'publicKeyHash': wallet.publicKeyHash,
-        // 'publicKeyHash': 'tz1L1YBz3nDNypeHPbSXECZbLdYVyJaGhv7w',
-        //'to': 'KT1QUswUywUe5WPuukjyK61prvjWvJPeZRHh',
-        'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-        'amount': '0.000001',
-    })),
+    // // send small amount to new wallet and wait for block creation
+    // transfer((state: any) => ({
+    //     'secretKey': wallet.secretKey,
+    //     'publicKey': wallet.publicKey,
+    //     'publicKeyHash': wallet.publicKeyHash,
+    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    //     'amount': '0.000001',
+    // })),
 
     // change delegate
     // setDelegation((state: any) => ({
     //     'secretKey': wallet.secretKey,
     //     'publicKey': wallet.publicKey,
     //     'publicKeyHash': wallet.publicKeyHash,
-    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    //     'to': 'tz1iCKMR6Hq7hSNGVu9mBCu7Tum7Xmd3tD9G',
     // })),
 
     // originate delegatable contract   
-    // originate((state: any) => ({
-    //     'secretKey': wallet.secretKey,
-    //     'publicKey': wallet.publicKey,
-    //     'publicKeyHash': wallet.publicKeyHash,
-    //     'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-    //     'amount': '0.000001',
-    // })),
+    originate((state: any) => ({
+        'secretKey': wallet.secretKey,
+        'publicKey': wallet.publicKey,
+        'publicKeyHash': wallet.publicKeyHash,
+        'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+        'amount': '0.000001',
+    })),
 
 ).subscribe(
     data => console.log('[+] ok'),
