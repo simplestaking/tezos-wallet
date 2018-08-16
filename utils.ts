@@ -121,11 +121,11 @@ export const publicKey2buffer = (publicKey: any) => {
 export const signOperation = (state: any) => {
     // TODO: change secretKey name to privateKey
 
-    // console.log('[signOperation]', state)
+    console.log('[signOperation]', state)
 
     let operation = sodium.from_hex(state.operation);
-    let secretKey = bs58checkDecode(prefix.edsk32, state.secretKey);
-    let publicKey = bs58checkDecode(prefix.edpk, state.publicKey);
+    let secretKey = bs58checkDecode(prefix.edsk32, state.wallet.secretKey);
+    let publicKey = bs58checkDecode(prefix.edpk, state.wallet.publicKey);
 
     //console.log('[secretKey]', secretKey)
     //console.log('[publicKey]', publicKey)
@@ -157,9 +157,11 @@ export const signOperation = (state: any) => {
 
     return {
         ...state,
-        signature: signature,
-        signedOperationContents: signedOperationContents,
-        operationHash: operationHash,
+        signOperation: {
+            signature: signature,
+            signedOperationContents: signedOperationContents,
+            operationHash: operationHash,
+        }
     }
 }
 

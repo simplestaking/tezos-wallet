@@ -5,7 +5,7 @@ import { tap, map, flatMap } from 'rxjs/operators';
 import './node'
 
 // import { initialize, originate, setDelegation, transfer, newWallet, getWallet } from './client'
-import { initialize, transfer, originate, newWallet, getWallet, setDelegation } from './client'
+import { initializeWallet, transfer, originateContract, newWallet, getWallet, setDelegation } from './client'
 
 console.log('[+] tezos wallet client')
 
@@ -23,7 +23,7 @@ const walletObservable = of(wallet)
 walletObservable.pipe(
 
     // wait for sodium to initialize
-    initialize(),
+    initializeWallet(),
 
     // create mnemonic, secret/public key for new wallet 
     //newWallet(),
@@ -50,7 +50,7 @@ walletObservable.pipe(
     // })),
 
     // originate delegatable contract   
-    originate((state: any) => ({
+    originateContract((state: any) => ({
         'secretKey': wallet.secretKey,
         'publicKey': wallet.publicKey,
         'publicKeyHash': wallet.publicKeyHash,

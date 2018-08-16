@@ -14,7 +14,7 @@ import { Wallet, Contract, Transfer, Operation, PublicAddress } from './types'
  */
 export const transfer = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  map(state => fn(state)),
+  map(state => ({ ...state, ...fn(state) })),
 
   // get contract counter
   counter(),
@@ -69,7 +69,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
  */
 export const setDelegation = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  map(state => fn(state)),
+  map(state => ({ ...state, ...fn(state) })),
 
   // get contract counter
   counter(),
@@ -123,9 +123,14 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
 /**
  * Originate new delegateble contract from wallet  
  */
-export const originate = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
+export const originateContract = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
 
-  map(state => fn(state)),
+  map(state => ({ ...state, 'originateContract': fn(state) })),
+
+  // display transaction info to console
+  tap(state => {
+    console.log('[+] originate : from "' + state.wallet.publicKeyHash)
+  }),
 
   // get contract counter
   counter(),
@@ -133,19 +138,14 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
   // get contract managerKey
   managerKey(),
 
-  // display transaction info to console
-  tap(state => {
-    console.log('[+] originate: from "' + state.publicKeyHash + '" delegate to "' + state.delegate + '"')
-  }),
-
   // prepare config for operation
   map(state => {
     const operations = []
     if (state.manager_key.key === undefined) {
       operations.push({
         "kind": "reveal",
-        "public_key": state.publicKey,
-        "source": state.publicKeyHash,
+        "public_key": state.wallet.publicKey,
+        "source": state.wallet.publicKeyHash,
         "fee": "0",
         "gas_limit": "10000",
         "storage_limit": "100",
@@ -155,10 +155,10 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
 
     operations.push({
       "kind": "origination",
-      "source": state.publicKeyHash,
+      "source": state.wallet.publicKeyHash,
       "managerPubkey": state.manager_key.manager,
       "fee": "0",
-      "balance": utils.amount(state.amount).toString(),
+      "balance": utils.amount(state.originateContract.amount).toString(),
       "gas_limit": "10000",
       "storage_limit": "100",
       "counter": (++state.counter).toString(),
@@ -200,7 +200,7 @@ export const originate = (fn: (state: any) => any) => (source: Observable<any>) 
  * Create operation in blocchain
  */
 export const operation = () => <T>(source: Observable<Wallet>): Observable<T> => source.pipe(
-  
+
   // create operation
   forgeOperation(),
 
@@ -232,7 +232,7 @@ export const counter = () => (source: Observable<any>) => source.pipe(
 
   // get counter for contract
   rpc((state: any) => ({
-    'url': '/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/counter',
+    'url': '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/counter',
     'path': 'counter',
   })),
 
@@ -245,7 +245,7 @@ export const managerKey = () => (source: Observable<any>) => source.pipe(
 
   // get manager key for contract 
   rpc((state: any) => ({
-    'url': '/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/manager_key',
+    'url': '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/manager_key',
     'path': 'manager_key'
   })),
 
@@ -287,7 +287,7 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
  * Apply and inject operation into node
  */
 export const applyAndInjectOperation = () => (source: Observable<any>) => source.pipe(
-  
+
   //get counter
   counter(),
 
@@ -299,7 +299,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
       "protocol": state.head.protocol,
       "branch": state.head.hash,
       "contents": state.operations,
-      "signature": state.signature
+      "signature": state.signOperation.signature
     }]
   })),
   // tap((state: any) => console.log("[+] operation: preapply ", state.preapply)),
@@ -308,7 +308,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   rpc((state: any) => ({
     'url': '/injection/operation',
     'path': 'injectionOperation',
-    'payload': '"' + state.signedOperationContents + '"',
+    'payload': '"' + state.signOperation.signedOperationContents + '"',
   })),
 
   tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
@@ -344,21 +344,18 @@ export const confirmOperation = () => (source: Observable<any>): any => source.p
  * Get wallet details
  */
 // export const getWalletDetail = (fn?: (params: Wallet) => PublicAddress) => (source: Observable<Wallet>): Observable<Contract> =>
-export const getWallet = (fn?: (params: any) => any) => (source: Observable<any>): Observable<any> =>
+export const getWallet = () => (source: Observable<any>): Observable<any> =>
   source.pipe(
-
-    // exec calback function only if is defined
-    map(state => fn ? fn(state) : state),
 
     // get contract info balance 
     rpc((state: any) => ({
-      url: '/chains/main/blocks/head/context/contracts/' + state.publicKeyHash + '/',
-      path: 'balance',
+      url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/',
+      path: 'getWallet',
     })),
 
     // show balance
     tap(state => {
-      console.log('[+] balance: ' + parseInt(state.balance.balance) / 1000000 + ' ꜩ')
+      console.log('[+] balance: ' + parseInt(state.getWallet.balance) / 1000000 + ' ꜩ  for: ' + state.wallet.publicKeyHash)
     })
   )
 
@@ -381,7 +378,7 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<Wallet> =>
 /**
  * Wait for sodium to initialize
  */
-export const initialize = () => (source: Observable<any>): Observable<any> => source.pipe(
+export const initializeWallet = (fn: (params: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
   // wait for sodium to initialize
   flatMap(state => of(sodium.ready)),
@@ -389,5 +386,15 @@ export const initialize = () => (source: Observable<any>): Observable<any> => so
   withLatestFrom(source),
   // use only state
   map(([resolved, state]) => state),
+
+  //tap(state => console.log('[initilazization] before', state)),
+
+  // exec calback function and add result state
+  map(state => ({
+    // ...state,
+    'wallet': fn(state)
+  })),
+
+  //tap(state => console.log('[initilazization] after', state)),
 
 )

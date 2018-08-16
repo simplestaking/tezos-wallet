@@ -2,20 +2,12 @@ import { Observable, of } from 'rxjs';
 import { map, filter, catchError, flatMap, tap } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
-export const config = () => {
-    return {
-        api: 'https://zeronet.simplestaking.com:3000',
-        //api: 'https://node2.simplestaking.com:3000',
-        header: { 'Content-Type': 'application/json' }
-    }
-}
-
 export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Observable<any> =>
     source.pipe(
 
         // exec calback function
         map(state => ({ ...state, rpc: fn(state) })),
-        // tap(state => console.log(' ')),
+        // tap(state => console.log('[rpc] state ', state)),
         // tap(state => console.log('[rpc][url] : ', state.rpc.url)),
         // tap(state => console.log('[rpc][path] : ', state.rpc.path)),
         // tap(state => console.log('[rpc][payload] : ', state.rpc.payload)),
@@ -23,7 +15,7 @@ export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Obse
         flatMap(state =>
             state.rpc.payload !== undefined ?
                 // post 
-                ajax.post(config().api + state.rpc.url, state.rpc.payload, config().header).pipe(
+                ajax.post(state.wallet.node.url + state.rpc.url, state.rpc.payload,  { 'Content-Type': 'application/json' }).pipe(
                     // without response do not run it
                     filter(event => event.response),
                     // use only response
@@ -36,7 +28,7 @@ export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Obse
                 )
                 :
                 // get 
-                ajax.get(config().api + state.rpc.url, config().header).pipe(
+                ajax.get(state.wallet.node.url + state.rpc.url,  { 'Content-Type': 'application/json' }).pipe(
                     // without response do not run it
                     filter(event => event.response),
                     // use only response

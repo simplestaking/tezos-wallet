@@ -1,3 +1,3 @@
-export const originateContract = () => {
+// export const originateContract = () => {
 
-}
+// }
