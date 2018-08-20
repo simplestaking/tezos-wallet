@@ -156,7 +156,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
     operations.push({
       "kind": "origination",
       "source": state.wallet.publicKeyHash,
-      "managerPubkey": state.manager_key.manager,
+      "manager_pubkey": state.manager_key.manager,
       "fee": "0",
       "balance": utils.amount(state.originateContract.amount).toString(),
       "gas_limit": "10000",
@@ -276,7 +276,8 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
   })),
 
   // add signature to state 
-  // TODO: move and just keep signOperation and create logic inside utils 
+  // 
+  // : move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
   flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
@@ -328,7 +329,7 @@ export const confirmOperation = () => (source: Observable<any>): any => source.p
 
   // call node and look for operation in mempool
   rpc((state: any) => ({
-    'url': '/chains/main/mempool',
+    'url': '/chains/main/mempool/pending_operations',
     'path': 'mempool'
   })),
 
