@@ -1,9 +1,9 @@
 import { Observable } from 'rxjs';
 import { Wallet } from './types';
 /**
- *  Transfer XTZ from one wallet to another
+ *  Transaction XTZ from one wallet to another
  */
-export declare const transfer: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
+export declare const transaction: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
 /**
  *  Set delegation rights to tezos address
  */

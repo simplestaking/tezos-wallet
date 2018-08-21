@@ -10,11 +10,11 @@ import { Wallet, Contract, Transfer, Operation, PublicAddress } from './types'
 
 
 /**
- *  Transfer XTZ from one wallet to another
+ *  Transaction XTZ from one wallet to another
  */
-export const transfer = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
+export const transaction = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  map(state => ({ ...state, ...fn(state) })),
+  map(state => ({ ...state, 'transaction': fn(state) })),
 
   // get contract counter
   counter(),
@@ -24,7 +24,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] transfer: ' + state.amount + ' ꜩ ' + 'from "' + state.publicKeyHash + '" to "' + state.to + '"')
+    console.log('[+] transaction: ' + state.transaction.amount + ' ꜩ ' + 'from "' + state.wallet.publicKeyHash + '" to "' + state.transaction.to + '"')
   }),
 
   // prepare config for operation
@@ -33,8 +33,8 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
     if (state.manager_key.key === undefined) {
       operations.push({
         "kind": "reveal",
-        "public_key": state.publicKey,
-        "source": state.publicKeyHash,
+        "public_key": state.wallet.publicKey,
+        "source": state.wallet.publicKeyHash,
         "fee": "0",
         "gas_limit": "200",
         "storage_limit": "0",
@@ -44,9 +44,9 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
 
     operations.push({
       "kind": "transaction",
-      "source": state.publicKeyHash,
-      "destination": state.to,
-      "amount": utils.amount(state.amount).toString(),
+      "source": state.wallet.publicKeyHash,
+      "destination": state.transaction.to,
+      "amount": utils.amount(state.transaction.amount).toString(),
       "fee": "0",
       "gas_limit": "200",
       "storage_limit": "0",
@@ -69,7 +69,7 @@ export const transfer = (fn: (state: any) => any) => (source: Observable<any>): 
  */
 export const setDelegation = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  map(state => ({ ...state, ...fn(state) })),
+  map(state => ({ ...state, 'setDelegate': fn(state) })),
 
   // get contract counter
   counter(),
@@ -79,7 +79,11 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] setDelegate: from "' + state.publicKeyHash + '" to "' + state.to + '"')
+    console.log('[+] setDelegate: from "' + state.wallet.publicKeyHash + '" to "' + state.setDelegate.to + '"')
+  }),
+
+  tap(state => {
+    console.log('[+] wallet: from "' + state.wallet)
   }),
 
   // prepare config for operation
@@ -88,8 +92,8 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
     if (state.manager_key.key === undefined) {
       operations.push({
         "kind": "reveal",
-        "public_key": state.publicKey,
-        "source": state.publicKeyHash,
+        "public_key": state.wallet.publicKey,
+        "source": state.wallet.publicKeyHash,
         "fee": "0",
         "gas_limit": "200",
         "storage_limit": "0",
@@ -99,12 +103,12 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
 
     operations.push({
       "kind": "delegation",
-      "source": state.publicKeyHash,
+      "source": state.wallet.publicKeyHash,
       "fee": "0",
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
-      "delegate": state.to,
+      "delegate": state.setDelegate.to,
     })
 
     return {
