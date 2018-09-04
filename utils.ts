@@ -5,8 +5,9 @@ import * as bip39 from 'bip39'
 import { Buffer } from 'buffer'
 import { Wallet, Operation, } from './types'
 import { Observable, of } from 'rxjs';
-import { tap, map, flatMap, delay, withLatestFrom, catchError } from 'rxjs/operators';
+import { tap, map, flatMap, mergeMap, delay, withLatestFrom, catchError } from 'rxjs/operators';
 
+// import { TrezorConnect } from 'trezor-connect';
 // declare external library
 declare var TrezorConnect: any;
 
@@ -77,7 +78,7 @@ export const publicKeyHash2buffer = (publicKeyHash: any) => {
             return {
                 curve: -1,
                 originated: 1,
-                hash: concatKeys(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0]), )
+                hash: concatKeys(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0]))
             }
         default:
             return {
@@ -181,7 +182,7 @@ export const signOperationTrezor = (state: any) => {
     // set basic config
     let message: message = {
         path: "m/44'/1729'/0'/0'/2'",
-        curve: publicKeyHash2buffer(state.manager).curve,
+        curve: publicKeyHash2buffer(state.manager_key.manager).curve,
         branch: bs58checkDecode(prefix.B, state.head.hash)
     }
 
@@ -272,23 +273,38 @@ export const signOperationTrezor = (state: any) => {
             }
         }
 
-    })
+    });
 
-    console.log('[TREZOR][signOperationTrezor]', state, message)
 
-    // number's must be ints otherwise it fails
-    return of(TrezorConnect.tezosSignTx(message)).pipe(
+    
+    // (<any>window).TrezorConnect.tezosGetAddress({
+    //     'path': "m/44'/1729'/0'/0'/2'",
+    //     'curve': 1,
+    //     'showOnTrezor': true,
+    // }).then((response:any) => console.error('[TrezorConnect.tezosGetAddress]', response) )
+
+    return of([state]).pipe(
+
+        tap(state => console.warn('[x][TREZOR][signOperationTrezor] message', message)),
+        
+        // wait for resopnse from Trezor
+        flatMap(state => (<any>window).TrezorConnect.tezosSignTransaction(message)),
+
+        tap((response:any) => { console.warn('[x][TrezorConnect.tezosSignTransaction]', response ) }),
         map(response => ({
             ...state,
-            signature: response.payload.signature,
-            signedOperationContents: response.payload.sig_op_contents,
-            operationHash: response.payload.operation_hash,
+            signOperation: {
+                signature: response.payload.signature,
+                signedOperationContents: response.payload.sig_op_contents,
+                operationHash: response.payload.operation_hash,
+            }
         })),
         catchError(error => {
-            console.error('[TrezorConnect.tezosSignTx]', error)
+            console.error('[ERROR][TrezorConnect.tezosSignTransaction]', error)
             return of([])
         })
     )
+
 }
 
 export const amount = (amount: string) => {

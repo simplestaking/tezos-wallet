@@ -6,7 +6,7 @@ import sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, Contract, Transfer, Operation, PublicAddress } from './types'
+import { Wallet, Contract, Operation, PublicAddress } from './types'
 
 
 /**
@@ -284,7 +284,7 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
   // : move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.walletType === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
+  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 
 )
 

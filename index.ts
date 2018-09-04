@@ -5,7 +5,7 @@ import { tap, map, flatMap } from 'rxjs/operators';
 import './node'
 
 // import { initialize, originate, setDelegation, transfer, newWallet, getWallet } from './client'
-import { initializeWallet, transfer, originateContract, newWallet, getWallet, setDelegation } from './client'
+import { initializeWallet, originateContract, newWallet, getWallet, setDelegation } from './client'
 
 console.log('[+] tezos wallet client')
 
@@ -23,15 +23,15 @@ const walletObservable = of(wallet)
 walletObservable.pipe(
 
     // wait for sodium to initialize
-    initializeWallet(),
+    // initializeWallet(),
 
     // create mnemonic, secret/public key for new wallet 
     //newWallet(),
 
     // get more details for new wallet
-    getWallet(state => ({
-        'publicKeyHash': state.publicKeyHash,
-    })),
+    // getWallet(state => ({
+    //     'publicKeyHash': state.publicKeyHash,
+    // })),
     // // send small amount to new wallet and wait for block creation
     // transfer((state: any) => ({
     //     'secretKey': wallet.secretKey,
@@ -50,13 +50,13 @@ walletObservable.pipe(
     // })),
 
     // originate delegatable contract   
-    originateContract((state: any) => ({
-        'secretKey': wallet.secretKey,
-        'publicKey': wallet.publicKey,
-        'publicKeyHash': wallet.publicKeyHash,
-        'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-        'amount': '0.000001',
-    })),
+    // originateContract((state: any) => ({
+    //     'secretKey': wallet.secretKey,
+    //     'publicKey': wallet.publicKey,
+    //     'publicKeyHash': wallet.publicKeyHash,
+    //     'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
+    //     'amount': '0.000001',
+    // })),
 
 ).subscribe(
     data => console.log('[+] ok'),
