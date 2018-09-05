@@ -173,10 +173,12 @@ export const signOperationTrezor = (state: any) => {
         path: string,
         curve: number,
         branch: any,
-        reveal?: any,
-        transaction?: any,
-        origination?: any,
-        delegation?: any,
+        operation: {
+            reveal?: any,
+            transaction?: any,
+            origination?: any,
+            delegation?: any,
+        }
     }
 
     // set basic config
@@ -194,17 +196,20 @@ export const signOperationTrezor = (state: any) => {
         if (operation.kind === 'reveal') {
             message = {
                 ...message,
-                // add reveal to operation 
-                reveal: {
-                    source: {
-                        tag: publicKeyHash2buffer(operation.source).originated,
-                        hash: publicKeyHash2buffer(operation.source).hash,
+                operation: {
+                    ...message.operation,
+                    // add reveal to operation 
+                    reveal: {
+                        source: {
+                            tag: publicKeyHash2buffer(operation.source).originated,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        public_key: publicKey2buffer(operation.public_key).hash,
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
                     },
-                    public_key: publicKey2buffer(operation.public_key).hash,
-                    fee: parseInt(operation.fee),
-                    counter: parseInt(operation.counter),
-                    gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
                 },
             }
         }
@@ -212,21 +217,24 @@ export const signOperationTrezor = (state: any) => {
         if (operation.kind === 'transaction') {
             message = {
                 ...message,
-                // add transactoin to operation
-                transaction: {
-                    source: {
-                        tag: publicKeyHash2buffer(operation.source).originated,
-                        hash: publicKeyHash2buffer(operation.source).hash,
+                operation: {
+                    ...message.operation,
+                    // add transactoin to operation
+                    transaction: {
+                        source: {
+                            tag: publicKeyHash2buffer(operation.source).originated,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        destination: {
+                            tag: publicKeyHash2buffer(operation.destination).originated,
+                            hash: publicKeyHash2buffer(operation.destination).hash,
+                        },
+                        amount: parseInt(operation.amount),
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
                     },
-                    destination: {
-                        tag: publicKeyHash2buffer(operation.destination).originated,
-                        hash: publicKeyHash2buffer(operation.destination).hash,
-                    },
-                    amount: parseInt(operation.amount),
-                    fee: parseInt(operation.fee),
-                    counter: parseInt(operation.counter),
-                    gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
                 },
             }
         }
@@ -234,23 +242,26 @@ export const signOperationTrezor = (state: any) => {
         if (operation.kind === 'origination') {
             message = {
                 ...message,
-                // add origination to operation
-                origination: {
-                    source: {
-                        tag: publicKeyHash2buffer(operation.source).originated,
-                        hash: publicKeyHash2buffer(operation.source).hash,
+                operation: {
+                    ...message.operation,
+                    // add origination to operation
+                    origination: {
+                        source: {
+                            tag: publicKeyHash2buffer(operation.source).originated,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        manager_pubkey: publicKeyHash2buffer(operation.manager_pubkey).hash,
+                        balance: parseInt(operation.balance),
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
+                        spendable: operation.spendable,
+                        delegatable: operation.delegatable,
+                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        // find encodig format http://doc.tzalpha.net/api/p2p.html
+                        //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                     },
-                    manager_pubkey: publicKeyHash2buffer(operation.managerPubkey).hash,
-                    balance: parseInt(operation.balance),
-                    fee: parseInt(operation.fee),
-                    counter: parseInt(operation.counter),
-                    gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
-                    spendable: operation.spendable,
-                    delegatable: operation.delegatable,
-                    delegate: publicKeyHash2buffer(operation.delegate).hash,
-                    // find encodig format http://doc.tzalpha.net/api/p2p.html
-                    //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                 },
             }
         }
@@ -258,17 +269,20 @@ export const signOperationTrezor = (state: any) => {
         if (operation.kind === 'delegation') {
             message = {
                 ...message,
-                // add delegation to operation
-                delegation: {
-                    source: {
-                        tag: publicKeyHash2buffer(operation.source).originated,
-                        hash: publicKeyHash2buffer(operation.source).hash,
+                operation: {
+                    ...message.operation,
+                    // add delegation to operation
+                    delegation: {
+                        source: {
+                            tag: publicKeyHash2buffer(operation.source).originated,
+                            hash: publicKeyHash2buffer(operation.source).hash,
+                        },
+                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        fee: parseInt(operation.fee),
+                        counter: parseInt(operation.counter),
+                        gas_limit: parseInt(operation.gas_limit),
+                        storage_limit: parseInt(operation.storage_limit),
                     },
-                    delegate: publicKeyHash2buffer(operation.delegate).hash,
-                    fee: parseInt(operation.fee),
-                    counter: parseInt(operation.counter),
-                    gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
                 },
             }
         }
@@ -276,7 +290,7 @@ export const signOperationTrezor = (state: any) => {
     });
 
 
-    
+
     // (<any>window).TrezorConnect.tezosGetAddress({
     //     'path': "m/44'/1729'/0'/0'/2'",
     //     'curve': 1,
@@ -286,11 +300,11 @@ export const signOperationTrezor = (state: any) => {
     return of([state]).pipe(
 
         tap(state => console.warn('[x][TREZOR][signOperationTrezor] message', message)),
-        
+
         // wait for resopnse from Trezor
         flatMap(state => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
-        tap((response:any) => { console.warn('[x][TrezorConnect.tezosSignTransaction]', response ) }),
+        tap((response: any) => { console.warn('[x][TrezorConnect.tezosSignTransaction]', response) }),
         map(response => ({
             ...state,
             signOperation: {
