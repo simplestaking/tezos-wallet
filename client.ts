@@ -108,7 +108,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
-      "delegate": state.setDelegate.to,
+      "delegate": !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })
 
     return {

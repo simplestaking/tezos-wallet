@@ -173,7 +173,7 @@ export const signOperationTrezor = (state: any) => {
         path: string,
         curve: number,
         branch: any,
-        operation: {
+        operation?: {
             reveal?: any,
             transaction?: any,
             origination?: any,
@@ -277,7 +277,8 @@ export const signOperationTrezor = (state: any) => {
                             tag: publicKeyHash2buffer(operation.source).originated,
                             hash: publicKeyHash2buffer(operation.source).hash,
                         },
-                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        delegate: !operation.delegate ?
+                            publicKeyHash2buffer(operation.source).hash : publicKeyHash2buffer(operation.delegate).hash,
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
@@ -285,6 +286,7 @@ export const signOperationTrezor = (state: any) => {
                     },
                 },
             }
+
         }
 
     });
