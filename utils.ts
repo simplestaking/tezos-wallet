@@ -171,7 +171,7 @@ export const signOperationTrezor = (state: any) => {
 
     type message = {
         path: string,
-        curve: number,
+        // curve: number,
         branch: any,
         operation?: {
             reveal?: any,
@@ -183,8 +183,8 @@ export const signOperationTrezor = (state: any) => {
 
     // set basic config
     let message: message = {
-        path: "m/44'/1729'/0'/0'/2'",
-        curve: publicKeyHash2buffer(state.manager_key.manager).curve,
+        path: "m/44'/1729'/0'",
+        //curve: publicKeyHash2buffer(state.manager_key.manager).curve,
         branch: bs58checkDecode(prefix.B, state.head.hash)
     }
 
@@ -294,19 +294,19 @@ export const signOperationTrezor = (state: any) => {
 
 
     // (<any>window).TrezorConnect.tezosGetAddress({
-    //     'path': "m/44'/1729'/0'/0'/2'",
+    //     'path': "m/44'/1729'/0'/0'/0'",
     //     'curve': 1,
     //     'showOnTrezor': true,
     // }).then((response:any) => console.error('[TrezorConnect.tezosGetAddress]', response) )
 
     return of([state]).pipe(
 
-        tap(state => console.warn('[x][TREZOR][signOperationTrezor] message', message)),
+        tap(state => console.warn('[[TrezorConnect]][signOperationTrezor] message', JSON.stringify(message))),
 
         // wait for resopnse from Trezor
         flatMap(state => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
-        tap((response: any) => { console.warn('[x][TrezorConnect.tezosSignTransaction]', response) }),
+        tap((response: any) => { console.warn('[TrezorConnect][tezosSignTransaction] reposne', response.payload) }),
         map(response => ({
             ...state,
             signOperation: {
