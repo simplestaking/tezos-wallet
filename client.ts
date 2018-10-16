@@ -359,9 +359,9 @@ export const getWallet = () => (source: Observable<any>): Observable<any> =>
     })),
 
     // show balance
-    tap(state => {
-      console.log('[+] balance: ' + parseInt(state.getWallet.balance) / 1000000 + ' ꜩ  for: ' + state.wallet.publicKeyHash)
-    })
+    // tap(state => {
+    //   console.log('[+] balance: ' + parseInt(state.getWallet.balance) / 1000000 + ' ꜩ  for: ' + state.wallet.publicKeyHash)
+    // })
   )
 
 /**
