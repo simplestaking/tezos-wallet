@@ -168,7 +168,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "counter": (++state.counter).toString(),
       "spendable": true,
       "delegatable": true,
-      "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
+      // "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
 
       // "script": {
       //   "code":
@@ -211,9 +211,6 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
 
   // apply & inject operation
   applyAndInjectOperation(),
-
-  // wait until operation is confirmed & moved from mempool to head
-  // confirmOperation(),
 
 )
 
@@ -298,16 +295,16 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   counter(),
 
   // preapply operation
-  rpc((state: any) => ({
-    'url': '/chains/main/blocks/head/helpers/preapply/operations',
-    'path': 'preapply',
-    'payload': [{
-      "protocol": state.head.protocol,
-      "branch": state.head.hash,
-      "contents": state.operations,
-      "signature": state.signOperation.signature
-    }]
-  })),
+  // rpc((state: any) => ({
+  //   'url': '/chains/main/blocks/head/helpers/preapply/operations',
+  //   'path': 'preapply',
+  //   'payload': [{
+  //     "protocol": state.head.protocol,
+  //     "branch": state.head.hash,
+  //     "contents": state.operations,
+  //     "signature": state.signOperation.signature
+  //   }]
+  // })),
   // tap((state: any) => console.log("[+] operation: preapply ", state.preapply)),
 
   // inject operation
@@ -325,9 +322,14 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 /**
  * Wait until operation is confirmed & moved from mempool to head
  */
-export const confirmOperation = () => (source: Observable<any>): any => source.pipe(
+export const confirmOperation = (fn?: (state: any) => any) => (source: Observable<any>): any => source.pipe(
 
-  tap((state: any) => console.log('[-] pending: operation "' + state.injectionOperation + '"')),
+  map(state => ({
+    ...state,
+    'confirmOperation': (fn && typeof fn === 'function') ? fn(state) : state.confirmOperation
+  })),
+
+  tap((state: any) => console.log('[-] pending: operation "' + state.confirmOperation.injectionOperation + '"')),
 
   // wait 5 sec for operation 
   delay(5000),
@@ -341,7 +343,7 @@ export const confirmOperation = () => (source: Observable<any>): any => source.p
   // if we find operation in mempool call confirmOperation() again
   flatMap((state: any) =>
     state.mempool.applied
-      .filter((operation: any) => state.injectionOperation === operation.hash)
+      .filter((operation: any) => state.confirmOperation.injectionOperation === operation.hash)
       .length > 0 ? of(state).pipe(confirmOperation()) : source
   ),
 )

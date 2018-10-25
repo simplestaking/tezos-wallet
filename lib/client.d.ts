@@ -39,7 +39,7 @@ export declare const applyAndInjectOperation: () => (source: Observable<any>) =>
 /**
  * Wait until operation is confirmed & moved from mempool to head
  */
-export declare const confirmOperation: () => (source: Observable<any>) => any;
+export declare const confirmOperation: (fn?: ((state: any) => any) | undefined) => (source: Observable<any>) => any;
 /**
  * Get wallet details
  */
