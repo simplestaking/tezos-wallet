@@ -183,8 +183,7 @@ export const signOperationTrezor = (state: any) => {
 
     // set basic config
     let message: message = {
-        path: "m/44'/1729'/0'",
-        //curve: publicKeyHash2buffer(state.manager_key.manager).curve,
+        path: state.wallet.path, 
         branch: bs58checkDecode(prefix.B, state.head.hash)
     }
 
@@ -258,7 +257,8 @@ export const signOperationTrezor = (state: any) => {
                         storage_limit: parseInt(operation.storage_limit),
                         spendable: operation.spendable,
                         delegatable: operation.delegatable,
-                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        // add delegation screen to trezor firmware  
+                        // delegate: publicKeyHash2buffer(operation.delegate).hash,
                         // find encodig format http://doc.tzalpha.net/api/p2p.html
                         //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                     },

@@ -169,6 +169,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "spendable": true,
       "delegatable": true,
       "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
+
       // "script": {
       //   "code":
       //     [{ "prim": "parameter", "args": [{ "prim": "unit" }] },
@@ -212,7 +213,7 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
   applyAndInjectOperation(),
 
   // wait until operation is confirmed & moved from mempool to head
-  confirmOperation(),
+  // confirmOperation(),
 
 )
 
