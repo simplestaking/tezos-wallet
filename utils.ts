@@ -257,8 +257,7 @@ export const signOperationTrezor = (state: any) => {
                         storage_limit: parseInt(operation.storage_limit),
                         spendable: operation.spendable,
                         delegatable: operation.delegatable,
-                        // add delegation screen to trezor firmware  
-                        // delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        delegate: publicKeyHash2buffer(operation.delegate).hash,
                         // find encodig format http://doc.tzalpha.net/api/p2p.html
                         //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                     },

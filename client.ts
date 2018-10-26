@@ -125,7 +125,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
 
 
 /**
- * Originate new delegateble contract from wallet  
+ * Originate new delegatable contract from wallet  
  */
 export const originateContract = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
 
@@ -163,13 +163,12 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "manager_pubkey": state.manager_key.manager,
       "fee": "0",
       "balance": utils.amount(state.originateContract.amount).toString(),
-      "gas_limit": "10000",
+      "gas_limit": "10001",
       "storage_limit": "100",
       "counter": (++state.counter).toString(),
       "spendable": true,
       "delegatable": true,
-      // "delegate": 'tz1boot3mLsohEn4pV9Te3hQihH6N8U3ks59',
-
+      "delegate": state.originateContract.to,
       // "script": {
       //   "code":
       //     [{ "prim": "parameter", "args": [{ "prim": "unit" }] },
@@ -295,17 +294,17 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
   counter(),
 
   // preapply operation
-  // rpc((state: any) => ({
-  //   'url': '/chains/main/blocks/head/helpers/preapply/operations',
-  //   'path': 'preapply',
-  //   'payload': [{
-  //     "protocol": state.head.protocol,
-  //     "branch": state.head.hash,
-  //     "contents": state.operations,
-  //     "signature": state.signOperation.signature
-  //   }]
-  // })),
-  // tap((state: any) => console.log("[+] operation: preapply ", state.preapply)),
+  rpc((state: any) => ({
+    'url': '/chains/main/blocks/head/helpers/preapply/operations',
+    'path': 'preapply',
+    'payload': [{
+      "protocol": state.head.protocol,
+      "branch": state.head.hash,
+      "contents": state.operations,
+      "signature": state.signOperation.signature
+    }]
+  })),
+  tap((state: any) => console.log("[+] operation: preapply ", state.preapply)),
 
   // inject operation
   rpc((state: any) => ({

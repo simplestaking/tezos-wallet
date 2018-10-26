@@ -9,7 +9,7 @@ export declare const transaction: (fn: (state: any) => any) => (source: Observab
  */
 export declare const setDelegation: (fn: (state: any) => any) => (source: Observable<any>) => Observable<any>;
 /**
- * Originate new delegateble contract from wallet
+ * Originate new delegatable contract from wallet
  */
 export declare const originateContract: (fn: (state: any) => any) => (source: Observable<any>) => Observable<{}>;
 /**
