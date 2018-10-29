@@ -313,7 +313,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
     'payload': '"' + state.signOperation.signedOperationContents + '"',
   })),
 
-  tap((state: any) => console.log("[+] operation: http://zeronet.tzscan.io/" + state.injectionOperation))
+  tap((state: any) => console.log("[+] operation: " + state.wallet.node.tzscan.url + state.injectionOperation))
 
 )
 
