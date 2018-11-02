@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { tap, map, flatMap, delay, withLatestFrom } from 'rxjs/operators';
+import { tap, map, flatMap, concatMap, delay, catchError } from 'rxjs/operators';
 
 import sodium from 'libsodium-wrappers'
 
@@ -387,21 +387,22 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<Wallet> =>
  */
 export const initializeWallet = (fn: (params: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
 
-  // wait for sodium to initialize
-  flatMap(state => of(sodium.ready)),
-  // combine resolved promise with state observable
-  withLatestFrom(source),
-  // use only state
-  map(([resolved, state]) => state),
+  flatMap(state => of([]).pipe(
 
-  //tap(state => console.log('[initilazization] before', state)),
+    // wait for sodium to initialize
+    concatMap(() => Promise.resolve(sodium.ready)),
 
-  // exec calback function and add result state
-  map(state => ({
-    // ...state,
-    'wallet': fn(state)
-  })),
+    // exec calback function and add result state
+    map(state => ({
+      // ...state,
+      'wallet': fn(state)
+    })),
+    catchError(error => {
+      console.warn('[initializeWallet][sodium] ready', error)
+      return of([error])
+    })
 
-  //tap(state => console.log('[initilazization] after', state)),
+  )),
+
 
 )

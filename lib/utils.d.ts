@@ -1,4 +1,4 @@
-import { Buffer } from 'buffer';
+/// <reference types="node" />
 import { Wallet } from './types';
 import { Observable } from 'rxjs';
 export declare const string2buffer: (payload: any) => Buffer;
