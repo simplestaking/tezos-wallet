@@ -335,7 +335,7 @@ export const confirmOperation = (fn?: (state: any) => any) => (source: Observabl
 
   // call node and look for operation in mempool
   rpc((state: any) => ({
-    'url': '/chains/main/mempool' + (state.wallet.node.name === 'zero' ? '/pending_operations' : ''),
+    'url': '/chains/main/mempool/pending_operations',
     'path': 'mempool'
   })),
 
