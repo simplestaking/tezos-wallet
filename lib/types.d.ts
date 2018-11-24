@@ -1,6 +1,3 @@
-export interface PublicAddress {
-    publicKeyHash: string;
-}
 export interface Wallet {
     mnemonic?: string;
     secretKey: string;
@@ -26,3 +23,20 @@ export interface Transfer {
 export interface Operation extends Wallet {
     operation: string;
 }
+export interface PublicAddress {
+    publicKeyHash: string;
+}
+export interface Config {
+    secretKey?: string;
+    publicKey: string;
+    publicKeyHash: string;
+    node: TezosNode;
+    type: WalletType;
+    path?: string;
+}
+export interface TezosNode {
+    display: string;
+    name: string;
+    url: string;
+}
+export declare type WalletType = "web" | "TREZOR_ONE" | "TREZOR_T";

@@ -1,12 +1,11 @@
 import { Observable, of } from 'rxjs';
 import { tap, map, flatMap, concatMap, delay, catchError } from 'rxjs/operators';
 
-import sodium from 'libsodium-wrappers'
-
+import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, Contract, Operation, PublicAddress } from './types'
+import { Wallet, Contract, Operation, PublicAddress, Config } from './types'
 
 
 /**
@@ -392,7 +391,7 @@ export const initializeWallet = (fn: (params: any) => any) => (source: Observabl
     // wait for sodium to initialize
     concatMap(() => Promise.resolve(sodium.ready)),
 
-    // exec calback function and add result state
+    // exec callback function and add result state
     map(state => ({
       // ...state,
       'wallet': fn(state)

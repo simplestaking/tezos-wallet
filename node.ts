@@ -1,4 +1,4 @@
-import xhr from 'xmlhttprequest-ssl'
+import * as xhr from 'xmlhttprequest-ssl'
 
 // declarations for node.js
 declare const global: any;
