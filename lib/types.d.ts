@@ -38,5 +38,12 @@ export interface TezosNode {
     display: string;
     name: string;
     url: string;
+    tzscan: TZScanNode;
+}
+export interface TZScanNode {
+    url: string;
+    operations?: string;
+    operations_number?: string;
+    block_timestamp?: string;
 }
 export declare type WalletType = "web" | "TREZOR_ONE" | "TREZOR_T";

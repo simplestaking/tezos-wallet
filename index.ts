@@ -39,14 +39,13 @@ walletObservable.pipe(
         node: wallet.node,
         // set wallet type: WEB, TREZOR_ONE, TREZOR_T
         type: wallet.type,
-        // set HD path for HW wallet
-    }
-    )),
+    })),
 
     // originate contract
     transaction(stateWallet => ({
         to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
         amount: '0.001',
+        fee: '0'
     })),
 
     // wait until operation is confirmed & moved from mempool to head
@@ -54,38 +53,6 @@ walletObservable.pipe(
         injectionOperation: stateWallet.injectionOperation,
     })),
 
-    // create mnemonic, secret/public key for new wallet 
-    //newWallet(),
-
-    // get more details for new wallet
-    // getWallet(state => ({
-    //     'publicKeyHash': state.publicKeyHash,
-    // })),
-    // // send small amount to new wallet and wait for block creation
-    // transfer((state: any) => ({
-    //     'secretKey': wallet.secretKey,
-    //     'publicKey': wallet.publicKey,
-    //     'publicKeyHash': wallet.publicKeyHash,
-    //     'to': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-    //     'amount': '0.000001',
-    // })),
-
-    // change delegate
-    // setDelegation((state: any) => ({
-    //     'secretKey': wallet.secretKey,
-    //     'publicKey': wallet.publicKey,
-    //     'publicKeyHash': wallet.publicKeyHash,
-    //     'to': 'tz1iCKMR6Hq7hSNGVu9mBCu7Tum7Xmd3tD9G',
-    // })),
-
-    // originate delegatable contract   
-    // originateContract((state: any) => ({
-    //     'secretKey': wallet.secretKey,
-    //     'publicKey': wallet.publicKey,
-    //     'publicKeyHash': wallet.publicKeyHash,
-    //     'delegate': 'tz1gw3bvZLSyw5Rj2a5rrH5LCWFAMBipLFmy',
-    //     'amount': '0.000001',
-    // })),
 
 ).subscribe(
     data => console.log('[+] ok'),

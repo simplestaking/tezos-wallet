@@ -23,7 +23,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] transaction: ' + state.transaction.amount + ' ꜩ ' + 'from "' + state.wallet.publicKeyHash + '" to "' + state.transaction.to + '"')
+    console.log('[+] transaction: ' + state.transaction.amount + ' ꜩ  fee:' + state.transaction.fee + ' ' + 'from "' + state.wallet.publicKeyHash + '" to "' + state.transaction.to + '"')
   }),
 
   // prepare config for operation
@@ -34,7 +34,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": "0",
+        "fee": utils.amount(state.transaction.fee).toString(),
         "gas_limit": "200",
         "storage_limit": "0",
         "counter": (++state.counter).toString(),
@@ -46,7 +46,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "source": state.wallet.publicKeyHash,
       "destination": state.transaction.to,
       "amount": utils.amount(state.transaction.amount).toString(),
-      "fee": "0",
+      "fee": utils.amount(state.transaction.fee).toString(),
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
@@ -93,7 +93,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": "0",
+        "fee": utils.amount(state.setDelegate.fee).toString(),
         "gas_limit": "200",
         "storage_limit": "0",
         "counter": (++state.counter).toString(),
@@ -103,7 +103,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
     operations.push({
       "kind": "delegation",
       "source": state.wallet.publicKeyHash,
-      "fee": "0",
+      "fee": utils.amount(state.setDelegate.fee).toString(),
       "gas_limit": "200",
       "storage_limit": "0",
       "counter": (++state.counter).toString(),
@@ -149,7 +149,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": "0",
+        "fee": utils.amount(state.originateContract.fee).toString(),
         "gas_limit": "10000",
         "storage_limit": "100",
         "counter": (++state.counter).toString(),
@@ -160,9 +160,9 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "kind": "origination",
       "source": state.wallet.publicKeyHash,
       "manager_pubkey": state.manager_key.manager,
-      "fee": "0",
+      "fee": utils.amount(state.originateContract.fee).toString(),
       "balance": utils.amount(state.originateContract.amount).toString(),
-      "gas_limit": "10001",
+      "gas_limit": "10000",
       "storage_limit": "100",
       "counter": (++state.counter).toString(),
       "spendable": true,

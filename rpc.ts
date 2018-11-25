@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { map, filter, catchError, flatMap, tap } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
 
@@ -23,7 +23,7 @@ export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Obse
                     // catchError
                     catchError(error => {
                         console.warn('[rpc][ajax.post]', error)
-                        return of([error])
+                        return throwError(error)
                     })
                 )
                 :
@@ -36,7 +36,7 @@ export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Obse
                     // catchError
                     catchError(error => {
                         console.warn('[rpc][ajax.get]', error)
-                        return of([error])
+                        return throwError(error)
                     })
                 )
         ),
