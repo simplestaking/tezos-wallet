@@ -36,7 +36,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
         "source": state.wallet.publicKeyHash,
         "fee": "1100",
         "gas_limit": "10100",
-        "storage_limit": "257",
+        "storage_limit": "277",
         "counter": (++state.counter).toString(),
       })
     }
@@ -48,7 +48,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "amount": utils.amount(state.transaction.amount).toString(),
       "fee": utils.amount(state.transaction.fee).toString(),
       "gas_limit": "10200",
-      "storage_limit": "257",
+      "storage_limit": "277",
       "counter": (++state.counter).toString(),
     })
     return {
@@ -96,8 +96,8 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
         "fee": utils.amount(state.setDelegate.fee).toString(),
-        "gas_limit": "10000",
-        "storage_limit": "257",
+        "gas_limit": "10100",
+        "storage_limit": "277",
         "counter": (++state.counter).toString(),
       })
     }
@@ -106,8 +106,8 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
       "kind": "delegation",
       "source": state.wallet.publicKeyHash,
       "fee": utils.amount(state.setDelegate.fee).toString(),
-      "gas_limit": "10000",
-      "storage_limit": "257",
+      "gas_limit": "10100",
+      "storage_limit": "277",
       "counter": (++state.counter).toString(),
       "delegate": !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })
@@ -152,8 +152,8 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
         "fee": utils.amount(state.originateContract.fee).toString(),
-        "gas_limit": "10000",
-        "storage_limit": "257",
+        "gas_limit": "10100",
+        "storage_limit": "277",
         "counter": (++state.counter).toString(),
       })
     }
@@ -164,8 +164,8 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "manager_pubkey": state.manager_key.manager,
       "fee": utils.amount(state.originateContract.fee).toString(),
       "balance": utils.amount(state.originateContract.amount).toString(),
-      "gas_limit": "10000",
-      "storage_limit": "257",
+      "gas_limit": "10100",
+      "storage_limit": "277",
       "counter": (++state.counter).toString(),
       "spendable": true,
       "delegatable": true,
