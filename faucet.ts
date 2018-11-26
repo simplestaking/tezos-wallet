@@ -99,23 +99,24 @@ utils.ready().then(() => {
             // get wallet info
             getWallet(),
 
-            tap((stateWallet: any) => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000) )),
+            tap((stateWallet: any) => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000))),
 
-            // send XTZ if balance is > 100 xtz
-            flatMap(stateWallet => (stateWallet.getWallet.balance / 1000000) > 100 ?
+            // send XTZ if balance is > 100 xt
+            flatMap(stateWallet => (stateWallet.getWallet.balance / 1000000) > 1 ?
                 of(stateWallet).pipe(
 
                     // send xtz
                     transaction(stateWallet => ({
                         to: config.transaction.to,
-                        amount: ((stateWallet.getWallet.balance / 1000000) - 100),
+                        //amount: ((stateWallet.getWallet.balance / 1000000) - 100),
+                        amount: 0.1,
                         fee: config.transaction.fee,
                     })),
 
                     // wait for transacation to be confirmed
-                    // confirmOperation(stateWallet => ({
-                    //     injectionOperation: stateWallet.injectionOperation,
-                    // })),
+                    confirmOperation(stateWallet => ({
+                        injectionOperation: stateWallet.injectionOperation,
+                    })),
 
                 ) :
                 of(stateWallet)

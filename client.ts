@@ -1,4 +1,4 @@
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { tap, map, flatMap, concatMap, delay, catchError } from 'rxjs/operators';
 
 import * as sodium from 'libsodium-wrappers'
@@ -34,8 +34,8 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": "1100",
-        "gas_limit": "10100",
+        "fee": "10000",
+        "gas_limit": "15000",
         "storage_limit": "277",
         "counter": (++state.counter).toString(),
       })
@@ -47,7 +47,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "destination": state.transaction.to,
       "amount": utils.amount(state.transaction.amount).toString(),
       "fee": utils.amount(state.transaction.fee).toString(),
-      "gas_limit": "10200",
+      "gas_limit": "11000",
       "storage_limit": "277",
       "counter": (++state.counter).toString(),
     })
@@ -359,8 +359,8 @@ export const confirmOperation = (fn?: (state: any) => any) => (source: Observabl
 
   tap((state: any) => console.log('[-] pending: operation "' + state.confirmOperation.injectionOperation + '"')),
 
-  // wait 5 sec for operation 
-  delay(5000),
+  // wait 3 sec for operation 
+  delay(3000),
 
   // call node and look for operation in mempool
   rpc((state: any) => ({
@@ -369,11 +369,21 @@ export const confirmOperation = (fn?: (state: any) => any) => (source: Observabl
   })),
 
   // if we find operation in mempool call confirmOperation() again
-  flatMap((state: any) =>
-    state.mempool.applied
+  flatMap((state: any) => {
+    // check if operation is refused
+    if (state.mempool.refused
+      .filter((operation: any) => state.confirmOperation.injectionOperation === operation.hash)
+      .length > 0) {
+
+      console.error('[-] operation refused: ', state.mempool.refused, state.confirmOperation.injectionOperation)
+
+      return throwError(state.mempool.refused);
+    }
+
+    return state.mempool.applied
       .filter((operation: any) => state.confirmOperation.injectionOperation === operation.hash)
       .length > 0 ? of(state).pipe(confirmOperation()) : source
-  ),
+  }),
 )
 
 /** 
