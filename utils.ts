@@ -120,9 +120,9 @@ export const publicKey2buffer = (publicKey: any) => {
 
 // sign operation 
 export const signOperation = (state: any) => {
+    
     // TODO: change secretKey name to privateKey
-
-    console.log('[signOperation]', state)
+    // console.log('[signOperation]', state)
 
     let operation = sodium.from_hex(state.operation);
     let secretKey = bs58checkDecode(prefix.edsk32, state.wallet.secretKey);
@@ -183,7 +183,7 @@ export const signOperationTrezor = (state: any) => {
 
     // set basic config
     let message: message = {
-        path: state.wallet.path, 
+        path: state.wallet.path,
         branch: bs58checkDecode(prefix.B, state.head.hash)
     }
 
@@ -326,11 +326,12 @@ export const amount = (amount: string) => {
     return amount === '0' ? '0' : (parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
 }
 
-export const keys = (mnemonic?: any): Wallet => {
+export const keys = (mnemonic?: any, passpharse?: any): Wallet => {
 
     mnemonic = mnemonic ? mnemonic : bip39.generateMnemonic(160)
+    passpharse = mnemonic ? passpharse : ''
 
-    let seed = bip39.mnemonicToSeed(mnemonic, '').slice(0, 32)
+    let seed = bip39.mnemonicToSeed(mnemonic, passpharse).slice(0, 32)
     // ED25516 
     let keyPair = sodium.crypto_sign_seed_keypair(seed, 'uint8array')
     // remove publicKey
@@ -345,5 +346,9 @@ export const keys = (mnemonic?: any): Wallet => {
             sodium.crypto_generichash(20, keyPair.publicKey)
         ),
     }
-
 }
+
+export const ready = (): any => {
+    return sodium.ready
+}
+

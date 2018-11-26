@@ -15,28 +15,31 @@ export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Obse
         flatMap(state =>
             state.rpc.payload !== undefined ?
                 // post 
-                ajax.post(state.wallet.node.url + state.rpc.url, state.rpc.payload,  { 'Content-Type': 'application/json' }).pipe(
+                ajax.post(state.wallet.node.url + state.rpc.url, state.rpc.payload, { 'Content-Type': 'application/json' }).pipe(
                     // without response do not run it
                     filter(event => event.response),
                     // use only response
                     map(event => ({ ...state, [state.rpc.path]: event.response })),
                     // catchError
                     catchError(error => {
-                        console.warn('[rpc][ajax.post]', error)
-                        return throwError(error)
+                        console.warn('[-] [rpc][ajax.post][request] url: ', error.request.url )
+                        console.warn('[-] [rpc][ajax.post][request] body: ', error.request.body )
+                        console.warn('[-] [rpc][ajax.post][response] error: ', error.status, error.response)
+                        return throwError({ ...error, state: state })
                     })
                 )
                 :
                 // get 
-                ajax.get(state.wallet.node.url + state.rpc.url,  { 'Content-Type': 'application/json' }).pipe(
+                ajax.get(state.wallet.node.url + state.rpc.url, { 'Content-Type': 'application/json' }).pipe(
                     // without response do not run it
                     filter(event => event.response),
                     // use only response
                     map(event => ({ ...state, [state.rpc.path]: event.response })),
                     // catchError
                     catchError(error => {
-                        console.warn('[rpc][ajax.get]', error)
-                        return throwError(error)
+                        console.warn('[-] [rpc][ajax.get][request] url: ', error.request.url)
+                        console.warn('[-] [rpc][ajax.get][response] error: ', error.status, error.response)
+                        return throwError({ ...error, state: state })
                     })
                 )
         ),

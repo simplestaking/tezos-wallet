@@ -13,6 +13,10 @@ export declare const setDelegation: (fn: (state: any) => any) => (source: Observ
  */
 export declare const originateContract: (fn: (state: any) => any) => (source: Observable<any>) => Observable<{}>;
 /**
+  * Activate wallet
+  */
+export declare const activateWallet: (fn: (state: any) => any) => (source: Observable<any>) => Observable<{}>;
+/**
  * Create operation in blocchain
  */
 export declare const operation: () => <T>(source: Observable<Wallet>) => Observable<T>;

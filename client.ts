@@ -34,9 +34,9 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": utils.amount(state.transaction.fee).toString(),
-        "gas_limit": "200",
-        "storage_limit": "0",
+        "fee": "1100",
+        "gas_limit": "10100",
+        "storage_limit": "257",
         "counter": (++state.counter).toString(),
       })
     }
@@ -47,8 +47,8 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "destination": state.transaction.to,
       "amount": utils.amount(state.transaction.amount).toString(),
       "fee": utils.amount(state.transaction.fee).toString(),
-      "gas_limit": "200",
-      "storage_limit": "0",
+      "gas_limit": "10200",
+      "storage_limit": "257",
       "counter": (++state.counter).toString(),
     })
     return {
@@ -57,6 +57,8 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
     }
 
   }),
+
+  // tap((state: any) => console.log("[+] trasaction: operation " , state.operations)),
 
   // create operation 
   operation(),
@@ -94,8 +96,8 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
         "fee": utils.amount(state.setDelegate.fee).toString(),
-        "gas_limit": "200",
-        "storage_limit": "0",
+        "gas_limit": "10000",
+        "storage_limit": "257",
         "counter": (++state.counter).toString(),
       })
     }
@@ -104,8 +106,8 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
       "kind": "delegation",
       "source": state.wallet.publicKeyHash,
       "fee": utils.amount(state.setDelegate.fee).toString(),
-      "gas_limit": "200",
-      "storage_limit": "0",
+      "gas_limit": "10000",
+      "storage_limit": "257",
       "counter": (++state.counter).toString(),
       "delegate": !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })
@@ -151,7 +153,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
         "source": state.wallet.publicKeyHash,
         "fee": utils.amount(state.originateContract.fee).toString(),
         "gas_limit": "10000",
-        "storage_limit": "100",
+        "storage_limit": "257",
         "counter": (++state.counter).toString(),
       })
     }
@@ -163,7 +165,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "fee": utils.amount(state.originateContract.fee).toString(),
       "balance": utils.amount(state.originateContract.amount).toString(),
       "gas_limit": "10000",
-      "storage_limit": "100",
+      "storage_limit": "257",
       "counter": (++state.counter).toString(),
       "spendable": true,
       "delegatable": true,
@@ -198,6 +200,34 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
 
 )
 
+/**
+  * Activate wallet
+  */
+export const activateWallet = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
+
+  map(state => ({ ...state, 'activateWallet': fn(state) })),
+
+  // prepare config for operation
+  map(state => {
+    const operations = []
+
+    operations.push({
+      "kind": "activate_account",
+      "pkh": state.wallet.publicKeyHash,
+      "secret": state.activateWallet.secret,
+    })
+
+    return {
+      ...state,
+      "operations": operations
+    }
+
+  }),
+
+  // create operation 
+  operation(),
+
+)
 
 /**
  * Create operation in blocchain
@@ -303,7 +333,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
       "signature": state.signOperation.signature
     }]
   })),
-  tap((state: any) => console.log("[+] operation: preapply ", state.preapply)),
+  // tap((state: any) => console.log("[+] operation: preapply ", state.preapply[0].contents[0])),
 
   // inject operation
   rpc((state: any) => ({
@@ -365,6 +395,7 @@ export const getWallet = () => (source: Observable<any>): Observable<any> =>
     // })
   )
 
+
 /**
  * Generate new menomonic, private, public key & tezos wallet address 
  */
@@ -392,10 +423,10 @@ export const initializeWallet = (fn: (params: any) => any) => (source: Observabl
     concatMap(() => Promise.resolve(sodium.ready)),
 
     // exec callback function and add result state
-    map(state => ({
-      // ...state,
+    map(() => ({
       'wallet': fn(state)
     })),
+
     catchError(error => {
       console.warn('[initializeWallet][sodium] ready', error)
       return of([error])

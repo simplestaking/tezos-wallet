@@ -17,4 +17,5 @@ export declare const publicKey2buffer: (publicKey: any) => {
 export declare const signOperation: (state: any) => any;
 export declare const signOperationTrezor: (state: any) => Observable<any>;
 export declare const amount: (amount: string) => number | "0";
-export declare const keys: (mnemonic?: any) => Wallet;
+export declare const keys: (mnemonic?: any, passpharse?: any) => Wallet;
+export declare const ready: () => any;
