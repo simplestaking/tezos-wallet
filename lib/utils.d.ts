@@ -1,6 +1,7 @@
+/// <reference types="node" />
 import { Wallet } from './types';
 import { Observable } from 'rxjs';
-export declare const string2buffer: (payload: any) => any;
+export declare const string2buffer: (payload: any) => Buffer;
 export declare const bs58checkEncode: (prefix: any, payload: any) => string;
 export declare const bs58checkDecode: (prefix: any, enc: any) => string;
 export declare const concatKeys: (privateKey: any, publicKey: any) => any;

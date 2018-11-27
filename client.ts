@@ -47,7 +47,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "destination": state.transaction.to,
       "amount": utils.amount(state.transaction.amount).toString(),
       "fee": utils.amount(state.transaction.fee).toString(),
-      "gas_limit": "250000", //"11000",
+      "gas_limit": "11000", // "250000", 
       "storage_limit": "277",
       "counter": (++state.counter).toString(),
     })
