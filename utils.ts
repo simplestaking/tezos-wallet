@@ -218,7 +218,7 @@ export const signOperationTrezor = (state: any) => {
                 ...message,
                 operation: {
                     ...message.operation,
-                    // add transactoin to operation
+                    // add transaction to operation
                     transaction: {
                         source: {
                             tag: publicKeyHash2buffer(operation.source).originated,
@@ -235,6 +235,24 @@ export const signOperationTrezor = (state: any) => {
                         storage_limit: parseInt(operation.storage_limit),
                     },
                 },
+            }
+
+            // TODO: refactor use pack data function, instead of preapply parsing
+            if (operation.parameters) {
+                
+                message = {
+                    ...message,
+                    operation: {
+                        ...message.operation,
+                        // add parameters to operation
+                        transaction: {
+                            ...message.operation.transaction,
+                            parameters: sodium.from_hex(
+                                state.operation.slice(state.operation.indexOf('000000d'),state.operation.length)
+                                )
+                        }
+                    }
+                }    
             }
         }
 
@@ -323,7 +341,7 @@ export const signOperationTrezor = (state: any) => {
 }
 
 export const amount = (amount: string) => {
-    return amount === '0' ? '0' : (parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
+    return amount === '0' ? '0' : Math.round(parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
 }
 
 export const keys = (mnemonic?: any, passpharse?: any): Wallet => {

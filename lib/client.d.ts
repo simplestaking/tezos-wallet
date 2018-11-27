@@ -45,6 +45,10 @@ export declare const applyAndInjectOperation: () => (source: Observable<any>) =>
  */
 export declare const confirmOperation: (fn?: ((state: any) => any) | undefined) => (source: Observable<any>) => any;
 /**
+ * Pack operation parameters
+ */
+export declare const packOperationParameters: () => (source: Observable<any>) => Observable<any>;
+/**
  * Get wallet details
  */
 export declare const getWallet: () => (source: Observable<any>) => Observable<any>;

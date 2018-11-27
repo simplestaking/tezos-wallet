@@ -47,17 +47,26 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "destination": state.transaction.to,
       "amount": utils.amount(state.transaction.amount).toString(),
       "fee": utils.amount(state.transaction.fee).toString(),
-      "gas_limit": "11000",
+      "gas_limit": "250000", //"11000",
       "storage_limit": "277",
       "counter": (++state.counter).toString(),
     })
+
+    // add parameters to transaction
+    if (state.transaction.parameters) {
+      operations[operations.length-1] = {
+        ...operations[operations.length-1],
+        "parameters": state.transaction.parameters,
+      }
+    }
+
     return {
       ...state,
       "operations": operations
     }
 
   }),
-
+  
   // tap((state: any) => console.log("[+] trasaction: operation " , state.operations)),
 
   // create operation 
@@ -387,6 +396,28 @@ export const confirmOperation = (fn?: (state: any) => any) => (source: Observabl
 )
 
 /** 
+ * Pack operation parameters
+ */
+export const packOperationParameters = () => (source: Observable<any>): Observable<any> =>
+  source.pipe(
+
+    tap(state => console.log('[+] packOperationParameters', state )),
+
+    // get packed transaction parameters  
+    rpc((state: any) => ({
+      'url': '/chains/main/blocks/head/helpers/scripts/pack_data',
+      'path': 'packOperationParameters',
+      'payload': { 
+        'data': state.operations[state.operations.length-1].parameters ?
+            state.operations[state.operations.length-1].parameters : {} , type:{}  }  ,
+    })), 
+    
+    tap(state => console.log('[+] packOperationParameters', state.packOperationParameters ))
+
+  )
+
+
+/** 
  * Get wallet details
  */
 // export const getWalletDetail = (fn?: (params: Wallet) => PublicAddress) => (source: Observable<Wallet>): Observable<Contract> =>
@@ -395,8 +426,8 @@ export const getWallet = () => (source: Observable<any>): Observable<any> =>
 
     // get contract info balance 
     rpc((state: any) => ({
-      url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/',
-      path: 'getWallet',
+      'url': '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/',
+      'path': 'getWallet',
     })),
 
     // show balance
