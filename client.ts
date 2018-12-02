@@ -54,8 +54,8 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
 
     // add parameters to transaction
     if (state.transaction.parameters) {
-      operations[operations.length-1] = {
-        ...operations[operations.length-1],
+      operations[operations.length - 1] = {
+        ...operations[operations.length - 1],
         "parameters": state.transaction.parameters,
       }
     }
@@ -66,7 +66,7 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
     }
 
   }),
-  
+
   // tap((state: any) => console.log("[+] trasaction: operation " , state.operations)),
 
   // create operation 
@@ -170,7 +170,6 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
     operations.push({
       "kind": "origination",
       "source": state.wallet.publicKeyHash,
-      "manager_pubkey": state.manager_key.manager,
       "fee": utils.amount(state.originateContract.fee).toString(),
       "balance": utils.amount(state.originateContract.amount).toString(),
       "gas_limit": "10100",
@@ -179,23 +178,20 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
       "spendable": true,
       "delegatable": true,
       "delegate": state.originateContract.to,
-      // "script": {
-      //   "code":
-      //     [{ "prim": "parameter", "args": [{ "prim": "unit" }] },
-      //     { "prim": "storage", "args": [{ "prim": "unit" }] },
-      //     {
-      //       "prim": "code",
-      //       "args":
-      //         [[{ "prim": "CDR" },
-      //         {
-      //           "prim": "NIL",
-      //           "args": [{ "prim": "operation" }]
-      //         },
-      //         { "prim": "PAIR" }]]
-      //     }],
-      //   "storage": { "prim": "Unit" }
-      // },
     })
+
+    // add manager_pubkey according to network
+    if (state.wallet.node.name === "main") {
+      operations[operations.length - 1] = {
+        ...operations[operations.length - 1],
+        "managerPubkey": state.manager_key.manager,
+      }
+    } else {
+      operations[operations.length - 1] = {
+        ...operations[operations.length - 1],
+        "manager_pubkey": state.manager_key.manager,
+      }
+    }
 
     return {
       ...state,
@@ -342,7 +338,16 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
       "signature": state.signOperation.signature
     }]
   })),
-  // tap((state: any) => console.log("[+] operation: preapply ", state.preapply[0].contents[0])),
+
+  tap((state: any) => console.log("[+] operation: preapply ", state.preapply[0].contents[0].metadata.operation_result)),
+
+  // check for errors
+  flatMap(state =>
+    state.preapply[0].contents[0].metadata.operation_result.status === "failed" ?
+      throwError({ response: state.preapply[0].contents[0].metadata.operation_result.errors }) :
+      of(state)
+  ),
+
 
   // inject operation
   rpc((state: any) => ({
@@ -401,18 +406,19 @@ export const confirmOperation = (fn?: (state: any) => any) => (source: Observabl
 export const packOperationParameters = () => (source: Observable<any>): Observable<any> =>
   source.pipe(
 
-    tap(state => console.log('[+] packOperationParameters', state )),
+    tap(state => console.log('[+] packOperationParameters', state)),
 
     // get packed transaction parameters  
     rpc((state: any) => ({
       'url': '/chains/main/blocks/head/helpers/scripts/pack_data',
       'path': 'packOperationParameters',
-      'payload': { 
-        'data': state.operations[state.operations.length-1].parameters ?
-            state.operations[state.operations.length-1].parameters : {} , type:{}  }  ,
-    })), 
-    
-    tap(state => console.log('[+] packOperationParameters', state.packOperationParameters ))
+      'payload': {
+        'data': state.operations[state.operations.length - 1].parameters ?
+          state.operations[state.operations.length - 1].parameters : {}, type: {}
+      },
+    })),
+
+    tap(state => console.log('[+] packOperationParameters', state.packOperationParameters))
 
   )
 

@@ -238,22 +238,23 @@ export const signOperationTrezor = (state: any) => {
             }
 
             // TODO: refactor use pack data function, instead of preapply parsing
-            if (operation.parameters) {
+            // use FF bit to find if we have parameters
+            // if (operation.parameters) {
                 
-                message = {
-                    ...message,
-                    operation: {
-                        ...message.operation,
-                        // add parameters to operation
-                        transaction: {
-                            ...message.operation.transaction,
-                            parameters: sodium.from_hex(
-                                state.operation.slice(state.operation.indexOf('000000d'),state.operation.length)
-                                )
-                        }
-                    }
-                }    
-            }
+            //     message = {
+            //         ...message,
+            //         operation: {
+            //             ...message.operation,
+            //             // add parameters to operation
+            //             transaction: {
+            //                 ...message.operation.transaction,
+            //                 parameters: sodium.from_hex(
+            //                     state.operation.slice(state.operation.indexOf('000000d'),state.operation.length)
+            //                     )
+            //             }
+            //         }
+            //     }    
+            // }
         }
 
         if (operation.kind === 'origination') {
