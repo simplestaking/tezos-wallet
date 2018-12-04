@@ -51,7 +51,7 @@ export const concatKeys = (privateKey: any, publicKey: any) => {
     return n;
 }
 
-// convert publicKeyHash to buffer and elliptic curve
+// convert publicKeyHash to buffer
 export const publicKeyHash2buffer = (publicKeyHash: any) => {
 
     switch (publicKeyHash.substr(0, 3)) {
@@ -268,7 +268,7 @@ export const signOperationTrezor = (state: any) => {
                             tag: publicKeyHash2buffer(operation.source).originated,
                             hash: publicKeyHash2buffer(operation.source).hash,
                         },
-                        manager_pubkey: publicKeyHash2buffer(operation.manager_pubkey).hash,
+                        manager_pubkey: publicKeyHash2buffer(operation.manager_pubkey ? operation.manager_pubkey : operation.managerPubkey).hash,
                         balance: parseInt(operation.balance),
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
