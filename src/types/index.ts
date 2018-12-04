@@ -1,3 +1,7 @@
+import { TrezorOperation } from "./operations";
+
+export * from './operations';
+
 export interface Wallet {
     mnemonic?: string
     secretKey: string
@@ -51,10 +55,22 @@ export interface TZScanNode {
     url: string,
     operations?: string,
     operations_number?: string,
-    block_timestamp?:  string,
+    block_timestamp?: string,
 }
 
 export type WalletType =
     | "web"
     | "TREZOR_ONE"
-    | "TREZOR_T"
+    | "TREZOR_T";
+
+export interface TrezorMessage {
+    path: string
+    // curve: number,
+    branch: any
+    operation: TrezorOperation
+}
+
+
+
+
+

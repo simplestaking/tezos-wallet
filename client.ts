@@ -5,7 +5,7 @@ import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, Contract, Operation, PublicAddress, Config } from './types'
+import { Wallet, Contract, Operation, PublicAddress, Config } from './src/types'
 
 
 /**
@@ -45,8 +45,8 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
       "kind": "transaction",
       "source": state.wallet.publicKeyHash,
       "destination": state.transaction.to,
-      "amount": utils.amount(state.transaction.amount).toString(),
-      "fee": utils.amount(state.transaction.fee).toString(),
+      "amount": utils.parseAmount(state.transaction.amount).toString(),
+      "fee": utils.parseAmount(state.transaction.fee).toString(),
       "gas_limit": "11000", // "250000", 
       "storage_limit": "277",
       "counter": (++state.counter).toString(),
@@ -104,7 +104,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": utils.amount(state.setDelegate.fee).toString(),
+        "fee": utils.parseAmount(state.setDelegate.fee).toString(),
         "gas_limit": "10100",
         "storage_limit": "277",
         "counter": (++state.counter).toString(),
@@ -114,7 +114,7 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
     operations.push({
       "kind": "delegation",
       "source": state.wallet.publicKeyHash,
-      "fee": utils.amount(state.setDelegate.fee).toString(),
+      "fee": utils.parseAmount(state.setDelegate.fee).toString(),
       "gas_limit": "10100",
       "storage_limit": "277",
       "counter": (++state.counter).toString(),
@@ -160,7 +160,7 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
         "kind": "reveal",
         "public_key": state.wallet.publicKey,
         "source": state.wallet.publicKeyHash,
-        "fee": utils.amount(state.originateContract.fee).toString(),
+        "fee": utils.parseAmount(state.originateContract.fee).toString(),
         "gas_limit": "10100",
         "storage_limit": "277",
         "counter": (++state.counter).toString(),
@@ -170,8 +170,8 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
     operations.push({
       "kind": "origination",
       "source": state.wallet.publicKeyHash,
-      "fee": utils.amount(state.originateContract.fee).toString(),
-      "balance": utils.amount(state.originateContract.amount).toString(),
+      "fee": utils.parseAmount(state.originateContract.fee).toString(),
+      "balance": utils.parseAmount(state.originateContract.amount).toString(),
       "gas_limit": "10100",
       "storage_limit": "277",
       "counter": (++state.counter).toString(),
@@ -315,7 +315,12 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
   // : move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
+  flatMap(state => {
+
+    return state.wallet.type === 'TREZOR_T' ?
+      utils.signOperationTrezor(state) :
+      [utils.signOperation(state)]
+  })
 
 )
 

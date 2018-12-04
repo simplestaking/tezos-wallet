@@ -2,7 +2,7 @@ import { of, from, throwError } from 'rxjs'
 import { flatMap, concatMap, catchError, map, tap } from 'rxjs/operators'
 
 import { initializeWallet, activateWallet, transaction, originateContract, getWallet, confirmOperation } from './client'
-import { Config } from './types'
+import { Config } from './src/types'
 
 import * as utils from './utils'
 import * as fs from 'fs'

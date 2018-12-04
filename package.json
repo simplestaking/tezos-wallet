@@ -5,7 +5,8 @@
   "main": "./lib/client.js",
   "types": "./lib/client.d.ts",
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "watch": "tsc -w"
   },
   "author": "",
   "license": "ISC",
@@ -18,5 +19,11 @@
     "libsodium-wrappers": "0.7.3",
     "rxjs": "6.3.2",
     "xmlhttprequest-ssl": "1.5.5"
+  },
+  "devDependencies": {
+    "@types/node": "^10.12.11",
+    "ts-node": "^7.0.1",
+    "typedoc": "^0.13.0",
+    "typescript": "~3.2.1"
   }
 }

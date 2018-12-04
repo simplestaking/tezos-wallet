@@ -2,14 +2,13 @@ import sodium from 'libsodium-wrappers'
 import * as bs58check from 'bs58check'
 import * as bip39 from 'bip39'
 
-import { Buffer } from 'buffer'
-import { Wallet, Operation, } from './types'
-import { Observable, of } from 'rxjs';
-import { tap, map, flatMap, mergeMap, delay, withLatestFrom, catchError } from 'rxjs/operators';
+import { Wallet, TrezorMessage, TrezorOperation, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation } from './src/types'
+import { State, StateOperation, StateOperations, StateHead } from './state';
+import { of } from 'rxjs';
+import { tap, map, flatMap, catchError } from 'rxjs/operators';
+import { isArray } from 'util';
+import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from './src/validators';
 
-// import { TrezorConnect } from 'trezor-connect';
-// declare external library
-declare var TrezorConnect: any;
 
 const prefix = {
     tz1: new Uint8Array([6, 161, 159]),
@@ -26,33 +25,32 @@ const prefix = {
     operation: new Uint8Array([5, 116]),
 }
 
-export const string2buffer = (payload: any) => {
-    debugger
-    let n: any = new Uint8Array(payload.length);
-    n.set(payload);
-    return new Buffer(n, 'hex');
+export const string2buffer = (payload: string) => {
+    return Buffer.from(payload, 'hex');
 }
 
-export const bs58checkEncode = (prefix: any, payload: any) => {
-    let n: any = new Uint8Array(prefix.length + payload.length);
+export const bs58checkEncode = (prefix: Uint8Array, payload: Uint8Array) => {
+    const n = new Uint8Array(prefix.length + payload.length);
+
     n.set(prefix);
     n.set(payload, prefix.length);
-    return bs58check.encode(new Buffer(n, 'hex'));
+
+    return bs58check.encode(Buffer.from(n));
 }
 
-export const bs58checkDecode = (prefix: any, enc: any) => {
-    return bs58check.decode(enc).slice(prefix.length);;
+export const bs58checkDecode = (prefix: Uint8Array, enc: string) => {
+    return bs58check.decode(enc).slice(prefix.length);
 }
 
-export const concatKeys = (privateKey: any, publicKey: any) => {
-    let n: any = new Uint8Array(privateKey.length + publicKey.length);
+export const concatKeys = (privateKey: Uint8Array, publicKey: Uint8Array) => {
+    const n = new Uint8Array(privateKey.length + publicKey.length);
     n.set(privateKey);
     n.set(publicKey, privateKey.length);
     return n;
 }
 
 // convert publicKeyHash to buffer and elliptic curve
-export const publicKeyHash2buffer = (publicKeyHash: any) => {
+export const publicKeyHash2buffer = (publicKeyHash: string) => {
 
     switch (publicKeyHash.substr(0, 3)) {
         case 'tz1':
@@ -91,7 +89,7 @@ export const publicKeyHash2buffer = (publicKeyHash: any) => {
 }
 
 // convert publicKeyHash to buffer and elliptic curve
-export const publicKey2buffer = (publicKey: any) => {
+export const publicKey2buffer = (publicKey: string) => {
 
     switch (publicKey.substr(0, 4)) {
         case 'edpk':
@@ -115,42 +113,47 @@ export const publicKey2buffer = (publicKey: any) => {
                 hash: null,
             }
     }
+}
 
+const cutBuffer = (buffer: Buffer, maxLength: number) => {
+    return buffer.length > maxLength ? buffer.slice(0, maxLength) : buffer;
 }
 
 // sign operation 
-export const signOperation = (state: any) => {
-    
-    // TODO: change secretKey name to privateKey
+export const signOperation = (state: State & StateOperation) => {
+
     // console.log('[signOperation]', state)
 
-    let operation = sodium.from_hex(state.operation);
-    let secretKey = bs58checkDecode(prefix.edsk32, state.wallet.secretKey);
-    let publicKey = bs58checkDecode(prefix.edpk, state.wallet.publicKey);
+    if (typeof state.operation !== 'string') {
+        throw new TypeError('[signOperation] Operation not available on state');
+    }
+
+    const operation = sodium.from_hex(state.operation);
+    const publicKey = bs58checkDecode(prefix.edpk, state.wallet.publicKey);
+    const privateKey = cutBuffer(bs58checkDecode(prefix.edsk32, state.wallet.secretKey), 32);
 
     //console.log('[secretKey]', secretKey)
     //console.log('[publicKey]', publicKey)
     //console.log('[operation]', operation)
 
-    // remove publicKey
-    if (secretKey.length > 32) secretKey = secretKey.slice(0, 32)
+
 
     // TODO: add all watermarks
     // ed25516
-    let sig = sodium.crypto_sign_detached(
+    const sig = sodium.crypto_sign_detached(
         sodium.crypto_generichash(32, concatKeys(new Uint8Array([3]), operation)),
-        concatKeys(secretKey, publicKey),
+        concatKeys(privateKey, publicKey),
         'uint8array'
     );
 
     //console.log('[sig]', sig)
 
-    let signature = bs58checkEncode(prefix.edsig, sig);
+    const signature = bs58checkEncode(prefix.edsig, sig);
     //console.log('[signature]', signature)
 
-    let signedOperationContents = state.operation + sodium.to_hex(sig);
+    const signedOperationContents = state.operation + sodium.to_hex(sig);
 
-    let operationHash = bs58checkEncode(
+    const operationHash = bs58checkEncode(
         prefix.operation,
         // blake2b
         sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
@@ -161,42 +164,35 @@ export const signOperation = (state: any) => {
         signOperation: {
             signature: signature,
             signedOperationContents: signedOperationContents,
-            operationHash: operationHash,
+            operationHash: operationHash
         }
     }
 }
 
 // sign operation 
-export const signOperationTrezor = (state: any) => {
+export const signOperationTrezor = (state: State & StateHead & StateOperations) => {
 
-    type message = {
-        path: string,
-        // curve: number,
-        branch: any,
-        operation?: {
-            reveal?: any,
-            transaction?: any,
-            origination?: any,
-            delegation?: any,
-        }
+    if (!isArray(state.operations)) {
+        throw new TypeError('[signOperationTrezor] Operations not available in state');
     }
 
     // set basic config
-    let message: message = {
+    let message: Partial<TrezorMessage> = {
         path: state.wallet.path,
         branch: bs58checkDecode(prefix.B, state.head.hash)
-    }
+    };
 
     // add operations to message 
-    state.operations.map((operation: any) => {
+    state.operations.map((operation) => {
 
         console.log('[signOperationTrezor] operation', operation)
 
-        if (operation.kind === 'reveal') {
-            message = {
-                ...message,
-                operation: {
-                    ...message.operation,
+        switch (operation.kind) {
+
+            case 'reveal': {
+                validateRevealOperation(operation);
+
+                (<TrezorRevealOperation>message.operation) = {
                     // add reveal to operation 
                     reveal: {
                         source: {
@@ -208,16 +204,15 @@ export const signOperationTrezor = (state: any) => {
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
                         storage_limit: parseInt(operation.storage_limit),
-                    },
-                },
+                    }
+                }
+                break;
             }
-        }
 
-        if (operation.kind === 'transaction') {
-            message = {
-                ...message,
-                operation: {
-                    ...message.operation,
+            case 'transaction': {
+                validateTransactionOperation(operation);
+
+                (<TrezorTransactionOperation>message.operation) = {
                     // add transaction to operation
                     transaction: {
                         source: {
@@ -233,35 +228,34 @@ export const signOperationTrezor = (state: any) => {
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
                         storage_limit: parseInt(operation.storage_limit),
-                    },
-                },
+                    }
+                }
+                break;
+
+                // TODO: refactor use pack data function, instead of preapply parsing
+                // use FF bit to find if we have parameters
+                // if (operation.parameters) {
+
+                //     message = {
+                //         ...message,
+                //         operation: {
+                //             ...message.operation,
+                //             // add parameters to operation
+                //             transaction: {
+                //                 ...message.operation.transaction,
+                //                 parameters: sodium.from_hex(
+                //                     state.operation.slice(state.operation.indexOf('000000d'),state.operation.length)
+                //                     )
+                //             }
+                //         }
+                //     }    
+                // }
             }
 
-            // TODO: refactor use pack data function, instead of preapply parsing
-            // use FF bit to find if we have parameters
-            // if (operation.parameters) {
-                
-            //     message = {
-            //         ...message,
-            //         operation: {
-            //             ...message.operation,
-            //             // add parameters to operation
-            //             transaction: {
-            //                 ...message.operation.transaction,
-            //                 parameters: sodium.from_hex(
-            //                     state.operation.slice(state.operation.indexOf('000000d'),state.operation.length)
-            //                     )
-            //             }
-            //         }
-            //     }    
-            // }
-        }
+            case 'origination': {
+                validateOriginationOperation(operation);
 
-        if (operation.kind === 'origination') {
-            message = {
-                ...message,
-                operation: {
-                    ...message.operation,
+                (<TrezorOriginationOperation>message.operation) = {
                     // add origination to operation
                     origination: {
                         source: {
@@ -279,16 +273,14 @@ export const signOperationTrezor = (state: any) => {
                         delegate: publicKeyHash2buffer(operation.delegate).hash,
                         // find encodig format http://doc.tzalpha.net/api/p2p.html
                         //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
-                    },
-                },
+                    }
+                }
             }
-        }
 
-        if (operation.kind === 'delegation') {
-            message = {
-                ...message,
-                operation: {
-                    ...message.operation,
+            case 'delegation': {
+                // no validation as no special properties are required
+
+                (<TrezorDelegationOperation>message.operation) = {
                     // add delegation to operation
                     delegation: {
                         source: {
@@ -301,15 +293,16 @@ export const signOperationTrezor = (state: any) => {
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
                         storage_limit: parseInt(operation.storage_limit),
-                    },
-                },
+                    }
+                }
+                break;
             }
 
+            default: {
+                throw new TypeError('[signOperationTrezor] Unknown operation type. Cannot proceed.');
+            }
         }
-
     });
-
-
 
     // (<any>window).TrezorConnect.tezosGetAddress({
     //     'path': "m/44'/1729'/0'/0'/0'",
@@ -319,10 +312,10 @@ export const signOperationTrezor = (state: any) => {
 
     return of([state]).pipe(
 
-        tap(state => console.warn('[[TrezorConnect]][signOperationTrezor] message', JSON.stringify(message))),
+        tap(() => console.warn('[[TrezorConnect]][signOperationTrezor] message', JSON.stringify(message))),
 
         // wait for resopnse from Trezor
-        flatMap(state => (<any>window).TrezorConnect.tezosSignTransaction(message)),
+        flatMap(() => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
         tap((response: any) => { console.warn('[TrezorConnect][tezosSignTransaction] reposne', response.payload) }),
         map(response => ({
@@ -341,7 +334,7 @@ export const signOperationTrezor = (state: any) => {
 
 }
 
-export const amount = (amount: string) => {
+export const parseAmount = (amount: string) => {
     return amount === '0' ? '0' : Math.round(parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
 }
 
