@@ -12,7 +12,9 @@ import './node'
 
 const config = {
     transaction: {
-        to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
+        // hw_trezor_zero
+        to: 'tz1ckrgqGGGBt4jGDmwFhtXc1LNpZJUnA9F2',
+        // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
         amount: '1.23',
         fee: '1',
     },
@@ -36,6 +38,8 @@ let faucets: any = []
 const files = fs.readdirSync(dir);
 files.forEach((file: any) => {
     // read file 
+    console.log('[file]', file)
+
     let faucet = JSON.parse(fs.readFileSync(dir + file, 'utf8'));
     // save only files with mnemonic
     if (faucet.hasOwnProperty('mnemonic')) {
@@ -108,8 +112,8 @@ utils.ready().then(() => {
                     // send xtz
                     transaction(stateWallet => ({
                         to: config.transaction.to,
-                        //amount: ((stateWallet.getWallet.balance / 1000000) - 100),
-                        amount: 0.1,
+                        amount: ((stateWallet.getWallet.balance / 1000000) - 100),
+                        // amount: 0.1,
                         fee: config.transaction.fee,
                     })),
 
