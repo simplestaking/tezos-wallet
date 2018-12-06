@@ -1,4 +1,4 @@
-import { Head, TrezorOperation, SignOperation, OperationMetadata } from "./src/types";
+import { Head, TrezorOperation, SignOperation, OperationMetadata } from ".";
 
 
 

@@ -2,10 +2,10 @@ import sodium from 'libsodium-wrappers'
 import * as bs58check from 'bs58check'
 import * as bip39 from 'bip39'
 
-import { Wallet, TrezorMessage, TrezorOperation, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation } from './src/types'
-import { State, StateOperation, StateOperations, StateHead } from './state';
-import { of } from 'rxjs';
-import { tap, map, flatMap, catchError } from 'rxjs/operators';
+import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation } from './src/types'
+import { State, StateOperation, StateOperations, StateHead } from './src/types/state';
+import { of, throwError } from 'rxjs';
+import { tap, map, flatMap } from 'rxjs/operators';
 import { isArray } from 'util';
 import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from './src/validators';
 
@@ -49,79 +49,10 @@ export const concatKeys = (privateKey: Uint8Array, publicKey: Uint8Array) => {
     return n;
 }
 
-// convert publicKeyHash to buffer and elliptic curve
-export const publicKeyHash2buffer = (publicKeyHash: string) => {
-
-    switch (publicKeyHash.substr(0, 3)) {
-        case 'tz1':
-            return {
-                curve: 0,
-                originated: 0,
-                hash: concatKeys(new Uint8Array([0]), bs58checkDecode(prefix.tz1, publicKeyHash))
-            }
-        case 'tz2':
-            return {
-                curve: 1,
-                originated: 0,
-                hash: concatKeys(new Uint8Array([1]), bs58checkDecode(prefix.tz2, publicKeyHash))
-            }
-        case 'tz3':
-            return {
-                curve: 2,
-                originated: 0,
-                hash: concatKeys(new Uint8Array([2]), bs58checkDecode(prefix.tz3, publicKeyHash))
-            }
-        case 'KT1':
-            // debugger
-            return {
-                curve: -1,
-                originated: 1,
-                hash: concatKeys(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0]))
-            }
-        default:
-            return {
-                curve: -1,
-                originated: -1,
-                hash: null,
-            }
-    }
-
-}
-
-// convert publicKeyHash to buffer and elliptic curve
-export const publicKey2buffer = (publicKey: string) => {
-
-    switch (publicKey.substr(0, 4)) {
-        case 'edpk':
-            return {
-                curve: 0,
-                hash: concatKeys(new Uint8Array([0]), bs58checkDecode(prefix.edpk, publicKey))
-            }
-        case 'sppk':
-            return {
-                curve: 1,
-                hash: concatKeys(new Uint8Array([1]), bs58checkDecode(prefix.sppk, publicKey))
-            }
-        case 'p2pk':
-            return {
-                curve: 2,
-                hash: concatKeys(new Uint8Array([2]), bs58checkDecode(prefix.p2pk, publicKey))
-            }
-        default:
-            return {
-                curve: -1,
-                hash: null,
-            }
-    }
-}
-
-const cutBuffer = (buffer: Buffer, maxLength: number) => {
-    return buffer.length > maxLength ? buffer.slice(0, maxLength) : buffer;
-}
-
 // sign operation 
-export const signOperation = (state: State & StateOperation) => {
+export const signOperation = (state: any) => {
 
+    // TODO: change secretKey name to privateKey
     // console.log('[signOperation]', state)
 
     if (typeof state.operation !== 'string') {
@@ -130,7 +61,7 @@ export const signOperation = (state: State & StateOperation) => {
 
     const operation = sodium.from_hex(state.operation);
     const publicKey = bs58checkDecode(prefix.edpk, state.wallet.publicKey);
-    const privateKey = cutBuffer(bs58checkDecode(prefix.edsk32, state.wallet.secretKey), 32);
+    const privateKey = bs58checkDecode(prefix.edsk32, state.wallet.secretKey);
 
     //console.log('[secretKey]', secretKey)
     //console.log('[publicKey]', publicKey)
@@ -179,8 +110,8 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
     // set basic config
     let message: Partial<TrezorMessage> = {
         path: state.wallet.path,
-        branch: bs58checkDecode(prefix.B, state.head.hash)
-    };
+        branch: state.head.hash
+    }
 
     // add operations to message 
     state.operations.map((operation) => {
@@ -195,11 +126,8 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
                 (<TrezorRevealOperation>message.operation) = {
                     // add reveal to operation 
                     reveal: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        public_key: publicKey2buffer(operation.public_key).hash,
+                        source: operation.source,
+                        public_key: operation.public_key,
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
@@ -215,14 +143,8 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
                 (<TrezorTransactionOperation>message.operation) = {
                     // add transaction to operation
                     transaction: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        destination: {
-                            tag: publicKeyHash2buffer(operation.destination).originated,
-                            hash: publicKeyHash2buffer(operation.destination).hash,
-                        },
+                        source: operation.source,
+                        destination: operation.destination,
                         amount: parseInt(operation.amount),
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
@@ -258,11 +180,8 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
                 (<TrezorOriginationOperation>message.operation) = {
                     // add origination to operation
                     origination: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        manager_pubkey: publicKeyHash2buffer(operation.manager_pubkey).hash,
+                        source: operation.source,
+                        manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : operation.managerPubkey,
                         balance: parseInt(operation.balance),
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
@@ -270,7 +189,7 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
                         storage_limit: parseInt(operation.storage_limit),
                         spendable: operation.spendable,
                         delegatable: operation.delegatable,
-                        delegate: publicKeyHash2buffer(operation.delegate).hash,
+                        delegate: operation.delegate,
                         // find encodig format http://doc.tzalpha.net/api/p2p.html
                         //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                     }
@@ -283,12 +202,8 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
                 (<TrezorDelegationOperation>message.operation) = {
                     // add delegation to operation
                     delegation: {
-                        source: {
-                            tag: publicKeyHash2buffer(operation.source).originated,
-                            hash: publicKeyHash2buffer(operation.source).hash,
-                        },
-                        delegate: !operation.delegate ?
-                            publicKeyHash2buffer(operation.source).hash : publicKeyHash2buffer(operation.delegate).hash,
+                        source: operation.source,
+                        delegate: !operation.delegate ? operation.source : operation.delegate,
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
                         gas_limit: parseInt(operation.gas_limit),
@@ -304,20 +219,20 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
         }
     });
 
-    // (<any>window).TrezorConnect.tezosGetAddress({
-    //     'path': "m/44'/1729'/0'/0'/0'",
-    //     'curve': 1,
-    //     'showOnTrezor': true,
-    // }).then((response:any) => console.error('[TrezorConnect.tezosGetAddress]', response) )
-
     return of([state]).pipe(
 
-        tap(() => console.warn('[[TrezorConnect]][signOperationTrezor] message', JSON.stringify(message))),
+        tap(() => console.warn('[TrezorConnect][signOperationTrezor] message', JSON.stringify(message))),
 
         // wait for resopnse from Trezor
         flatMap(() => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
-        tap((response: any) => { console.warn('[TrezorConnect][tezosSignTransaction] reposne', response.payload) }),
+        // handle error from Trezor
+        flatMap((response: any) => response.payload.error ?
+            // throw error
+            throwError({ response: [{ 'TrezorConnect': 'tezosSignTransaction', ...response.payload }] }) :
+            of(response)),
+
+        tap((response: any) => { console.warn('[TrezorConnect][tezosSignTransaction] reponse', response.payload) }),
         map(response => ({
             ...state,
             signOperation: {
@@ -326,10 +241,7 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
                 operationHash: response.payload.operation_hash,
             }
         })),
-        catchError(error => {
-            console.error('[ERROR][TrezorConnect.tezosSignTransaction]', error)
-            return of([])
-        })
+
     )
 
 }

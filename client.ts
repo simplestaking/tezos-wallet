@@ -312,16 +312,10 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
 
   // add signature to state 
   // 
-  // : move and just keep signOperation and create logic inside utils 
+  // TODO: move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => {
-
-    return state.wallet.type === 'TREZOR_T' ?
-      utils.signOperationTrezor(state) :
-      [utils.signOperation(state)]
-  })
-
+  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state): [utils.signOperation(state)]),
 )
 
 /**
@@ -348,7 +342,7 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 
   // check for errors
   flatMap(state =>
-    state.preapply[0].contents[0].metadata.operation_result.status === "failed" ?
+    state.preapply[0].contents[0].metadata.operation_result && state.preapply[0].contents[0].metadata.operation_result.status === "failed" ?
       throwError({ response: state.preapply[0].contents[0].metadata.operation_result.errors }) :
       of(state)
   ),
@@ -481,7 +475,7 @@ export const initializeWallet = (fn: (params: any) => any) => (source: Observabl
 
     catchError(error => {
       console.warn('[initializeWallet][sodium] ready', error)
-      return of([error])
+      return of({ response: error })
     })
 
   )),
