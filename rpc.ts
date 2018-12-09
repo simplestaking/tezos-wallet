@@ -1,12 +1,16 @@
 import { Observable, of, throwError } from 'rxjs';
 import { map, filter, catchError, flatMap, tap } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
+import { State, RpcParams } from './src/types';
 
-export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Observable<any> =>
+export const rpc = <T extends State, P>(selector: (params: T) => RpcParams) => (source: Observable<any>): Observable<T & P> =>
     source.pipe(
 
         // exec calback function
-        map(state => ({ ...state, rpc: fn(state) })),
+        map(state => ({
+            ...state,
+            rpc: selector(state)
+        })),
         // tap(state => console.log('[rpc] state ', state)),
         // tap(state => console.log('[rpc][url] : ', state.rpc.url)),
         // tap(state => console.log('[rpc][path] : ', state.rpc.path)),
@@ -22,8 +26,8 @@ export const rpc = (fn: (params: any) => any) => (source: Observable<any>): Obse
                     map(event => ({ ...state, [state.rpc.path]: event.response })),
                     // catchError
                     catchError(error => {
-                        console.warn('[-] [rpc][ajax.post][request] url: ', error.request.url )
-                        console.warn('[-] [rpc][ajax.post][request] body: ', error.request.body )
+                        console.warn('[-] [rpc][ajax.post][request] url: ', error.request.url)
+                        console.warn('[-] [rpc][ajax.post][request] body: ', error.request.body)
                         console.warn('[-] [rpc][ajax.post][response] error: ', error.status, error.response)
                         return throwError({ ...error, state: state })
                     })

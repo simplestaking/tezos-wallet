@@ -5,15 +5,18 @@ import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, Contract, Operation, PublicAddress, Config } from './src/types'
+import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations } from './src/types'
 
 
 /**
  *  Transaction XTZ from one wallet to another
  */
-export const transaction = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
+export const transaction = (selector: (state: StateWallet) => Transaction) => (source: Observable<State>) => source.pipe(
 
-  map(state => ({ ...state, 'transaction': fn(state) })),
+  map(state => ({
+    ...state,
+    transaction: selector(state)
+  })),
 
   // get contract counter
   counter(),
@@ -28,50 +31,41 @@ export const transaction = (fn: (state: any) => any) => (source: Observable<any>
 
   // prepare config for operation
   map(state => {
-    const operations = []
+    const operations: OperationMetadata[] = [];
+
     if (state.manager_key.key === undefined) {
       operations.push({
-        "kind": "reveal",
-        "public_key": state.wallet.publicKey,
-        "source": state.wallet.publicKeyHash,
-        "fee": "10000",
-        "gas_limit": "15000",
-        "storage_limit": "277",
-        "counter": (++state.counter).toString(),
+        kind: "reveal",
+        public_key: state.wallet.publicKey,
+        source: state.wallet.publicKeyHash,
+        fee: "10000",
+        gas_limit: "15000",
+        storage_limit: "277",
+        counter: (++state.counter).toString()
       })
     }
 
     operations.push({
-      "kind": "transaction",
-      "source": state.wallet.publicKeyHash,
-      "destination": state.transaction.to,
-      "amount": utils.parseAmount(state.transaction.amount).toString(),
-      "fee": utils.parseAmount(state.transaction.fee).toString(),
-      "gas_limit": "11000", // "250000", 
-      "storage_limit": "277",
-      "counter": (++state.counter).toString(),
-    })
-
-    // add parameters to transaction
-    if (state.transaction.parameters) {
-      operations[operations.length - 1] = {
-        ...operations[operations.length - 1],
-        "parameters": state.transaction.parameters,
-      }
-    }
+      kind: "transaction",
+      source: state.wallet.publicKeyHash,
+      destination: state.transaction.to,
+      amount: utils.parseAmount(state.transaction.amount).toString(),
+      fee: utils.parseAmount(state.transaction.fee).toString(),
+      gas_limit: "11000", // "250000", 
+      storage_limit: "277",
+      parameters: state.transaction.parameters,
+      counter: (++state.counter).toString()
+    });
 
     return {
       ...state,
-      "operations": operations
+      operations: operations
     }
-
   }),
-
   // tap((state: any) => console.log("[+] trasaction: operation " , state.operations)),
 
   // create operation 
-  operation(),
-
+  operation()
 )
 
 /**
@@ -237,7 +231,7 @@ export const activateWallet = (fn: (state: any) => any) => (source: Observable<a
 /**
  * Create operation in blocchain
  */
-export const operation = () => <T>(source: Observable<Wallet>): Observable<T> => source.pipe(
+export const operation = () => <T extends State>(source: Observable<T>): Observable<T> => source.pipe(
 
   // create operation
   forgeOperation(),
@@ -250,12 +244,12 @@ export const operation = () => <T>(source: Observable<Wallet>): Observable<T> =>
 /**
  * Get head for operation
  */
-export const head = () => (source: Observable<any>) => source.pipe(
+export const head = <T extends State>() => (source: Observable<T>) => source.pipe(
 
   // get head
-  rpc(state => ({
-    'url': '/chains/main/blocks/head',
-    'path': 'head',
+  rpc<T, StateHead>((state: T) => ({
+    url: '/chains/main/blocks/head',
+    path: 'head',
   }))
 
 )
@@ -263,33 +257,31 @@ export const head = () => (source: Observable<any>) => source.pipe(
 /**
  * Get counter for contract  
  */
-export const counter = () => (source: Observable<any>) => source.pipe(
+export const counter = <T extends State>() => (source: Observable<T>) => source.pipe(
 
   // get counter for contract
-  rpc((state: any) => ({
-    'url': '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/counter',
-    'path': 'counter',
-  })),
-
+  rpc<T, StateCounter>((state) => ({
+    url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/counter',
+    path: 'counter',
+  }))
 )
 
 /**
 * Get manager key for contract 
 */
-export const managerKey = () => (source: Observable<any>) => source.pipe(
+export const managerKey = <T extends State>() => (source: Observable<T>) => source.pipe(
 
   // get manager key for contract 
-  rpc((state: any) => ({
-    'url': '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/manager_key',
-    'path': 'manager_key'
-  })),
-
+  rpc<T, StateManagerKey>((state) => ({
+    url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/manager_key',
+    path: 'manager_key'
+  }))
 )
 
 /**
  * Forge operation in blocchain
  */
-export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<T> => source.pipe(
+export const forgeOperation = () => <T extends State>(source: Observable<T>): Observable<T> => source.pipe(
 
   // get head and counter
   head(),
@@ -301,12 +293,12 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
   managerKey(),
 
   // create operation
-  rpc((state: any) => ({
-    'url': '/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations',
-    'path': 'operation',
-    'payload': {
-      "branch": state.head.hash,
-      "contents": state.operations,
+  rpc<State & StateHead, State & StateHead & StateOperations>((state) => ({
+    url: '/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations',
+    path: 'operation',
+    payload: {
+      branch: state.head.hash,
+      contents: state.operations
     }
   })),
 
@@ -315,7 +307,7 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
   // TODO: move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state): [utils.signOperation(state)]),
+  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 )
 
 /**
@@ -328,13 +320,13 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 
   // preapply operation
   rpc((state: any) => ({
-    'url': '/chains/main/blocks/head/helpers/preapply/operations',
-    'path': 'preapply',
-    'payload': [{
-      "protocol": state.head.protocol,
-      "branch": state.head.hash,
-      "contents": state.operations,
-      "signature": state.signOperation.signature
+    url: '/chains/main/blocks/head/helpers/preapply/operations',
+    path: 'preapply',
+    payload: [{
+      protocol: state.head.protocol,
+      branch: state.head.hash,
+      contents: state.operations,
+      signature: state.signOperation.signature
     }]
   })),
 
@@ -349,10 +341,10 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 
 
   // inject operation
-  rpc((state: any) => ({
-    'url': '/injection/operation',
-    'path': 'injectionOperation',
-    'payload': '"' + state.signOperation.signedOperationContents + '"',
+  rpc<any, any>((state) => ({
+    url: '/injection/operation',
+    path: 'injectionOperation',
+    payload: `"${state.signOperation.signedOperationContents}"`,
   })),
 
   tap((state: any) => console.log("[+] operation: " + state.wallet.node.tzscan.url + state.injectionOperation))
@@ -377,8 +369,8 @@ export const confirmOperation = (fn?: (state: any) => any) => (source: Observabl
 
   // call node and look for operation in mempool
   rpc((state: any) => ({
-    'url': '/chains/main/mempool/pending_operations',
-    'path': 'mempool'
+    url: '/chains/main/mempool/pending_operations',
+    path: 'mempool'
   })),
 
   // if we find operation in mempool call confirmOperation() again
@@ -426,13 +418,13 @@ export const packOperationParameters = () => (source: Observable<any>): Observab
  * Get wallet details
  */
 // export const getWalletDetail = (fn?: (params: Wallet) => PublicAddress) => (source: Observable<Wallet>): Observable<Contract> =>
-export const getWallet = () => (source: Observable<any>): Observable<any> =>
+export const getWallet = () => (source: Observable<State>): Observable<State> =>
   source.pipe(
 
     // get contract info balance 
-    rpc((state: any) => ({
-      'url': '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/',
-      'path': 'getWallet',
+    rpc((state: State) => ({
+      url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/',
+      path: 'getWallet'
     })),
 
     // show balance
@@ -445,7 +437,7 @@ export const getWallet = () => (source: Observable<any>): Observable<any> =>
 /**
  * Generate new menomonic, private, public key & tezos wallet address 
  */
-export const newWallet = () => <T>(source: Observable<T>): Observable<Wallet> => source.pipe(
+export const newWallet = () => <T>(source: Observable<T>): Observable<WalletBase> => source.pipe(
 
   // create keys
   map(state => utils.keys()),
@@ -461,8 +453,7 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<Wallet> =>
 /**
  * Wait for sodium to initialize
  */
-export const initializeWallet = (fn: (params: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
-
+export const initializeWallet = (fn: (params: State) => Wallet) => (source: Observable<any>): Observable<any> => source.pipe(
   flatMap(state => of([]).pipe(
 
     // wait for sodium to initialize
@@ -477,8 +468,5 @@ export const initializeWallet = (fn: (params: any) => any) => (source: Observabl
       console.warn('[initializeWallet][sodium] ready', error)
       return of({ response: error })
     })
-
-  )),
-
-
+  ))
 )

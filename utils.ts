@@ -2,7 +2,7 @@ import sodium from 'libsodium-wrappers'
 import * as bs58check from 'bs58check'
 import * as bip39 from 'bip39'
 
-import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation } from './src/types'
+import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, WalletBase } from './src/types'
 import { State, StateOperation, StateOperations, StateHead } from './src/types/state';
 import { of, throwError } from 'rxjs';
 import { tap, map, flatMap } from 'rxjs/operators';
@@ -247,10 +247,10 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
 }
 
 export const parseAmount = (amount: string) => {
-    return amount === '0' ? '0' : Math.round(parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
+    return amount === '0' ? 0 : Math.round(parseFloat(amount) * +1000000); // 1 000 000 = 1.00 tez
 }
 
-export const keys = (mnemonic?: any, passpharse?: any): Wallet => {
+export const keys = (mnemonic?: string, passpharse?: string): WalletBase => {
 
     mnemonic = mnemonic ? mnemonic : bip39.generateMnemonic(160)
     passpharse = mnemonic ? passpharse : ''
@@ -268,11 +268,9 @@ export const keys = (mnemonic?: any, passpharse?: any): Wallet => {
             prefix.tz1,
             // blake2b algo
             sodium.crypto_generichash(20, keyPair.publicKey)
-        ),
+        )
     }
 }
 
-export const ready = (): any => {
-    return sodium.ready
-}
+export const ready = () => sodium.ready;
 

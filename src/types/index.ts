@@ -1,15 +1,16 @@
 import { TrezorOperation } from "./operations";
 
 export * from './operations';
+export * from './state';
 
-export interface Wallet {
+export interface WalletBase {
     mnemonic?: string
     secretKey: string
     publicKey: string
     publicKeyHash: string
 }
 
-export interface Contract extends Wallet {
+export interface Contract extends WalletBase {
     manager: string
     balance: any
     spendable: boolean
@@ -27,7 +28,7 @@ export interface Transfer {
     amount: number
 }
 
-export interface Operation extends Wallet {
+export interface Operation extends WalletBase {
     operation: string;
 }
 
@@ -36,7 +37,7 @@ export interface PublicAddress {
 }
 
 export interface Config {
-    secretKey?: string,
+    secretKey: string,
     publicKey: string,
     publicKeyHash: string,
     node: TezosNode,
@@ -71,6 +72,11 @@ export interface TrezorMessage {
 }
 
 
+export interface RpcParams {
+    path: string
+    url: string
+    payload?: any
+}
 
 
 

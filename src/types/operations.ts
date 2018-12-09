@@ -4,10 +4,6 @@ export type SignOperation = {
     operationHash: string
 }
 
-export type Head = {
-    hash: string
-}
-
 interface BaseOperationMetadata {
     source: any
     fee: string
@@ -25,6 +21,7 @@ export interface TransactionOperationMetadata extends BaseOperationMetadata {
     kind: 'transaction'
     amount: string
     destination: any
+    parameters?: Record<string, any>
 }
 
 export interface OriginationOperationMetadata extends BaseOperationMetadata {

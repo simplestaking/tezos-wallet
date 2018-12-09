@@ -11,7 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/bip39": "^2.4.0",
     "bip39": "^2.5.0",
     "bs58check": "2.1.1",
     "buffer": "5.1.0",
@@ -21,6 +20,8 @@
     "xmlhttprequest-ssl": "1.5.5"
   },
   "devDependencies": {
+    "@types/bip39": "^2.4.0",
+    "@types/libsodium-wrappers": "^0.7.0",
     "@types/node": "^10.12.11",
     "ts-node": "^7.0.1",
     "typedoc": "^0.13.0",

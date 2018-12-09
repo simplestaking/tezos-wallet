@@ -2,7 +2,6 @@ import { of, from, throwError } from 'rxjs'
 import { flatMap, concatMap, catchError, map, tap } from 'rxjs/operators'
 
 import { initializeWallet, activateWallet, transaction, originateContract, getWallet, confirmOperation } from './client'
-import { Config } from './src/types'
 
 import * as utils from './utils'
 import * as fs from 'fs'
@@ -32,7 +31,12 @@ const config = {
 // go to https://faucet.tzalpha.net/ and save files to ./faucet directory
 // read connet of faucet files
 const dir = './faucet/'
-let faucets: any = []
+let faucets: {
+    publicKeyHash: string
+    mnemonic: string
+    password: string,
+    secret: string
+}[] = []
 
 // read directory
 const files = fs.readdirSync(dir);
@@ -63,14 +67,14 @@ utils.ready().then(() => {
         flatMap(faucet => of(faucet).pipe(
 
             // create privateKey & publicKey form mnemonic
-            map((faucet: any) => ({
+            map((faucet) => ({
                 wallet: {
                     ...utils.keys(faucet.mnemonic, faucet.password),
                     secret: faucet.secret,
                 }
             })),
 
-            tap((stateWallet: any) => console.log('\n\n[+] [stateWallet]', stateWallet.wallet.publicKeyHash)),
+            tap((stateWallet) => console.log('\n\n[+] [stateWallet]', stateWallet.wallet.publicKeyHash)),
 
             // wait for sodium to initialize
             initializeWallet(stateWallet => ({
@@ -81,7 +85,7 @@ utils.ready().then(() => {
                 // set Tezos node
                 node: config.node,
                 // set wallet type: WEB, TREZOR_ONE, TREZOR_T
-                type: config.type,
+                type: <any>config.type,
             })),
 
             // activate wallet
