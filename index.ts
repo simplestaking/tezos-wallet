@@ -6,6 +6,7 @@ import { initializeWallet, transaction, confirmOperation } from './client'
 
 // support for node.js
 import './node'
+import { WalletType } from './src/enums';
 
 console.log('[+] tezos wallet client')
 
@@ -22,7 +23,7 @@ const wallet: Config = {
             url: 'http://tzscan.io/',
         }
     },
-    type: 'web',
+    type: WalletType.WEB,
 }
 
 const walletObservable = of([])
@@ -38,7 +39,7 @@ walletObservable.pipe(
         // set Tezos node
         node: wallet.node,
         // set wallet type: WEB, TREZOR_ONE, TREZOR_T
-        type: wallet.type,
+        type: wallet.type
     })),
 
     // originate contract

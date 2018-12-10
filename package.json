@@ -13,7 +13,6 @@
   "dependencies": {
     "bip39": "^2.5.0",
     "bs58check": "2.1.1",
-    "buffer": "5.1.0",
     "libsodium": "^0.7.3",
     "libsodium-wrappers": "0.7.3",
     "rxjs": "6.3.2",

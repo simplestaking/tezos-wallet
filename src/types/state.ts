@@ -1,9 +1,10 @@
 import { TrezorOperation, SignOperation, OperationMetadata, RpcParams } from ".";
+import { WalletType } from "../enums";
 
 
 
 export interface State {
-    counter: number
+    counter?: number
     head?: Head
     manager_key?: ManagerKey
     operation?: string
@@ -34,7 +35,7 @@ export type Wallet = {
     publicKeyHash: string
     secret?: string
     secretKey: string
-    type?: 'TREZOR_T' | 'web'
+    type?: WalletType
 }
 
 export type Transaction = {
@@ -53,7 +54,7 @@ export type StateOperation = {
 }
 
 export type StateOperations = {
-    operations: TrezorOperation[]
+    operations: OperationMetadata[]
 }
 
 export type StateCounter = {
@@ -65,5 +66,9 @@ export type StateManagerKey = {
 }
 
 export type StateWallet = {
+    wallet: Wallet    
+}
+
+export interface StateWallet2 {
     wallet: Wallet
 }

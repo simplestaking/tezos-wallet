@@ -5,13 +5,14 @@ import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations } from './src/types'
+import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations, Config } from './src/types'
+import { WalletType } from './src/enums';
 
 
 /**
  *  Transaction XTZ from one wallet to another
  */
-export const transaction = (selector: (state: StateWallet) => Transaction) => (source: Observable<State>) => source.pipe(
+export const transaction = (selector: (state: StateWallet) => Transaction) => (source: Observable<StateWallet>) => source.pipe(
 
   map(state => ({
     ...state,
@@ -231,7 +232,7 @@ export const activateWallet = (fn: (state: any) => any) => (source: Observable<a
 /**
  * Create operation in blocchain
  */
-export const operation = () => <T extends State>(source: Observable<T>): Observable<T> => source.pipe(
+export const operation = () => <T extends State>(source: Observable<T & StateOperations>) => source.pipe(
 
   // create operation
   forgeOperation(),
@@ -247,53 +248,53 @@ export const operation = () => <T extends State>(source: Observable<T>): Observa
 export const head = <T extends State>() => (source: Observable<T>) => source.pipe(
 
   // get head
-  rpc<T, StateHead>((state: T) => ({
+  rpc<T>((state: T) => ({
     url: '/chains/main/blocks/head',
     path: 'head',
   }))
-
-)
+) as Observable<T & StateHead>
 
 /**
  * Get counter for contract  
  */
-export const counter = <T extends State>() => (source: Observable<T>) => source.pipe(
+export const counter = <T extends StateWallet>() => (source: Observable<T>) => source.pipe(
 
   // get counter for contract
-  rpc<T, StateCounter>((state) => ({
+  rpc<T>((state) => ({
     url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/counter',
     path: 'counter',
   }))
-)
+) as Observable<T & StateCounter>
 
 /**
 * Get manager key for contract 
 */
-export const managerKey = <T extends State>() => (source: Observable<T>) => source.pipe(
+export const managerKey = <T extends StateWallet>() => (source: Observable<T>) => source.pipe(
 
   // get manager key for contract 
-  rpc<T, StateManagerKey>((state) => ({
+  rpc<T>((state) => ({
     url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/manager_key',
     path: 'manager_key'
   }))
-)
+) as Observable<T & StateManagerKey>
 
 /**
  * Forge operation in blocchain
  */
-export const forgeOperation = () => <T extends State>(source: Observable<T>): Observable<T> => source.pipe(
+export const forgeOperation = () => <T extends State & StateOperations>(source: Observable<T>): Observable<T> => source.pipe(
 
   // get head and counter
   head(),
 
+  // @TODO: do we need special counter here?
   // get contract counter
-  counter(),
+  counter(), 
 
   // get contract managerKey
   managerKey(),
 
   // create operation
-  rpc<State & StateHead, State & StateHead & StateOperations>((state) => ({
+  rpc(state => ({
     url: '/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations',
     path: 'operation',
     payload: {
@@ -307,7 +308,7 @@ export const forgeOperation = () => <T extends State>(source: Observable<T>): Ob
   // TODO: move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
+  flatMap(state => state.wallet.type === WalletType.TREZOR_T ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 )
 
 /**
@@ -341,14 +342,13 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 
 
   // inject operation
-  rpc<any, any>((state) => ({
+  rpc<any>((state) => ({
     url: '/injection/operation',
     path: 'injectionOperation',
     payload: `"${state.signOperation.signedOperationContents}"`,
   })),
 
   tap((state: any) => console.log("[+] operation: " + state.wallet.node.tzscan.url + state.injectionOperation))
-
 )
 
 
@@ -453,20 +453,23 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<WalletBase
 /**
  * Wait for sodium to initialize
  */
-export const initializeWallet = (fn: (params: State) => Wallet) => (source: Observable<any>): Observable<any> => source.pipe(
-  flatMap(state => of([]).pipe(
+export const initializeWallet = (selector: (params: Config) => Wallet) => (source: Observable<any>): Observable<StateWallet> => source.pipe(
+  flatMap(state => of({}).pipe(
 
     // wait for sodium to initialize
     concatMap(() => Promise.resolve(sodium.ready)),
 
     // exec callback function and add result state
     map(() => ({
-      'wallet': fn(state)
+      wallet: selector(state)
     })),
 
     catchError(error => {
       console.warn('[initializeWallet][sodium] ready', error)
-      return of({ response: error })
+
+      // this might not work. Why we do not propagate error further?
+      //return of({ response: error })
+      return throwError(error);
     })
   ))
 )

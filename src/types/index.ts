@@ -1,4 +1,5 @@
 import { TrezorOperation } from "./operations";
+import { WalletType } from "../enums";
 
 export * from './operations';
 export * from './state';
@@ -58,11 +59,6 @@ export interface TZScanNode {
     operations_number?: string,
     block_timestamp?: string,
 }
-
-export type WalletType =
-    | "web"
-    | "TREZOR_ONE"
-    | "TREZOR_T";
 
 export interface TrezorMessage {
     path: string
