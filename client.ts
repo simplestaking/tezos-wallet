@@ -5,7 +5,7 @@ import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations, Config } from './src/types'
+import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations, Config, StateSignOperation, StatePreapplyOperation, StateInjectionOperation } from './src/types'
 import { WalletType } from './src/enums';
 
 
@@ -238,8 +238,7 @@ export const operation = () => <T extends State>(source: Observable<T & StateOpe
   forgeOperation(),
 
   // apply & inject operation
-  applyAndInjectOperation(),
-
+  applyAndInjectOperation() 
 )
 
 /**
@@ -278,49 +277,56 @@ export const managerKey = <T extends StateWallet>() => (source: Observable<T>) =
   }))
 ) as Observable<T & StateManagerKey>
 
+
 /**
  * Forge operation in blocchain
  */
-export const forgeOperation = () => <T extends State & StateOperations>(source: Observable<T>): Observable<T> => source.pipe(
+export const forgeOperation = <T extends State & StateOperations>() => (source: Observable<T>) => source.pipe(
 
   // get head and counter
   head(),
 
   // @TODO: do we need special counter here?
   // get contract counter
-  counter(), 
+  counter(),
 
   // get contract managerKey
   managerKey(),
 
+  forgeOperationAtomic(),
+
+  // add signature to state 
+  // 
+  // TODO: move and just keep signOperation and create logic inside utils 
+  // tap(state => console.log('[operation]', state.walletType, state)),
+  flatMap(state => {
+
+    if (state.wallet.type === WalletType.TREZOR_T) {
+      return utils.signOperationTrezor(state);
+
+    } else {
+      return utils.signOperation(state);
+    }
+  })
+)
+
+export const forgeOperationAtomic = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
+
   // create operation
-  rpc(state => ({
+  rpc<T>(state => ({
     url: '/chains/' + state.head.chain_id + '/blocks/' + state.head.hash + '/helpers/forge/operations',
     path: 'operation',
     payload: {
       branch: state.head.hash,
       contents: state.operations
     }
-  })),
+  }))
+) as Observable<T & StateOperation>
 
-  // add signature to state 
-  // 
-  // TODO: move and just keep signOperation and create logic inside utils 
-  // tap(state => console.log('[operation]', state.walletType, state)),
-  // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.wallet.type === WalletType.TREZOR_T ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
-)
 
-/**
- * Apply and inject operation into node
- */
-export const applyAndInjectOperation = () => (source: Observable<any>) => source.pipe(
+export const preapplyOperations = () => <T extends State & StateHead & StateSignOperation>(source: Observable<T>) => source.pipe(
 
-  //get counter
-  counter(),
-
-  // preapply operation
-  rpc((state: any) => ({
+  rpc<T>((state) => ({
     url: '/chains/main/blocks/head/helpers/preapply/operations',
     path: 'preapply',
     payload: [{
@@ -329,27 +335,45 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
       contents: state.operations,
       signature: state.signOperation.signature
     }]
-  })),
+  }))
+) as Observable<T & StatePreapplyOperation>
 
-  tap((state: any) => console.log("[+] operation: preapply ", state.preapply[0].contents[0].metadata.operation_result)),
-
-  // check for errors
-  flatMap(state =>
-    state.preapply[0].contents[0].metadata.operation_result && state.preapply[0].contents[0].metadata.operation_result.status === "failed" ?
-      throwError({ response: state.preapply[0].contents[0].metadata.operation_result.errors }) :
-      of(state)
-  ),
-
-
-  // inject operation
-  rpc<any>((state) => ({
+export const injectOperations = () => <T extends State & StateHead & StateOperations & StateSignOperation>(source: Observable<T>) => source.pipe(
+  rpc<T>((state) => ({
     url: '/injection/operation',
     path: 'injectionOperation',
-    payload: `"${state.signOperation.signedOperationContents}"`,
-  })),
+    payload: `"${state.signOperation.signedOperationContents}"`
+  }))
+) as Observable<T & StateInjectionOperation>
 
-  tap((state: any) => console.log("[+] operation: " + state.wallet.node.tzscan.url + state.injectionOperation))
-)
+
+/**
+ * Apply and inject operation into node
+ */
+export const applyAndInjectOperation = () => <T extends State & StateHead & StateOperations & StateSignOperation>(source: Observable<T>) => source.pipe(
+
+  //get counter
+  counter(),
+
+  // preapply operation
+  preapplyOperations(),
+
+  tap((state) => console.log("[+] operation: preapply ", state.preapply[0].contents[0].metadata.operation_result)),
+
+  // check for errors
+  flatMap(state => {
+    const result = state.preapply[0].contents[0].metadata;
+
+    return result.operation_result && result.operation_result.status === "failed" ?
+      throwError({ response: result.operation_result.errors }) :
+      of(state)
+  }),
+
+  // inject operation
+  injectOperations(),
+
+  tap((state) => console.log("[+] operation: " + state.wallet.node.tzscan.url + state.injectionOperation))
+);
 
 
 /**

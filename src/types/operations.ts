@@ -1,9 +1,3 @@
-export type SignOperation = {
-    signature: string
-    signedOperationContents: string
-    operationHash: string
-}
-
 interface BaseOperationMetadata {
     source: any
     fee: string

@@ -1,4 +1,4 @@
-import { TrezorOperation, SignOperation, OperationMetadata, RpcParams } from ".";
+import { OperationMetadata, RpcParams, TezosNode } from ".";
 import { WalletType } from "../enums";
 
 
@@ -6,9 +6,11 @@ import { WalletType } from "../enums";
 export interface State {
     counter?: number
     head?: Head
+    injectionOperation?: InjectionOperation
     manager_key?: ManagerKey
     operation?: string
     operations?: OperationMetadata[]
+    preapply?: PreapplyOperation[]
     rpc?: RpcParams
     signOperation?: SignOperation
     transaction?: Transaction
@@ -19,23 +21,29 @@ export interface State {
 export type Head = {
     hash: string
     chain_id: string
+    protocol: string
+}
+
+export type InjectionOperation = {
+
 }
 
 export type ManagerKey = {
     key?: any
 }
 
-export type Wallet = {
-    mnemonic?: string
-    path?: string
-    node: {
-        url: string
-    }
-    publicKey: string
-    publicKeyHash: string
-    secret?: string
-    secretKey: string
-    type?: WalletType
+export type PreapplyOperation = {
+    contents: {
+        metadata: {
+            operation_result: any
+        }
+    }[]
+}
+
+export type SignOperation = {
+    signature: string
+    signedOperationContents: string
+    operationHash: string
 }
 
 export type Transaction = {
@@ -44,6 +52,17 @@ export type Transaction = {
     to: string
     parameters?: Record<string, any>
 }
+export type Wallet = {
+    mnemonic?: string
+    path?: string
+    node: TezosNode,
+    publicKey: string
+    publicKeyHash: string
+    secret?: string
+    secretKey: string
+    type?: WalletType
+}
+
 
 export type StateHead = {
     head: Head
@@ -61,14 +80,22 @@ export type StateCounter = {
     counter: number
 }
 
-export type StateManagerKey = { 
-    manager_key: ManagerKey 
+export type StateManagerKey = {
+    manager_key: ManagerKey
 }
 
 export type StateWallet = {
-    wallet: Wallet    
+    wallet: Wallet
 }
 
-export interface StateWallet2 {
-    wallet: Wallet
+export type StateSignOperation = {
+    signOperation: SignOperation
+}
+
+export type StatePreapplyOperation = {
+    preapply: PreapplyOperation
+}
+
+export type StateInjectionOperation = {
+    injectionOperation: InjectionOperation
 }

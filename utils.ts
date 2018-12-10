@@ -3,8 +3,8 @@ import * as bs58check from 'bs58check'
 import * as bip39 from 'bip39'
 
 import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, WalletBase } from './src/types'
-import { State, StateOperation, StateOperations, StateHead } from './src/types/state';
-import { of, throwError } from 'rxjs';
+import { State, StateOperation, StateOperations, StateHead, StateSignOperation } from './src/types/state';
+import { of, throwError, Observable } from 'rxjs';
 import { tap, map, flatMap } from 'rxjs/operators';
 import { isArray } from 'util';
 import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from './src/validators';
@@ -50,7 +50,7 @@ export const concatKeys = (privateKey: Uint8Array, publicKey: Uint8Array) => {
 }
 
 // sign operation 
-export const signOperation = (state: any) => {
+export const signOperation = <T extends State & StateHead & StateOperation>(state: T) => {
 
     // TODO: change secretKey name to privateKey
     // console.log('[signOperation]', state)
@@ -58,7 +58,6 @@ export const signOperation = (state: any) => {
     if (typeof state.operation !== 'string') {
         throw new TypeError('[signOperation] Operation not available on state');
     }
-
     const operation = sodium.from_hex(state.operation);
     const publicKey = bs58checkDecode(prefix.edpk, state.wallet.publicKey);
     const privateKey = bs58checkDecode(prefix.edsk32, state.wallet.secretKey);
@@ -90,18 +89,20 @@ export const signOperation = (state: any) => {
         sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
     );
 
-    return {
-        ...state,
-        signOperation: {
-            signature: signature,
-            signedOperationContents: signedOperationContents,
-            operationHash: operationHash
-        }
-    }
-}
+    return of(state).pipe(
+        map(state => ({
+            ...state,
+            signOperation: {
+                signature: signature,
+                signedOperationContents: signedOperationContents,
+                operationHash: operationHash
+            }
+        }))
+    );
+};
 
 // sign operation 
-export const signOperationTrezor = (state: State & StateHead & StateOperations) => {
+export const signOperationTrezor = <T extends State & StateHead & StateOperation>(state: T) => {
 
     if (!isArray(state.operations)) {
         throw new TypeError('[signOperationTrezor] Operations not available in state');
@@ -219,31 +220,36 @@ export const signOperationTrezor = (state: State & StateHead & StateOperations) 
         }
     });
 
-    return of([state]).pipe(
+    return of(state).pipe(
 
         tap(() => console.warn('[TrezorConnect][signOperationTrezor] message', JSON.stringify(message))),
 
         // wait for resopnse from Trezor
         flatMap(() => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
-        // handle error from Trezor
-        flatMap((response: any) => response.payload.error ?
-            // throw error
-            throwError({ response: [{ 'TrezorConnect': 'tezosSignTransaction', ...response.payload }] }) :
-            of(response)),
+        //  handle error from Trezor
+        flatMap((response: any) => {
+
+            // error on invalid response
+            if (response.payload.error) {
+                // throw error
+                return throwError({ response: [{ 'TrezorConnect': 'tezosSignTransaction', ...response.payload }] });
+            }
+
+            return of(response)
+        }),
 
         tap((response: any) => { console.warn('[TrezorConnect][tezosSignTransaction] reponse', response.payload) }),
         map(response => ({
             ...state,
             signOperation: {
-                signature: response.payload.signature,
-                signedOperationContents: response.payload.sig_op_contents,
-                operationHash: response.payload.operation_hash,
+                signature: response.payload.signature as string,
+                signedOperationContents: response.payload.sig_op_contents as string,
+                operationHash: response.payload.operation_hash as string,
             }
-        })),
-
+        })
+        )
     )
-
 }
 
 export const parseAmount = (amount: string) => {

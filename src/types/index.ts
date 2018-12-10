@@ -11,31 +11,31 @@ export interface WalletBase {
     publicKeyHash: string
 }
 
-export interface Contract extends WalletBase {
-    manager: string
-    balance: any
-    spendable: boolean
-    delegate: {
-        setable: boolean
-    }
-    counter: number
-}
+// export interface Contract extends WalletBase {
+//     manager: string
+//     balance: any
+//     spendable: boolean
+//     delegate: {
+//         setable: boolean
+//     }
+//     counter: number
+// }
 
-export interface Transfer {
-    secretKey: string
-    publicKey: string
-    publicKeyHash: string
-    to: string;
-    amount: number
-}
+// export interface Transfer {
+//     secretKey: string
+//     publicKey: string
+//     publicKeyHash: string
+//     to: string;
+//     amount: number
+// }
 
-export interface Operation extends WalletBase {
-    operation: string;
-}
+// export interface Operation extends WalletBase {
+//     operation: string;
+// }
 
-export interface PublicAddress {
-    publicKeyHash: string
-}
+// export interface PublicAddress {
+//     publicKeyHash: string
+// }
 
 export interface Config {
     secretKey: string,
