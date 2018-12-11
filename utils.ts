@@ -2,7 +2,7 @@ import sodium from 'libsodium-wrappers'
 import * as bs58check from 'bs58check'
 import * as bip39 from 'bip39'
 
-import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, WalletBase } from './src/types'
+import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, WalletBase, TrezorConnectResponse as TrezorResponse } from './src/types'
 import { State, StateOperation, StateOperations, StateHead, StateSignOperation } from './src/types/state';
 import { of, throwError, Observable } from 'rxjs';
 import { tap, map, flatMap } from 'rxjs/operators';
@@ -109,7 +109,7 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
     }
 
     // set basic config
-    let message: Partial<TrezorMessage> = {
+    let msg: Partial<TrezorMessage> = {
         path: state.wallet.path,
         branch: state.head.hash
     }
@@ -124,7 +124,7 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
             case 'reveal': {
                 validateRevealOperation(operation);
 
-                (<TrezorRevealOperation>message.operation) = {
+                (<TrezorRevealOperation>msg.operation) = {
                     // add reveal to operation 
                     reveal: {
                         source: operation.source,
@@ -141,7 +141,7 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
             case 'transaction': {
                 validateTransactionOperation(operation);
 
-                (<TrezorTransactionOperation>message.operation) = {
+                (<TrezorTransactionOperation>msg.operation) = {
                     // add transaction to operation
                     transaction: {
                         source: operation.source,
@@ -178,7 +178,7 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
             case 'origination': {
                 validateOriginationOperation(operation);
 
-                (<TrezorOriginationOperation>message.operation) = {
+                (<TrezorOriginationOperation>msg.operation) = {
                     // add origination to operation
                     origination: {
                         source: operation.source,
@@ -200,7 +200,7 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
             case 'delegation': {
                 // no validation as no special properties are required
 
-                (<TrezorDelegationOperation>message.operation) = {
+                (<TrezorDelegationOperation>msg.operation) = {
                     // add delegation to operation
                     delegation: {
                         source: operation.source,
@@ -214,38 +214,45 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
                 break;
             }
 
+            // @TODO: acount activation is missing??
+            case 'activate_account': {
+                //??
+            }
+
             default: {
-                throw new TypeError('[signOperationTrezor] Unknown operation type. Cannot proceed.');
+                throw new TypeError(`[signOperationTrezor] Unknown operation type "${operation.kind}". Cannot proceed.`);
             }
         }
     });
+
+    // force cast to message as its complete now
+    const message = msg as TrezorMessage;
 
     return of(state).pipe(
 
         tap(() => console.warn('[TrezorConnect][signOperationTrezor] message', JSON.stringify(message))),
 
         // wait for resopnse from Trezor
-        flatMap(() => (<any>window).TrezorConnect.tezosSignTransaction(message)),
+        flatMap<T, TrezorResponse>(() => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
         //  handle error from Trezor
-        flatMap((response: any) => {
+        flatMap((response) => {
 
             // error on invalid response
             if (response.payload.error) {
                 // throw error
-                return throwError({ response: [{ 'TrezorConnect': 'tezosSignTransaction', ...response.payload }] });
+                return throwError({ response: [{ TrezorConnect: 'tezosSignTransaction', ...response.payload }] });
             }
-
             return of(response)
         }),
 
-        tap((response: any) => { console.warn('[TrezorConnect][tezosSignTransaction] reponse', response.payload) }),
+        tap((response) => { console.warn('[TrezorConnect][tezosSignTransaction] reponse', response.payload) }),
         map(response => ({
             ...state,
             signOperation: {
-                signature: response.payload.signature as string,
-                signedOperationContents: response.payload.sig_op_contents as string,
-                operationHash: response.payload.operation_hash as string,
+                signature: response.payload.signature,
+                signedOperationContents: response.payload.sig_op_contents,
+                operationHash: response.payload.operation_hash,
             }
         })
         )

@@ -5,14 +5,14 @@ import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations, Config, StateSignOperation, StatePreapplyOperation, StateInjectionOperation } from './src/types'
+import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations, Config, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateWalletDetail, ProcessingError, ConfirmOperation, ActivateWallet, StateMempool, StateConfirmOperation, MempoolOperation } from './src/types'
 import { WalletType } from './src/enums';
 
 
 /**
  *  Transaction XTZ from one wallet to another
  */
-export const transaction = (selector: (state: StateWallet) => Transaction) => (source: Observable<StateWallet>) => source.pipe(
+export const transaction = (selector: (state: State) => Transaction) => (source: Observable<StateWallet>) => source.pipe(
 
   map(state => ({
     ...state,
@@ -203,30 +203,32 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
 /**
   * Activate wallet
   */
-export const activateWallet = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
+export const activateWallet = <T extends State>(fn: (state: T) => ActivateWallet) => (source: Observable<T>) => source.pipe(
 
-  map(state => ({ ...state, 'activateWallet': fn(state) })),
+  map(state => ({
+    ...state,
+    activateWallet: fn(state)
+  })),
 
   // prepare config for operation
   map(state => {
     const operations = []
 
     operations.push({
-      "kind": "activate_account",
-      "pkh": state.wallet.publicKeyHash,
-      "secret": state.activateWallet.secret,
+      kind: "activate_account",
+      pkh: state.wallet.publicKeyHash,
+      secret: state.activateWallet.secret
     })
 
     return {
       ...state,
-      "operations": operations
+      operations: operations
     }
 
   }),
 
   // create operation 
-  operation(),
-
+  operation()
 )
 
 /**
@@ -238,7 +240,7 @@ export const operation = () => <T extends State>(source: Observable<T & StateOpe
   forgeOperation(),
 
   // apply & inject operation
-  applyAndInjectOperation() 
+  applyAndInjectOperation()
 )
 
 /**
@@ -324,7 +326,7 @@ export const forgeOperationAtomic = <T extends State & StateHead & StateOperatio
 ) as Observable<T & StateOperation>
 
 
-export const preapplyOperations = () => <T extends State & StateHead & StateSignOperation>(source: Observable<T>) => source.pipe(
+export const preapplyOperations = <T extends State & StateHead & StateSignOperation>() => (source: Observable<T>) => source.pipe(
 
   rpc<T>((state) => ({
     url: '/chains/main/blocks/head/helpers/preapply/operations',
@@ -338,7 +340,7 @@ export const preapplyOperations = () => <T extends State & StateHead & StateSign
   }))
 ) as Observable<T & StatePreapplyOperation>
 
-export const injectOperations = () => <T extends State & StateHead & StateOperations & StateSignOperation>(source: Observable<T>) => source.pipe(
+export const injectOperations = <T extends State & StateHead & StateOperations & StateSignOperation>() => (source: Observable<T>) => source.pipe(
   rpc<T>((state) => ({
     url: '/injection/operation',
     path: 'injectionOperation',
@@ -350,7 +352,7 @@ export const injectOperations = () => <T extends State & StateHead & StateOperat
 /**
  * Apply and inject operation into node
  */
-export const applyAndInjectOperation = () => <T extends State & StateHead & StateOperations & StateSignOperation>(source: Observable<T>) => source.pipe(
+export const applyAndInjectOperation = <T extends State & StateHead & StateOperations & StateSignOperation>() => (source: Observable<T>) => source.pipe(
 
   //get counter
   counter(),
@@ -376,44 +378,60 @@ export const applyAndInjectOperation = () => <T extends State & StateHead & Stat
 );
 
 
+export const checkPendingOperations = <T extends State>() => (source: Observable<T>) => source.pipe(
+
+  rpc<T>(() => ({
+    url: '/chains/main/mempool/pending_operations',
+    path: 'mempool'
+  }))
+) as Observable<T & StateMempool>
+
+
 /**
  * Wait until operation is confirmed & moved from mempool to head
  */
-export const confirmOperation = (fn?: (state: any) => any) => (source: Observable<any>): any => source.pipe(
+export const confirmOperation = <T extends State>(selector: (state: T) => ConfirmOperation) => (source: Observable<T>): Observable<T> => source.pipe(
 
   map(state => ({
     ...state,
-    'confirmOperation': (fn && typeof fn === 'function') ? fn(state) : state.confirmOperation
+    // why?? confirmOperation is never created other way
+    //confirmOperation: (fn && typeof fn === 'function') ? fn(state) : state.confirmOperation
+    confirmOperation: selector(state)
   })),
 
-  tap((state: any) => console.log('[-] pending: operation "' + state.confirmOperation.injectionOperation + '"')),
+  tap((state) => console.log('[-] pending: operation "' + state.confirmOperation.injectionOperation + '"')),
 
   // wait 3 sec for operation 
   delay(3000),
 
   // call node and look for operation in mempool
-  rpc((state: any) => ({
-    url: '/chains/main/mempool/pending_operations',
-    path: 'mempool'
-  })),
+  checkPendingOperations(),
 
   // if we find operation in mempool call confirmOperation() again
-  flatMap((state: any) => {
+  flatMap((state) => {
     // check if operation is refused
-    if (state.mempool.refused
-      .filter((operation: any) => state.confirmOperation.injectionOperation === operation.hash)
-      .length > 0) {
-
+    if (state.mempool.refused.filter(hasRefusedOperationInMempool, state).length > 0) {
       console.error('[-] operation refused: ', state.mempool.refused, state.confirmOperation.injectionOperation)
 
       return throwError(state.mempool.refused);
-    }
+    } else {
 
-    return state.mempool.applied
-      .filter((operation: any) => state.confirmOperation.injectionOperation === operation.hash)
-      .length > 0 ? of(state).pipe(confirmOperation()) : source
-  }),
+      return state.mempool.applied.filter(hasAppliedOperationInMempool).length > 0 ?
+        of(state).pipe(
+          confirmOperation(selector)
+        ) :
+        source
+    }
+  })
 )
+
+export function hasRefusedOperationInMempool(this: StateConfirmOperation, operation: MempoolOperation) {
+  return this.confirmOperation.injectionOperation === operation.hash;
+};
+
+export function hasAppliedOperationInMempool(this: StateConfirmOperation, operation: MempoolOperation) {
+  return this.confirmOperation.injectionOperation === operation.hash;
+}
 
 /** 
  * Pack operation parameters
@@ -442,11 +460,11 @@ export const packOperationParameters = () => (source: Observable<any>): Observab
  * Get wallet details
  */
 // export const getWalletDetail = (fn?: (params: Wallet) => PublicAddress) => (source: Observable<Wallet>): Observable<Contract> =>
-export const getWallet = () => (source: Observable<State>): Observable<State> =>
+export const getWallet = <T extends State>() => (source: Observable<T>) =>
   source.pipe(
 
     // get contract info balance 
-    rpc((state: State) => ({
+    rpc<T>(state => ({
       url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/',
       path: 'getWallet'
     })),
@@ -455,7 +473,7 @@ export const getWallet = () => (source: Observable<State>): Observable<State> =>
     // tap(state => {
     //   console.log('[+] balance: ' + parseInt(state.getWallet.balance) / 1000000 + ' ꜩ  for: ' + state.wallet.publicKeyHash)
     // })
-  )
+  ) as Observable<T & StateWalletDetail>
 
 
 /**
@@ -477,7 +495,7 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<WalletBase
 /**
  * Wait for sodium to initialize
  */
-export const initializeWallet = (selector: (params: Config) => Wallet) => (source: Observable<any>): Observable<StateWallet> => source.pipe(
+export const initializeWallet = (selector: (params: StateWallet) => Wallet) => (source: Observable<any>) => source.pipe(
   flatMap(state => of({}).pipe(
 
     // wait for sodium to initialize
@@ -488,12 +506,15 @@ export const initializeWallet = (selector: (params: Config) => Wallet) => (sourc
       wallet: selector(state)
     })),
 
-    catchError(error => {
+    catchError((error: any) => {
       console.warn('[initializeWallet][sodium] ready', error)
 
       // this might not work. Why we do not propagate error further?
-      //return of({ response: error })
-      return throwError(error);
+      return of({
+        ...state,
+        response: error
+      })
+      //return throwError(error);
     })
   ))
 )

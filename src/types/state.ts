@@ -4,10 +4,14 @@ import { WalletType } from "../enums";
 
 
 export interface State {
+    activateWallet?: ActivateWallet
+    confirmOperation?: InjectionOperation
     counter?: number
+    getWallet?: WalletDetail
     head?: Head
-    injectionOperation?: InjectionOperation
+    injectionOperation?: ConfirmOperation
     manager_key?: ManagerKey
+    mempool?: Mempool
     operation?: string
     operations?: OperationMetadata[]
     preapply?: PreapplyOperation[]
@@ -17,6 +21,17 @@ export interface State {
     wallet: Wallet
 };
 
+export type ActivateWallet = {
+    secret: string
+}
+
+export type ConfirmOperation = {
+    injectionOperation: InjectionOperation
+}
+
+export type WalletDetail = {
+    balance: number
+}
 
 export type Head = {
     hash: string
@@ -26,6 +41,15 @@ export type Head = {
 
 export type InjectionOperation = {
 
+}
+
+export type MempoolOperation = {
+    hash: string
+}
+
+export type Mempool = {
+    applied: MempoolOperation[]
+    refused: MempoolOperation[]
 }
 
 export type ManagerKey = {
@@ -63,6 +87,19 @@ export type Wallet = {
     type?: WalletType
 }
 
+export type StateActivateWallet = {
+    activateWallet: ActivateWallet
+}
+
+export type StateConfirmOperation = {
+    confirmOperation: {
+        injectionOperation: InjectionOperation
+    }
+}
+
+export type StateWalletDetail = {
+    getWallet: WalletDetail
+}
 
 export type StateHead = {
     head: Head
@@ -84,6 +121,10 @@ export type StateManagerKey = {
     manager_key: ManagerKey
 }
 
+export type StateMempool = {
+    mempool: Mempool
+}
+
 export type StateWallet = {
     wallet: Wallet
 }
@@ -98,4 +139,10 @@ export type StatePreapplyOperation = {
 
 export type StateInjectionOperation = {
     injectionOperation: InjectionOperation
+}
+
+export type ProcessingError = State & {
+    response: {
+        id: string
+    }[]
 }

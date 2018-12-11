@@ -8,6 +8,8 @@ import * as fs from 'fs'
 
 // support for node.js
 import './node'
+import { WalletType } from './src/enums';
+import { ProcessingError } from './src/types';
 
 const config = {
     transaction: {
@@ -25,7 +27,7 @@ const config = {
             url: 'http://zeronet.tzscan.io/',
         }
     },
-    type: 'web',
+    type: WalletType.WEB,
 }
 
 // go to https://faucet.tzalpha.net/ and save files to ./faucet directory
@@ -85,7 +87,7 @@ utils.ready().then(() => {
                 // set Tezos node
                 node: config.node,
                 // set wallet type: WEB, TREZOR_ONE, TREZOR_T
-                type: <any>config.type,
+                type: config.type,
             })),
 
             // activate wallet
@@ -99,15 +101,17 @@ utils.ready().then(() => {
             })),
 
             // continue if wallet was activated already, otherwise throw error
-            catchError((error, caught) => {
+            catchError((error: ProcessingError) => {
+
                 return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
-                    of({ wallet: error.state.wallet }) : throwError(error)
+                    of({ wallet: error.wallet }) : 
+                    throwError(error)
             }),
 
             // get wallet info
             getWallet(),
 
-            tap((stateWallet: any) => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000))),
+            tap((stateWallet) => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000))),
 
             // send XTZ if balance is > 100 xt
             flatMap(stateWallet => (stateWallet.getWallet.balance / 1000000) > 1 ?

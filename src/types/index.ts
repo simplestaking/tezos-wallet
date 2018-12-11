@@ -74,5 +74,12 @@ export interface RpcParams {
     payload?: any
 }
 
-
+export interface TrezorConnectResponse {
+    payload: {
+        signature: string,
+        sig_op_contents: string,
+        operation_hash: string,
+        error?: any
+    }
+}
 

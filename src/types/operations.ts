@@ -30,70 +30,77 @@ export interface OriginationOperationMetadata extends BaseOperationMetadata {
 
 export interface DelegationOperationMetadata extends BaseOperationMetadata {
     kind: 'delegation'
-    delegate?: any   
+    delegate?: any
+}
+
+export interface ActivateWalletOperationMetadata {
+    kind: 'activate_account'
+    pkh: string
+    secret: string
 }
 
 export type OperationMetadata = BaseOperationMetadata &
     (
         RevealOperationMetadata |
         TransactionOperationMetadata |
-        OriginationOperationMetadata | 
-        DelegationOperationMetadata
+        OriginationOperationMetadata |
+        DelegationOperationMetadata | 
+        ActivateWalletOperationMetadata
     );
 
-    type TrezorOperationTarget = {
-        tag: number
-        hash: Uint8Array | null
+type TrezorOperationTarget = {
+    tag: number
+    hash: Uint8Array | null
+}
+
+export type TrezorRevealOperation = {
+    reveal: {
+        source: TrezorOperationTarget
+        public_key: string
+        fee: number
+        counter: number
+        gas_limit: number
+        storage_limit: number
     }
-    
-    export type TrezorRevealOperation = {
-        reveal: {
-            source: TrezorOperationTarget
-            public_key: string
-            fee: number
-            counter: number
-            gas_limit: number
-            storage_limit: number
-        }
+}
+
+export type TrezorTransactionOperation = {
+    transaction: {
+        source: TrezorOperationTarget
+        destination: TrezorOperationTarget
+        amount: number
+        fee: number
+        counter: number
+        gas_limit: number
+        storage_limit: number
     }
-    
-    export type TrezorTransactionOperation = {
-        transaction: {
-            source: TrezorOperationTarget
-            destination: TrezorOperationTarget
-            amount: number
-            fee: number
-            counter: number
-            gas_limit: number
-            storage_limit: number
-        }
+}
+
+export type TrezorOriginationOperation = {
+    origination: {
+        source: TrezorOperationTarget
+        manager_pubkey: Uint8Array | null
+        balance: number
+        spendable: boolean
+        delegatable: boolean
+        delegate: Uint8Array | null
+        fee: number
+        counter: number
+        gas_limit: number
+        storage_limit: number
     }
-    
-    export type TrezorOriginationOperation = {
-        origination: {
-            source: TrezorOperationTarget
-            manager_pubkey: Uint8Array | null
-            balance: number
-            spendable: boolean
-            delegatable: boolean
-            delegate: Uint8Array | null
-            fee: number
-            counter: number
-            gas_limit: number
-            storage_limit: number
-        }
+}
+
+export type TrezorDelegationOperation = {
+    delegation: {
+        source: TrezorOperationTarget
+        delegate: Uint8Array | null
+        fee: number
+        counter: number
+        gas_limit: number
+        storage_limit: number
     }
-    
-    export type TrezorDelegationOperation = {
-        delegation: {
-            source: TrezorOperationTarget
-            delegate: Uint8Array | null
-            fee: number
-            counter: number
-            gas_limit: number
-            storage_limit: number
-        }
-    }
-    
-    export type TrezorOperation = TrezorRevealOperation | TrezorTransactionOperation | TrezorOriginationOperation | TrezorDelegationOperation;
-    
+}
+
+export type TrezorOperation = TrezorRevealOperation | TrezorTransactionOperation | TrezorOriginationOperation | TrezorDelegationOperation;
+
