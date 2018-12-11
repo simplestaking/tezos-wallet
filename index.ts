@@ -43,7 +43,7 @@ walletObservable.pipe(
     })),
 
     // originate contract
-    transaction(stateWallet => ({
+    transaction(() => ({
         to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
         amount: '0.001',
         fee: '0'

@@ -9,7 +9,7 @@ import * as fs from 'fs'
 // support for node.js
 import './node'
 import { WalletType } from './src/enums';
-import { ProcessingError } from './src/types';
+import { ProcessingError, State } from './src/types';
 
 const config = {
     transaction: {
@@ -92,7 +92,7 @@ utils.ready().then(() => {
 
             // activate wallet
             activateWallet(stateWallet => ({
-                secret: stateWallet.wallet.secret
+                secret: <string>stateWallet.wallet.secret
             })),
 
             // wait for transaction to be confirmed
@@ -101,7 +101,7 @@ utils.ready().then(() => {
             })),
 
             // continue if wallet was activated already, otherwise throw error
-            catchError((error: ProcessingError) => {
+            catchError<State, State>((error: ProcessingError) => {
 
                 return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
                     of({ wallet: error.wallet }) : 
@@ -115,12 +115,12 @@ utils.ready().then(() => {
 
             // send XTZ if balance is > 100 xt
             flatMap(stateWallet => (stateWallet.getWallet.balance / 1000000) > 1 ?
-                of(stateWallet).pipe(
+                of(stateWallet).pipe(                    
 
                     // send xtz
                     transaction(stateWallet => ({
                         to: config.transaction.to,
-                        amount: ((stateWallet.getWallet.balance / 1000000) - 100),
+                        amount: ((stateWallet.getWallet.balance / 1000000) - 100).toString(),
                         // amount: 0.1,
                         fee: config.transaction.fee,
                     })),

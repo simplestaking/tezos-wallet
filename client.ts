@@ -12,7 +12,7 @@ import { WalletType } from './src/enums';
 /**
  *  Transaction XTZ from one wallet to another
  */
-export const transaction = (selector: (state: State) => Transaction) => (source: Observable<StateWallet>) => source.pipe(
+export const transaction = <T extends State>(selector: (state: T) => Transaction) => (source: Observable<T>) => source.pipe(
 
   map(state => ({
     ...state,
@@ -495,7 +495,7 @@ export const newWallet = () => <T>(source: Observable<T>): Observable<WalletBase
 /**
  * Wait for sodium to initialize
  */
-export const initializeWallet = (selector: (params: StateWallet) => Wallet) => (source: Observable<any>) => source.pipe(
+export const initializeWallet = (selector: (params: StateWallet) => Wallet) => (source: Observable<any>): Observable<State> => source.pipe(
   flatMap(state => of({}).pipe(
 
     // wait for sodium to initialize
