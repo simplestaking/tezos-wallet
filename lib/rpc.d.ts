@@ -1,2 +1,3 @@
 import { Observable } from 'rxjs';
-export declare const rpc: (fn: (params: any) => any) => (source: Observable<any>) => Observable<any>;
+import { RpcParams, StateWallet } from './src/types';
+export declare const rpc: <T extends StateWallet>(selector: (params: T) => RpcParams) => (source: Observable<T>) => Observable<T>;

@@ -275,7 +275,7 @@ export const managerKey = <T extends StateWallet>() => (source: Observable<T>) =
   // get manager key for contract 
   rpc<T>((state) => ({
     url: '/chains/main/blocks/head/context/contracts/' + state.wallet.publicKeyHash + '/manager_key',
-    path: 'manager_key'
+    path: 'manager_key' // @TODO: should not be 'manager' ??
   }))
 ) as Observable<T & StateManagerKey>
 
@@ -365,7 +365,8 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
   // check for errors
   flatMap(state => {
     const result = state.preapply[0].contents[0].metadata;
-
+    
+    // @@TODO: no such a field as operation_result
     return result.operation_result && result.operation_result.status === "failed" ?
       throwError({ response: result.operation_result.errors }) :
       of(state)
@@ -416,7 +417,7 @@ export const confirmOperation = <T extends State>(selector: (state: T) => Confir
       return throwError(state.mempool.refused);
     } else {
 
-      return state.mempool.applied.filter(hasAppliedOperationInMempool).length > 0 ?
+      return state.mempool.applied.filter(hasAppliedOperationInMempool, state).length > 0 ?
         of(state).pipe(
           confirmOperation(selector)
         ) :

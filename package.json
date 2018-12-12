@@ -6,7 +6,9 @@
   "types": "./lib/client.d.ts",
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w"
+    "dev": "tsc --sourceMap false",
+    "watch": "tsc -w",
+    "ts-node": "ts-node faucet.ts"
   },
   "author": "",
   "license": "ISC",

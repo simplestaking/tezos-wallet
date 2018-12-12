@@ -14,7 +14,7 @@ import { ProcessingError, State } from './src/types';
 const config = {
     transaction: {
         // hw_trezor_zero
-        to: 'tz1ckrgqGGGBt4jGDmwFhtXc1LNpZJUnA9F2',
+        to: 'tz1UQfd6Hqbfy9x4yQAA9XdkZih57aZYYtnC',
         // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
         amount: '1.23',
         fee: '1',
