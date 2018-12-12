@@ -54,7 +54,7 @@ export type Head = {
         baker: string
         balance_updates: any[] // operations
         consumed_gas: string // number
-        deactivated: any[] 
+        deactivated: any[]
         level: any
         max_block_header_length: number
         max_operation_data_length: number
@@ -114,7 +114,7 @@ export type PreapplyOperation = {
     contents: {
         metadata: {
             operation_result: any
-        }        
+        }
     }[]
     signature: string
 }
@@ -196,8 +196,9 @@ export type StateInjectionOperation = {
     injectionOperation: InjectionOperation
 }
 
-export type ProcessingError = State & {
+export type RpcError = {
     response: {
         id: string
     }[]
+    state: State
 }

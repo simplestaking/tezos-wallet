@@ -165,8 +165,9 @@ export declare type StatePreapplyOperation = {
 export declare type StateInjectionOperation = {
     injectionOperation: InjectionOperation;
 };
-export declare type ProcessingError = State & {
+export declare type RpcError = {
     response: {
         id: string;
     }[];
+    state: State;
 };

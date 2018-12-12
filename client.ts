@@ -5,7 +5,11 @@ import * as sodium from 'libsodium-wrappers'
 import * as utils from './utils'
 import { rpc } from './rpc'
 
-import { Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet, WalletBase, StateOperation, StateOperations, Config, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateWalletDetail, ProcessingError, ConfirmOperation, ActivateWallet, StateMempool, StateConfirmOperation, MempoolOperation } from './src/types'
+import {
+  Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet,
+  WalletBase, StateOperation, StateOperations, Config, StateSignOperation, StatePreapplyOperation, StateInjectionOperation,
+  StateWalletDetail, ConfirmOperation, ActivateWallet, StateMempool, StateConfirmOperation, MempoolOperation
+} from './src/types'
 import { WalletType } from './src/enums';
 
 
@@ -365,7 +369,7 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
   // check for errors
   flatMap(state => {
     const result = state.preapply[0].contents[0].metadata;
-    
+
     // @@TODO: no such a field as operation_result
     return result.operation_result && result.operation_result.status === "failed" ?
       throwError({ response: result.operation_result.errors }) :
@@ -511,9 +515,10 @@ export const initializeWallet = (selector: (params: StateWallet) => Wallet) => (
       console.warn('[initializeWallet][sodium] ready', error)
 
       // this might not work. Why we do not propagate error further?
+      // incompatible
       return of({
         ...state,
-        response: error
+        error
       })
       //return throwError(error);
     })

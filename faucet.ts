@@ -9,7 +9,7 @@ import * as fs from 'fs'
 // support for node.js
 import './node'
 import { WalletType } from './src/enums';
-import { ProcessingError, State } from './src/types';
+import { State, RpcError } from './src/types';
 
 const config = {
     transaction: {
@@ -101,10 +101,10 @@ utils.ready().then(() => {
             })),
 
             // continue if wallet was activated already, otherwise throw error
-            catchError<State, State>((error: ProcessingError) => {
+            catchError<State, State>((error: RpcError) => {
 
                 return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
-                    of({ wallet: error.wallet }) : 
+                    of({ wallet: error.state.wallet }) : 
                     throwError(error)
             }),
 

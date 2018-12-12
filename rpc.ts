@@ -34,7 +34,7 @@ export const rpc = <T extends StateWallet>(selector: (params: T) => RpcParams) =
                         console.warn('[-] [rpc][ajax.post][request] url: ', error.request.url)
                         console.warn('[-] [rpc][ajax.post][request] body: ', error.request.body)
                         console.warn('[-] [rpc][ajax.post][response] error: ', error.status, error.response)
-                        return throwError({ ...error, state: state })
+                        return throwError({ ...error, state })
                     })
                 )
                 :
@@ -50,7 +50,7 @@ export const rpc = <T extends StateWallet>(selector: (params: T) => RpcParams) =
                     catchError(error => {
                         console.warn('[-] [rpc][ajax.get][request] url: ', error.request.url)
                         console.warn('[-] [rpc][ajax.get][response] error: ', error.status, error.response)
-                        return throwError({ ...error, state: state })
+                        return throwError({ ...error, state })
                     })
                 )
         }
