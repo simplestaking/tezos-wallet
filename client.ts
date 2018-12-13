@@ -8,7 +8,8 @@ import { rpc } from './rpc'
 import {
   Wallet, State, Transaction, OperationMetadata, StateHead, StateCounter, StateManagerKey, StateWallet,
   WalletBase, StateOperation, StateOperations, Config, StateSignOperation, StatePreapplyOperation, StateInjectionOperation,
-  StateWalletDetail, ConfirmOperation, ActivateWallet, StateMempool, StateConfirmOperation, MempoolOperation
+  StateWalletDetail, ConfirmOperation, ActivateWallet, StateMempool, StateConfirmOperation, MempoolOperation, SetDelegate, 
+  OriginationOperationMetadata
 } from './src/types'
 import { WalletType } from './src/enums';
 
@@ -67,7 +68,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       operations: operations
     }
   }),
-  // tap((state: any) => console.log("[+] trasaction: operation " , state.operations)),
+  // tap((state) => console.log("[+] trasaction: operation " , state.operations)),
 
   // create operation 
   operation()
@@ -76,9 +77,12 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
 /**
  *  Set delegation rights to tezos address
  */
-export const setDelegation = (fn: (state: any) => any) => (source: Observable<any>): Observable<any> => source.pipe(
+export const setDelegation = <T extends State>(selector: (state: T) => SetDelegate) => (source: Observable<T>) => source.pipe(
 
-  map(state => ({ ...state, 'setDelegate': fn(state) })),
+  map(state => ({
+    ...state,
+    setDelegate: selector(state)
+  })),
 
   // get contract counter
   counter(),
@@ -97,48 +101,51 @@ export const setDelegation = (fn: (state: any) => any) => (source: Observable<an
 
   // prepare config for operation
   map(state => {
-    const operations = []
+    const operations: OperationMetadata[] = [];
+
     if (state.manager_key.key === undefined) {
+
       operations.push({
-        "kind": "reveal",
-        "public_key": state.wallet.publicKey,
-        "source": state.wallet.publicKeyHash,
-        "fee": utils.parseAmount(state.setDelegate.fee).toString(),
-        "gas_limit": "10100",
-        "storage_limit": "277",
-        "counter": (++state.counter).toString(),
+        kind: "reveal",
+        public_key: state.wallet.publicKey,
+        source: state.wallet.publicKeyHash,
+        fee: utils.parseAmount(state.setDelegate.fee).toString(),
+        gas_limit: "10100",
+        storage_limit: "277",
+        counter: (++state.counter).toString(),
       })
     }
 
     operations.push({
-      "kind": "delegation",
-      "source": state.wallet.publicKeyHash,
-      "fee": utils.parseAmount(state.setDelegate.fee).toString(),
-      "gas_limit": "10100",
-      "storage_limit": "277",
-      "counter": (++state.counter).toString(),
-      "delegate": !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
+      kind: "delegation",
+      source: state.wallet.publicKeyHash,
+      fee: utils.parseAmount(state.setDelegate.fee).toString(),
+      gas_limit: "10100",
+      storage_limit: "277",
+      counter: (++state.counter).toString(),
+      delegate: !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })
 
     return {
       ...state,
-      "operations": operations
+      operations: operations
     }
-
   }),
 
   // create operation 
-  operation(),
-
+  operation()
 )
 
 
 /**
  * Originate new delegatable contract from wallet  
  */
-export const originateContract = (fn: (state: any) => any) => (source: Observable<any>) => source.pipe(
+export const originateContract = <T extends State>(selector: (state: T) => any) => (source: Observable<T>) => source.pipe(
 
-  map(state => ({ ...state, 'originateContract': fn(state) })),
+  map(state => ({
+    ...state,
+    originateContract: selector(state)
+  })),
 
   // display transaction info to console
   tap(state => {
@@ -153,55 +160,45 @@ export const originateContract = (fn: (state: any) => any) => (source: Observabl
 
   // prepare config for operation
   map(state => {
-    const operations = []
+    const operations: OperationMetadata[] = [];
+
     if (state.manager_key.key === undefined) {
+
       operations.push({
-        "kind": "reveal",
-        "public_key": state.wallet.publicKey,
-        "source": state.wallet.publicKeyHash,
-        "fee": utils.parseAmount(state.originateContract.fee).toString(),
-        "gas_limit": "10100",
-        "storage_limit": "277",
-        "counter": (++state.counter).toString(),
+        kind: "reveal",
+        public_key: state.wallet.publicKey,
+        source: state.wallet.publicKeyHash,
+        fee: utils.parseAmount(state.originateContract.fee).toString(),
+        gas_limit: "10100",
+        storage_limit: "277",
+        counter: (++state.counter).toString(),
       })
     }
+    
+    const originationOperation: OriginationOperationMetadata = {
+      kind: "origination",
+      source: state.wallet.publicKeyHash,
+      fee: utils.parseAmount(state.originateContract.fee).toString(),
+      balance: utils.parseAmount(state.originateContract.amount).toString(),
+      gas_limit: "10100",
+      storage_limit: "277",
+      counter: (++state.counter).toString(),
+      spendable: true,
+      delegatable: true,
+      delegate: state.originateContract.to,
+      [state.wallet.node.name === "main" ? "managerPubkey" : "manager_pubkey"]: state.manager_key.manager
+    };  
 
-    operations.push({
-      "kind": "origination",
-      "source": state.wallet.publicKeyHash,
-      "fee": utils.parseAmount(state.originateContract.fee).toString(),
-      "balance": utils.parseAmount(state.originateContract.amount).toString(),
-      "gas_limit": "10100",
-      "storage_limit": "277",
-      "counter": (++state.counter).toString(),
-      "spendable": true,
-      "delegatable": true,
-      "delegate": state.originateContract.to,
-    })
-
-    // add manager_pubkey according to network
-    if (state.wallet.node.name === "main") {
-      operations[operations.length - 1] = {
-        ...operations[operations.length - 1],
-        "managerPubkey": state.manager_key.manager,
-      }
-    } else {
-      operations[operations.length - 1] = {
-        ...operations[operations.length - 1],
-        "manager_pubkey": state.manager_key.manager,
-      }
-    }
+    operations.push(originationOperation);    
 
     return {
       ...state,
       "operations": operations
     }
-
   }),
 
   // create operation 
-  operation(),
-
+  operation()
 )
 
 /**

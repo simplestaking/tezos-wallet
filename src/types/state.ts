@@ -13,10 +13,12 @@ export interface State {
     injectionOperation?: ConfirmOperation
     manager_key?: ManagerKey
     mempool?: Mempool
+    originateContract: OriginateContract
     operation?: string
     operations?: OperationMetadata[]
     preapply?: PreapplyOperation[]
     rpc?: RpcParams
+    setDelegate: SetDelegate
     signOperation?: SignOperation
     transaction?: Transaction
     wallet: Wallet
@@ -110,6 +112,10 @@ export type ManagerKey = {
     key?: string
 }
 
+export type OriginateContract = {
+
+}
+
 export type PreapplyOperation = {
     contents: {
         metadata: {
@@ -117,6 +123,11 @@ export type PreapplyOperation = {
         }
     }[]
     signature: string
+}
+
+export type SetDelegate = {
+    fee: string
+    to: string
 }
 
 export type SignOperation = {
@@ -171,6 +182,9 @@ export type StateOperations = {
 export type StateCounter = {
     counter: number
 }
+export type StateInjectionOperation = {
+    injectionOperation: InjectionOperation
+}
 
 export type StateManagerKey = {
     manager_key: ManagerKey
@@ -180,25 +194,23 @@ export type StateMempool = {
     mempool: Mempool
 }
 
-export type StateWallet = {
-    wallet: Wallet
+export type StatePreapplyOperation = {
+    preapply: PreapplyOperation
+}
+
+export type StateOriginateContract = {
+    originateContract: OriginateContract
+}
+
+
+export type StateSetDelegate = {
+    setDelegate: SetDelegate
 }
 
 export type StateSignOperation = {
     signOperation: SignOperation
 }
 
-export type StatePreapplyOperation = {
-    preapply: PreapplyOperation
-}
-
-export type StateInjectionOperation = {
-    injectionOperation: InjectionOperation
-}
-
-export type RpcError = {
-    response: {
-        id: string
-    }[]
-    state: State
+export type StateWallet = {
+    wallet: Wallet
 }

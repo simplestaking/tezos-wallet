@@ -1,5 +1,6 @@
 import { TrezorOperation } from "./operations";
 import { WalletType } from "../enums";
+import { State } from "./state";
 
 export * from './operations';
 export * from './state';
@@ -83,3 +84,9 @@ export interface TrezorConnectResponse {
     }
 }
 
+export type RpcError = {
+    response: {
+        id: string
+    }[]
+    state: State
+}

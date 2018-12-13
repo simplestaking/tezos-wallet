@@ -1,5 +1,4 @@
 import { of } from 'rxjs'
-import { tap, map, flatMap } from 'rxjs/operators';
 
 import { Config } from './src/types'
 import { initializeWallet, transaction, confirmOperation } from './client'

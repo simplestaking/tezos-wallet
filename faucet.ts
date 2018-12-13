@@ -1,7 +1,7 @@
 import { of, from, throwError } from 'rxjs'
-import { flatMap, concatMap, catchError, map, tap } from 'rxjs/operators'
+import { flatMap, catchError, map, tap } from 'rxjs/operators'
 
-import { initializeWallet, activateWallet, transaction, originateContract, getWallet, confirmOperation } from './client'
+import { initializeWallet, activateWallet, transaction, getWallet, confirmOperation } from './client'
 
 import * as utils from './utils'
 import * as fs from 'fs'
@@ -103,8 +103,9 @@ utils.ready().then(() => {
             // continue if wallet was activated already, otherwise throw error
             catchError<State, State>((error: RpcError) => {
 
+                // ignore activation error and proceed if already activated
                 return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
-                    of({ wallet: error.state.wallet }) : 
+                    of({ ...error.state }) : 
                     throwError(error)
             }),
 

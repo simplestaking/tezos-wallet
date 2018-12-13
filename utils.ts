@@ -1,12 +1,15 @@
-import sodium from 'libsodium-wrappers'
-import * as bs58check from 'bs58check'
-import * as bip39 from 'bip39'
+import sodium from 'libsodium-wrappers';
+import * as bs58check from 'bs58check';
+import * as bip39 from 'bip39';
+import {Buffer} from 'buffer';
 
-import { Wallet, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, WalletBase, TrezorConnectResponse as TrezorResponse } from './src/types'
-import { State, StateOperation, StateOperations, StateHead, StateSignOperation } from './src/types/state';
-import { of, throwError, Observable } from 'rxjs';
+import {
+    TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation,
+    WalletBase, TrezorConnectResponse as TrezorResponse
+} from './src/types'
+import { State, StateOperation, StateHead } from './src/types/state';
+import { of, throwError } from 'rxjs';
 import { tap, map, flatMap } from 'rxjs/operators';
-import { isArray } from 'util';
 import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from './src/validators';
 
 
@@ -104,7 +107,7 @@ export const signOperation = <T extends State & StateHead & StateOperation>(stat
 // sign operation 
 export const signOperationTrezor = <T extends State & StateHead & StateOperation>(state: T) => {
 
-    if (!isArray(state.operations)) {
+    if (!Array.isArray(state.operations)) {
         throw new TypeError('[signOperationTrezor] Operations not available in state');
     }
 
@@ -182,7 +185,7 @@ export const signOperationTrezor = <T extends State & StateHead & StateOperation
                     // add origination to operation
                     origination: {
                         source: operation.source,
-                        manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : operation.managerPubkey,
+                        manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : <string>operation.managerPubkey,
                         balance: parseInt(operation.balance),
                         fee: parseInt(operation.fee),
                         counter: parseInt(operation.counter),
