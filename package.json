@@ -5,7 +5,7 @@
   "main": "./lib/client.js",
   "types": "./lib/client.d.ts",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -p .",
     "dev": "tsc --sourceMap false",
     "watch": "tsc -w",
     "ts-node": "ts-node faucet.ts"

@@ -1,15 +1,15 @@
 import { of, from, throwError } from 'rxjs'
 import { flatMap, catchError, map, tap } from 'rxjs/operators'
 
-import { initializeWallet, activateWallet, transaction, getWallet, confirmOperation } from './client'
 
-import * as utils from './utils'
+import * as utils from './src/utils'
 import * as fs from 'fs'
 
 // support for node.js
 import './node'
-import { WalletType } from './src/enums';
+import { WalletType } from './src/utils/enums';
 import { State, RpcError } from './src/types';
+import { initializeWallet, activateWallet, confirmOperation, getWallet, transaction } from './src';
 
 const config = {
     transaction: {

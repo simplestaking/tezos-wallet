@@ -1,7 +1,5 @@
 import { OperationMetadata, RpcParams, TezosNode } from ".";
-import { WalletType } from "../enums";
-import { operation } from "../../client";
-
+import { WalletType } from "../utils/enums";
 
 
 export interface State {
@@ -16,6 +14,7 @@ export interface State {
     originateContract: OriginateContract
     operation?: string
     operations?: OperationMetadata[]
+    packOperationParameters?: PackOperationParameters
     preapply?: PreapplyOperation[]
     rpc?: RpcParams
     setDelegate: SetDelegate
@@ -116,6 +115,10 @@ export type OriginateContract = {
 
 }
 
+export type PackOperationParameters = {
+
+}
+
 export type PreapplyOperation = {
     contents: {
         metadata: {
@@ -192,6 +195,10 @@ export type StateManagerKey = {
 
 export type StateMempool = {
     mempool: Mempool
+}
+
+export type StatePackOperationParameters = {
+    packOperationParameters: PackOperationParameters
 }
 
 export type StatePreapplyOperation = {

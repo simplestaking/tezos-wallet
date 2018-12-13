@@ -1,5 +1,5 @@
 import { OperationMetadata, RpcParams, TezosNode } from ".";
-import { WalletType } from "../enums";
+import { WalletType } from "../utils/enums";
 export interface State {
     activateWallet?: ActivateWallet;
     confirmOperation?: InjectionOperation;
@@ -9,10 +9,13 @@ export interface State {
     injectionOperation?: ConfirmOperation;
     manager_key?: ManagerKey;
     mempool?: Mempool;
+    originateContract: OriginateContract;
     operation?: string;
     operations?: OperationMetadata[];
+    packOperationParameters?: PackOperationParameters;
     preapply?: PreapplyOperation[];
     rpc?: RpcParams;
+    setDelegate: SetDelegate;
     signOperation?: SignOperation;
     transaction?: Transaction;
     wallet: Wallet;
@@ -95,6 +98,8 @@ export declare type ManagerKey = {
     manager: string;
     key?: string;
 };
+export declare type OriginateContract = {};
+export declare type PackOperationParameters = {};
 export declare type PreapplyOperation = {
     contents: {
         metadata: {
@@ -102,6 +107,10 @@ export declare type PreapplyOperation = {
         };
     }[];
     signature: string;
+};
+export declare type SetDelegate = {
+    fee: string;
+    to: string;
 };
 export declare type SignOperation = {
     signature: string;
@@ -147,27 +156,30 @@ export declare type StateOperations = {
 export declare type StateCounter = {
     counter: number;
 };
+export declare type StateInjectionOperation = {
+    injectionOperation: InjectionOperation;
+};
 export declare type StateManagerKey = {
     manager_key: ManagerKey;
 };
 export declare type StateMempool = {
     mempool: Mempool;
 };
-export declare type StateWallet = {
-    wallet: Wallet;
-};
-export declare type StateSignOperation = {
-    signOperation: SignOperation;
+export declare type StatePackOperationParameters = {
+    packOperationParameters: PackOperationParameters;
 };
 export declare type StatePreapplyOperation = {
     preapply: PreapplyOperation;
 };
-export declare type StateInjectionOperation = {
-    injectionOperation: InjectionOperation;
+export declare type StateOriginateContract = {
+    originateContract: OriginateContract;
 };
-export declare type RpcError = {
-    response: {
-        id: string;
-    }[];
-    state: State;
+export declare type StateSetDelegate = {
+    setDelegate: SetDelegate;
+};
+export declare type StateSignOperation = {
+    signOperation: SignOperation;
+};
+export declare type StateWallet = {
+    wallet: Wallet;
 };
