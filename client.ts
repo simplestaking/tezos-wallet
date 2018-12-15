@@ -315,7 +315,7 @@ export const forgeOperation = () => <T>(source: Observable<Wallet>): Observable<
   // TODO: move and just keep signOperation and create logic inside utils 
   // tap(state => console.log('[operation]', state.walletType, state)),
   // flatMap(state => [utils.signOperation(state)]),
-  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state): [utils.signOperation(state)]),
+  flatMap(state => state.wallet.type === 'TREZOR_T' ? utils.signOperationTrezor(state) : [utils.signOperation(state)]),
 )
 
 /**
@@ -359,6 +359,34 @@ export const applyAndInjectOperation = () => (source: Observable<any>) => source
 
 )
 
+/**
+ * Get operation from mempool for address
+ */
+export const pendingOperation = (fn: (state: any) => any) => (source: Observable<any>): any => source.pipe(
+
+  map(state => ({ ...state, 'pendingOperation': fn(state) })),
+
+  // call node and look for operation in mempool
+  rpc((state: any) => ({
+    'url': '/chains/main/mempool/pending_operations',
+    'path': 'mempool'
+  })),
+
+  // get operation for address in mempool
+  map((state: any) => ({
+    applied: [
+      ...state.mempool.applied
+        .filter((operation: any) => operation.contents[0].source === state.pendingOperation.publicKeyHash)
+    ],
+    refused: [
+      ...state.mempool.refused
+        .filter((operation: any) => operation.contents[0].source === state.pendingOperation.publicKeyHash)
+    ]
+  })),
+
+  tap(state => console.warn('[pendingOperation]', state))
+
+)
 
 /**
  * Wait until operation is confirmed & moved from mempool to head

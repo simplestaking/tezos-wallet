@@ -41,6 +41,10 @@ export declare const forgeOperation: () => <T>(source: Observable<Wallet>) => Ob
  */
 export declare const applyAndInjectOperation: () => (source: Observable<any>) => Observable<any>;
 /**
+ * Get operation from mempool for address
+ */
+export declare const pendingOperation: (fn: (state: any) => any) => (source: Observable<any>) => any;
+/**
  * Wait until operation is confirmed & moved from mempool to head
  */
 export declare const confirmOperation: (fn?: ((state: any) => any) | undefined) => (source: Observable<any>) => any;

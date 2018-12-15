@@ -2,7 +2,7 @@ import { of } from 'rxjs'
 import { tap, map, flatMap } from 'rxjs/operators';
 
 import { Config } from './types'
-import { initializeWallet, transaction, confirmOperation } from './client'
+import { initializeWallet, transaction, pendingOperation, confirmOperation } from './client'
 
 // support for node.js
 import './node'
@@ -46,6 +46,11 @@ walletObservable.pipe(
         to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
         amount: '0.001',
         fee: '0'
+    })),
+
+    // originate contract
+    pendingOperation(stateWallet => ({
+        address: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
     })),
 
     // wait until operation is confirmed & moved from mempool to head
