@@ -1,11 +1,11 @@
 import { of } from 'rxjs'
+import { tap, map, flatMap } from 'rxjs/operators';
 
-import { Config } from './src/types'
+import { Config } from '../src'
+import { initializeWallet, transaction, pendingOperation, confirmOperation } from '../src'
 
 // support for node.js
 import './node'
-import { WalletType } from './src/utils/enums';
-import { initializeWallet, transaction, confirmOperation } from './src';
 
 console.log('[+] tezos wallet client')
 
@@ -22,7 +22,7 @@ const wallet: Config = {
             url: 'http://tzscan.io/',
         }
     },
-    type: WalletType.WEB,
+    type: 'web',
 }
 
 const walletObservable = of([])
@@ -38,15 +38,21 @@ walletObservable.pipe(
         // set Tezos node
         node: wallet.node,
         // set wallet type: WEB, TREZOR_ONE, TREZOR_T
-        type: wallet.type
+        type: wallet.type,
     })),
 
     // originate contract
-    transaction(() => ({
+    transaction(stateWallet => ({
         to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
         amount: '0.001',
         fee: '0'
     })),
+
+    // originate contract
+    tap(state => pendingOperation(stateWallet => ({
+        publicKeyHash: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
+    }))
+    ),
 
     // wait until operation is confirmed & moved from mempool to head
     confirmOperation(stateWallet => ({

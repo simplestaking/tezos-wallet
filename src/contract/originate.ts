@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
-import { State, OperationMetadata, OriginationOperationMetadata } from "../types";
+import { State, OperationMetadata, OriginationOperationMetadata, StateOriginateContract } from "../types";
 import { counter, managerKey } from "../helpers";
 import * as utils from '../utils';
 import { operation } from "../operation";
@@ -12,8 +12,8 @@ import { operation } from "../operation";
  */
 export const originateContract = <T extends State>(selector: (state: T) => any) => (source: Observable<T>) => source.pipe(
 
-    map(state => ({
-      ...state,
+    map<T, T & StateOriginateContract>(state => ({
+      ...state as any,
       originateContract: selector(state)
     })),
   
@@ -62,8 +62,8 @@ export const originateContract = <T extends State>(selector: (state: T) => any) 
       operations.push(originationOperation);
   
       return {
-        ...state,
-        "operations": operations
+        ...state as any,
+        operations: operations
       }
     }),
   

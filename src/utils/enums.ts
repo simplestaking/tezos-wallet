@@ -1,5 +1,5 @@
 export enum WalletType {
-    'WEB',
-    "TREZOR_ONE",
-    'TREZOR_T'
+    'WEB' = 'web',
+    "TREZOR_ONE" = 'TREZOR_ONE',
+    'TREZOR_T' = 'TREZOR_T'
 }

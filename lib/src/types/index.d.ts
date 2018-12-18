@@ -1,5 +1,4 @@
 import { TrezorOperation } from "./operations";
-import { WalletType } from "../utils/enums";
 import { State } from "./state";
 export * from './operations';
 export * from './state';
@@ -14,7 +13,7 @@ export interface Config {
     publicKey: string;
     publicKeyHash: string;
     node: TezosNode;
-    type: WalletType;
+    type: 'web' | 'TREZOR_T' | 'TREZOR_P';
     path?: string;
 }
 export interface TezosNode {

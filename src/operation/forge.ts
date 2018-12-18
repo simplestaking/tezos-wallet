@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { flatMap } from "rxjs/operators";
 
-import { State, StateOperations, StateHead, StateOperation } from "../types";
+import { State, StateOperations, StateHead, StateOperation, StateCounter, StateManagerKey, StateSignOperation } from "../types";
 import { rpc } from "../rpc";
 import * as utils from "../utils";
 import { head, counter, managerKey } from "../helpers";
@@ -37,7 +37,7 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
         return utils.signOperation(state);
       }
     })
-  )
+  ) as Observable<T & StateHead & StateCounter & StateManagerKey & StateOperation & StateSignOperation>
   
   export const forgeOperationAtomic = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
   

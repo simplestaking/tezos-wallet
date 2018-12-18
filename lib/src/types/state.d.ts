@@ -1,5 +1,4 @@
 import { OperationMetadata, RpcParams, TezosNode } from ".";
-import { WalletType } from "../utils/enums";
 export interface State {
     activateWallet?: ActivateWallet;
     confirmOperation?: InjectionOperation;
@@ -9,13 +8,14 @@ export interface State {
     injectionOperation?: ConfirmOperation;
     manager_key?: ManagerKey;
     mempool?: Mempool;
-    originateContract: OriginateContract;
+    originateContract?: OriginateContract;
     operation?: string;
     operations?: OperationMetadata[];
     packOperationParameters?: PackOperationParameters;
+    pendingOperation?: PendingOperation;
     preapply?: PreapplyOperation[];
     rpc?: RpcParams;
-    setDelegate: SetDelegate;
+    setDelegate?: SetDelegate;
     signOperation?: SignOperation;
     transaction?: Transaction;
     wallet: Wallet;
@@ -98,8 +98,15 @@ export declare type ManagerKey = {
     manager: string;
     key?: string;
 };
-export declare type OriginateContract = {};
+export declare type OriginateContract = {
+    fee: string;
+    amount: string;
+    to: string;
+};
 export declare type PackOperationParameters = {};
+export declare type PendingOperation = {
+    publicKeyHash: string;
+};
 export declare type PreapplyOperation = {
     contents: {
         metadata: {
@@ -130,8 +137,8 @@ export declare type Wallet = {
     publicKey: string;
     publicKeyHash: string;
     secret?: string;
-    secretKey: string;
-    type?: WalletType;
+    secretKey?: string;
+    type?: 'web' | 'TREZOR_T' | 'TREZOR_P';
 };
 export declare type StateActivateWallet = {
     activateWallet: ActivateWallet;
@@ -174,11 +181,17 @@ export declare type StatePreapplyOperation = {
 export declare type StateOriginateContract = {
     originateContract: OriginateContract;
 };
+export declare type StatePendingOperation = {
+    pendingOperation: PendingOperation;
+};
 export declare type StateSetDelegate = {
     setDelegate: SetDelegate;
 };
 export declare type StateSignOperation = {
     signOperation: SignOperation;
+};
+export declare type StateTransaction = {
+    transaction: Transaction;
 };
 export declare type StateWallet = {
     wallet: Wallet;

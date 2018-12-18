@@ -3,4 +3,4 @@ import { State, StateHead, StateSignOperation, StatePreapplyOperation, StateOper
 /**
  * Apply and inject operation into node
  */
-export declare const applyAndInjectOperation: <T extends State & StateHead & StateOperations & StateSignOperation>() => (source: Observable<T>) => Observable<T & import("../types").StateCounter & StatePreapplyOperation & StateInjectionOperation>;
+export declare const applyAndInjectOperation: <T extends State & StateHead & StateOperations & StateSignOperation>() => (source: Observable<T>) => Observable<T & import("../src/types/state").StateCounter & StatePreapplyOperation & StateInjectionOperation>;

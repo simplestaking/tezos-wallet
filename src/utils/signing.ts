@@ -1,4 +1,4 @@
-import sodium from 'libsodium-wrappers';
+import * as sodium from 'libsodium-wrappers';
 import { of, throwError } from "rxjs";
 import { map, tap, flatMap } from "rxjs/operators";
 
@@ -27,7 +27,7 @@ export function signOperation<T extends State & StateHead & StateOperation>(stat
 
     // keys in byte format
     const publicKey = base58CheckDecode(prefix.edpk, state.wallet.publicKey);
-    const privateKey = base58CheckDecode(prefix.edsk32, state.wallet.secretKey);
+    const privateKey = base58CheckDecode(prefix.edsk32, state.wallet.secretKey || '');
 
     //console.log('[secretKey]', secretKey)
     //console.log('[publicKey]', publicKey)
@@ -59,7 +59,7 @@ export function signOperation<T extends State & StateHead & StateOperation>(stat
     // add signed operation to state
     return of(state).pipe(
         map(state => ({
-            ...state,
+            ...state as any,
             signOperation: {
                 signature: signature,
                 signedOperationContents: signedOperationContents,
@@ -220,7 +220,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
 
         tap((response) => { console.warn('[TrezorConnect][tezosSignTransaction] reponse', response.payload) }),
         map(response => ({
-            ...state,
+            ...state as any,
             signOperation: {
                 signature: response.payload.signature,
                 signedOperationContents: response.payload.sig_op_contents,

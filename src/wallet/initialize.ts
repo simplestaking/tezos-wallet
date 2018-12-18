@@ -7,7 +7,7 @@ import { StateWallet, Wallet, State } from "../types";
 /**
  * Wait for sodium to initialize
  */
-export const initializeWallet = (selector: (params: StateWallet) => Wallet) => (source: Observable<any>): Observable<State> => source.pipe(
+export const initializeWallet = <T extends Wallet>(selector: (params: StateWallet) => T) => (source: Observable<any>): Observable<{wallet: T}> => source.pipe(
     flatMap(state => of({}).pipe(
   
       // wait for sodium to initialize

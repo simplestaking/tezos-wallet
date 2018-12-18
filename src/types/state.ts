@@ -11,13 +11,14 @@ export interface State {
     injectionOperation?: ConfirmOperation
     manager_key?: ManagerKey
     mempool?: Mempool
-    originateContract: OriginateContract
+    originateContract?: OriginateContract
     operation?: string
     operations?: OperationMetadata[]
     packOperationParameters?: PackOperationParameters
+    pendingOperation?: PendingOperation
     preapply?: PreapplyOperation[]
     rpc?: RpcParams
-    setDelegate: SetDelegate
+    setDelegate?: SetDelegate
     signOperation?: SignOperation
     transaction?: Transaction
     wallet: Wallet
@@ -29,10 +30,6 @@ export type ActivateWallet = {
 
 export type ConfirmOperation = {
     injectionOperation: InjectionOperation
-}
-
-export type WalletDetail = {
-    balance: number
 }
 
 export type Head = {
@@ -112,11 +109,17 @@ export type ManagerKey = {
 }
 
 export type OriginateContract = {
-
+    fee: string
+    amount: string
+    to: string
 }
 
 export type PackOperationParameters = {
 
+}
+
+export type PendingOperation = {
+    publicKeyHash: string
 }
 
 export type PreapplyOperation = {
@@ -144,16 +147,32 @@ export type Transaction = {
     fee: string
     to: string
     parameters?: Record<string, any>
+    
 }
-export type Wallet = {
+
+// contractParameters?: {
+//     payreq: {
+//         parameters: any
+//         destination: string
+//         amount: number
+//     }
+//     trezorParams: any
+//  }
+
+export type Wallet = {    
     mnemonic?: string
     path?: string
     node: TezosNode,
-    publicKey: string
+    publicKey?: string
     publicKeyHash: string
     secret?: string
-    secretKey: string
-    type?: WalletType
+    secretKey?: string
+    type?: 'web' | 'TREZOR_T' | 'TREZOR_P'
+}
+
+
+export type WalletDetail = {
+    balance: number
 }
 
 export type StateActivateWallet = {
@@ -209,6 +228,9 @@ export type StateOriginateContract = {
     originateContract: OriginateContract
 }
 
+export type StatePendingOperation = {
+    pendingOperation: PendingOperation
+}
 
 export type StateSetDelegate = {
     setDelegate: SetDelegate
@@ -216,6 +238,10 @@ export type StateSetDelegate = {
 
 export type StateSignOperation = {
     signOperation: SignOperation
+}
+
+export type StateTransaction = {
+    transaction: Transaction
 }
 
 export type StateWallet = {

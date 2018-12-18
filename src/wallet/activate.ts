@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { State, ActivateWallet } from "../types";
+import { State, ActivateWallet, StateActivateWallet, StateOperation, StateOperations } from "../types";
 import { operation } from "../operation";
 
 
@@ -10,13 +10,13 @@ import { operation } from "../operation";
   */
  export const activateWallet = <T extends State>(fn: (state: T) => ActivateWallet) => (source: Observable<T>) => source.pipe(
 
-    map(state => ({
-      ...state,
+    map<T, T & StateActivateWallet>(state => ({
+     ...state as any,
       activateWallet: fn(state)
     })),
   
     // prepare config for operation
-    map(state => {
+    map<T & StateActivateWallet, T & StateActivateWallet & StateOperations>(state => {
       const operations = []
   
       operations.push({
@@ -26,7 +26,7 @@ import { operation } from "../operation";
       })
   
       return {
-        ...state,
+        ...state as any,
         operations: operations
       }
   

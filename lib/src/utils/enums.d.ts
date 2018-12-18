@@ -1,5 +1,5 @@
 export declare enum WalletType {
-    'WEB' = 0,
-    "TREZOR_ONE" = 1,
-    'TREZOR_T' = 2
+    'WEB' = "web",
+    "TREZOR_ONE" = "TREZOR_ONE",
+    'TREZOR_T' = "TREZOR_T"
 }

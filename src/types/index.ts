@@ -43,7 +43,7 @@ export interface Config {
     publicKey: string,
     publicKeyHash: string,
     node: TezosNode,
-    type: WalletType,
+    type: 'web' | 'TREZOR_T' | 'TREZOR_P',
     path?: string,
 }
 

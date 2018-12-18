@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
-import { State, SetDelegate, OperationMetadata } from "../types";
+import { State, SetDelegate, OperationMetadata, StateSetDelegate } from "../types";
 import * as utils from '../utils';
 import { counter, managerKey } from "../helpers";
 import { operation } from "../operation";
@@ -12,8 +12,8 @@ import { operation } from "../operation";
  */
 export const setDelegation = <T extends State>(selector: (state: T) => SetDelegate) => (source: Observable<T>) => source.pipe(
 
-    map(state => ({
-      ...state,
+    map<T, T & StateSetDelegate>(state => ({
+      ...state as any,
       setDelegate: selector(state)
     })),
   
@@ -60,7 +60,7 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
       })
   
       return {
-        ...state,
+        ...state as any,
         operations: operations
       }
     }),

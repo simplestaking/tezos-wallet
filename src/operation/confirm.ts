@@ -2,15 +2,15 @@ import { Observable, throwError, of } from "rxjs";
 import { map, tap, delay, flatMap } from "rxjs/operators";
 
 import { State, ConfirmOperation, StateConfirmOperation, MempoolOperation } from "../types";
-import { checkPendingOperations } from "./pending";
+import { pendingOperationsAtomic, pendingOperation } from "./pending";
 
 /**
  * Wait until operation is confirmed & moved from mempool to head
  */
 export const confirmOperation = <T extends State>(selector: (state: T) => ConfirmOperation) => (source: Observable<T>): Observable<T> => source.pipe(
 
-    map(state => ({
-      ...state,
+    map<T, T & StateConfirmOperation>(state => ({
+      ...state as any,
       // why?? confirmOperation is never created other way
       //confirmOperation: (fn && typeof fn === 'function') ? fn(state) : state.confirmOperation
       confirmOperation: selector(state)
@@ -21,8 +21,7 @@ export const confirmOperation = <T extends State>(selector: (state: T) => Confir
     // wait 3 sec for operation 
     delay(3000),
   
-    // call node and look for operation in mempool
-    checkPendingOperations(),
+    pendingOperationsAtomic(),    
   
     // if we find operation in mempool call confirmOperation() again
     flatMap((state) => {

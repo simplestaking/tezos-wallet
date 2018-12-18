@@ -1,6 +1,8 @@
 import { Observable } from "rxjs";
-import { StateWallet, Wallet, State } from "../types";
+import { StateWallet, Wallet } from "../types";
 /**
  * Wait for sodium to initialize
  */
-export declare const initializeWallet: (selector: (params: StateWallet) => Wallet) => (source: Observable<any>) => Observable<State>;
+export declare const initializeWallet: <T extends Wallet>(selector: (params: StateWallet) => T) => (source: Observable<any>) => Observable<{
+    wallet: T;
+}>;

@@ -27,6 +27,6 @@
     "@types/node": "^10.12.11",
     "ts-node": "^7.0.1",
     "typedoc": "^0.13.0",
-    "typescript": "~3.2.1"
+    "typescript": "^2.9.2"
   }
 }

@@ -9,7 +9,7 @@ export const rpc = <T extends StateWallet>(selector: (params: T) => RpcParams) =
 
         //exec calback function
         map(state => ({
-            ...state,
+            ...state as any,
             rpc: selector(state)
         })),
 
