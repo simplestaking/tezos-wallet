@@ -1,4 +1,4 @@
-import { TrezorOperation } from "./operations";
+import { TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation } from "./operations";
 import { State } from "./state";
 export * from './operations';
 export * from './state';
@@ -31,7 +31,12 @@ export interface TZScanNode {
 export interface TrezorMessage {
     path: string;
     branch: any;
-    operation: TrezorOperation;
+    operation: {
+        reveal?: TrezorRevealOperation;
+        transaction?: TrezorTransactionOperation;
+        origination?: TrezorOriginationOperation;
+        delegation?: TrezorDelegationOperation;
+    };
 }
 export interface RpcParams {
     path: string;

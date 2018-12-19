@@ -33,10 +33,14 @@ export const originateContract = <T extends State>(selector: (state: T) => any) 
       const operations: OperationMetadata[] = [];
   
       if (state.manager_key.key === undefined) {
+
+        if(typeof state.wallet.publicKey === 'undefined'){
+          console.warn('[originateContract] Public key not available in wallet. Using empty string.');
+        }
   
         operations.push({
           kind: "reveal",
-          public_key: state.wallet.publicKey,
+          public_key: state.wallet.publicKey || '',
           source: state.wallet.publicKeyHash,
           fee: utils.parseAmount(state.originateContract.fee).toString(),
           gas_limit: "10100",

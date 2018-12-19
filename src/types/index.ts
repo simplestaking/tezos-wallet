@@ -1,5 +1,4 @@
-import { TrezorOperation } from "./operations";
-import { WalletType } from "../utils/enums";
+import { TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation } from "./operations";
 import { State } from "./state";
 
 export * from './operations';
@@ -65,7 +64,12 @@ export interface TrezorMessage {
     path: string
     // curve: number,
     branch: any
-    operation: TrezorOperation
+    operation: {
+        reveal?: TrezorRevealOperation
+        transaction?: TrezorTransactionOperation
+        origination?: TrezorOriginationOperation
+        delegation?: TrezorDelegationOperation
+    }
 }
 
 

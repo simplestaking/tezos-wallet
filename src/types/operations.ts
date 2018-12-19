@@ -54,30 +54,25 @@ type TrezorOperationTarget = {
 }
 
 export type TrezorRevealOperation = {
-    reveal: {
         source: TrezorOperationTarget
         public_key: string
         fee: number
         counter: number
         gas_limit: number
-        storage_limit: number
-    }
+        storage_limit: number    
 }
 
 export type TrezorTransactionOperation = {
-    transaction: {
         source: TrezorOperationTarget
         destination: TrezorOperationTarget
         amount: number
         fee: number
         counter: number
         gas_limit: number
-        storage_limit: number
-    }
+        storage_limit: number    
 }
 
 export type TrezorOriginationOperation = {
-    origination: {
         source: TrezorOperationTarget
         manager_pubkey: string
         balance: number
@@ -87,20 +82,17 @@ export type TrezorOriginationOperation = {
         fee: number
         counter: number
         gas_limit: number
-        storage_limit: number
-    }
+        storage_limit: number    
 }
 
 export type TrezorDelegationOperation = {
-    delegation: {
         source: TrezorOperationTarget
         delegate: Uint8Array | null
         fee: number
         counter: number
         gas_limit: number
-        storage_limit: number
-    }
+        storage_limit: number    
 }
 
-export type TrezorOperation = TrezorRevealOperation | TrezorTransactionOperation | TrezorOriginationOperation | TrezorDelegationOperation;
+//export type TrezorOperation = TrezorRevealOperation | TrezorTransactionOperation | TrezorOriginationOperation | TrezorDelegationOperation;
 

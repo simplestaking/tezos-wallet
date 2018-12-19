@@ -2,11 +2,13 @@ import * as sodium from 'libsodium-wrappers';
 import { of, throwError } from "rxjs";
 import { map, tap, flatMap } from "rxjs/operators";
 
-import { State, StateHead, StateOperation, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, 
-    TrezorDelegationOperation, TrezorConnectResponse } from "../types";
+import {
+    State, StateHead, StateOperation, TrezorMessage, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation,
+    TrezorDelegationOperation, TrezorConnectResponse
+} from "../types";
 
 import { base58CheckDecode, concatKeys, bs58checkEncode, prefix } from "./utils";
-import {validateRevealOperation, validateTransactionOperation, validateOriginationOperation} from './validators';
+import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from './validators';
 
 
 /**
@@ -25,8 +27,16 @@ export function signOperation<T extends State & StateHead & StateOperation>(stat
     // convert preapplied operation from hex format to by array
     const operation = sodium.from_hex(state.operation);
 
+    if (typeof state.wallet.publicKey === 'undefined') {
+        console.warn('[signOperation] Public key not available in wallet. Using empty string.');
+    }
+
+    if (typeof state.wallet.secretKey === 'undefined') {
+        console.warn('[signOperation] Secret key not available in wallet. Using empty string.');
+    }
+
     // keys in byte format
-    const publicKey = base58CheckDecode(prefix.edpk, state.wallet.publicKey);
+    const publicKey = base58CheckDecode(prefix.edpk, state.wallet.publicKey || '');
     const privateKey = base58CheckDecode(prefix.edsk32, state.wallet.secretKey || '');
 
     //console.log('[secretKey]', secretKey)
@@ -81,9 +91,10 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
     }
 
     // set basic config
-    let msg: Partial<TrezorMessage> = {
-        path: state.wallet.path,
-        branch: state.head.hash
+    let message: TrezorMessage = {
+        path: state.wallet.path || '',
+        branch: state.head.hash,
+        operation: {}
     }
 
     // add operations to message 
@@ -96,16 +107,14 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'reveal': {
                 validateRevealOperation(operation);
 
-                (<TrezorRevealOperation>msg.operation) = {
-                    // add reveal to operation 
-                    reveal: {
-                        source: operation.source,
-                        public_key: operation.public_key,
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
-                    }
+                // add reveal to operation 
+                message.operation.reveal = {
+                    source: operation.source,
+                    public_key: operation.public_key,
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
                 }
                 break;
             }
@@ -113,17 +122,15 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'transaction': {
                 validateTransactionOperation(operation);
 
-                (<TrezorTransactionOperation>msg.operation) = {
-                    // add transaction to operation
-                    transaction: {
-                        source: operation.source,
-                        destination: operation.destination,
-                        amount: parseInt(operation.amount),
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
-                    }
+                // add transaction to operation
+                message.operation.transaction = {
+                    source: operation.source,
+                    destination: operation.destination,
+                    amount: parseInt(operation.amount),
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
                 }
                 break;
 
@@ -150,45 +157,37 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'origination': {
                 validateOriginationOperation(operation);
 
-                (<TrezorOriginationOperation>msg.operation) = {
-                    // add origination to operation
-                    origination: {
-                        source: operation.source,
-                        manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : <string>operation.managerPubkey,
-                        balance: parseInt(operation.balance),
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
-                        spendable: operation.spendable,
-                        delegatable: operation.delegatable,
-                        delegate: operation.delegate,
-                        // find encodig format http://doc.tzalpha.net/api/p2p.html
-                        //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
-                    }
+                // add origination to operation
+                message.operation.origination = {
+                    source: operation.source,
+                    manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : <string>operation.managerPubkey,
+                    balance: parseInt(operation.balance),
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
+                    spendable: operation.spendable,
+                    delegatable: operation.delegatable,
+                    delegate: operation.delegate,
+                    // find encodig format http://doc.tzalpha.net/api/p2p.html
+                    //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                 }
+
             }
 
             case 'delegation': {
                 // no validation as no special properties are required
 
-                (<TrezorDelegationOperation>msg.operation) = {
-                    // add delegation to operation
-                    delegation: {
-                        source: operation.source,
-                        delegate: !operation.delegate ? operation.source : operation.delegate,
-                        fee: parseInt(operation.fee),
-                        counter: parseInt(operation.counter),
-                        gas_limit: parseInt(operation.gas_limit),
-                        storage_limit: parseInt(operation.storage_limit),
-                    }
+                // add delegation to operation
+                message.operation.delegation = {
+                    source: operation.source,
+                    delegate: !operation.delegate ? operation.source : operation.delegate,
+                    fee: parseInt(operation.fee),
+                    counter: parseInt(operation.counter),
+                    gas_limit: parseInt(operation.gas_limit),
+                    storage_limit: parseInt(operation.storage_limit),
                 }
                 break;
-            }
-
-            // @TODO: acount activation is missing??
-            case 'activate_account': {
-                //??
             }
 
             default: {
@@ -197,8 +196,6 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
         }
     });
 
-    // force cast to Trezor message as its complete
-    const message = msg as TrezorMessage;
 
     return of(state).pipe(
 

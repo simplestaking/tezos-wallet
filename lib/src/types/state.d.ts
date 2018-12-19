@@ -26,9 +26,6 @@ export declare type ActivateWallet = {
 export declare type ConfirmOperation = {
     injectionOperation: InjectionOperation;
 };
-export declare type WalletDetail = {
-    balance: number;
-};
 export declare type Head = {
     chain_id: string;
     hash: string;
@@ -96,7 +93,7 @@ export declare type Mempool = {
 };
 export declare type ManagerKey = {
     manager: string;
-    key?: string;
+    key: string;
 };
 export declare type OriginateContract = {
     fee: string;
@@ -134,11 +131,14 @@ export declare type Wallet = {
     mnemonic?: string;
     path?: string;
     node: TezosNode;
-    publicKey: string;
+    publicKey?: string;
     publicKeyHash: string;
     secret?: string;
     secretKey?: string;
     type?: 'web' | 'TREZOR_T' | 'TREZOR_P';
+};
+export declare type WalletDetail = {
+    balance: number;
 };
 export declare type StateActivateWallet = {
     activateWallet: ActivateWallet;

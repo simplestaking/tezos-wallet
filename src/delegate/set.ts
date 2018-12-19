@@ -38,9 +38,13 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
   
       if (state.manager_key.key === undefined) {
   
+        if(typeof state.wallet.publicKey === 'undefined'){
+          console.warn('[setDelegation] Public key not available in wallet. Using empty string.');
+        }
+
         operations.push({
           kind: "reveal",
-          public_key: state.wallet.publicKey,
+          public_key: state.wallet.publicKey || '',
           source: state.wallet.publicKeyHash,
           fee: utils.parseAmount(state.setDelegate.fee).toString(),
           gas_limit: "10100",

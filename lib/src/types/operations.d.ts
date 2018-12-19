@@ -39,49 +39,40 @@ declare type TrezorOperationTarget = {
     hash: Uint8Array | null;
 };
 export declare type TrezorRevealOperation = {
-    reveal: {
-        source: TrezorOperationTarget;
-        public_key: string;
-        fee: number;
-        counter: number;
-        gas_limit: number;
-        storage_limit: number;
-    };
+    source: TrezorOperationTarget;
+    public_key: string;
+    fee: number;
+    counter: number;
+    gas_limit: number;
+    storage_limit: number;
 };
 export declare type TrezorTransactionOperation = {
-    transaction: {
-        source: TrezorOperationTarget;
-        destination: TrezorOperationTarget;
-        amount: number;
-        fee: number;
-        counter: number;
-        gas_limit: number;
-        storage_limit: number;
-    };
+    source: TrezorOperationTarget;
+    destination: TrezorOperationTarget;
+    amount: number;
+    fee: number;
+    counter: number;
+    gas_limit: number;
+    storage_limit: number;
 };
 export declare type TrezorOriginationOperation = {
-    origination: {
-        source: TrezorOperationTarget;
-        manager_pubkey: string;
-        balance: number;
-        spendable: boolean;
-        delegatable: boolean;
-        delegate: Uint8Array | null;
-        fee: number;
-        counter: number;
-        gas_limit: number;
-        storage_limit: number;
-    };
+    source: TrezorOperationTarget;
+    manager_pubkey: string;
+    balance: number;
+    spendable: boolean;
+    delegatable: boolean;
+    delegate: Uint8Array | null;
+    fee: number;
+    counter: number;
+    gas_limit: number;
+    storage_limit: number;
 };
 export declare type TrezorDelegationOperation = {
-    delegation: {
-        source: TrezorOperationTarget;
-        delegate: Uint8Array | null;
-        fee: number;
-        counter: number;
-        gas_limit: number;
-        storage_limit: number;
-    };
+    source: TrezorOperationTarget;
+    delegate: Uint8Array | null;
+    fee: number;
+    counter: number;
+    gas_limit: number;
+    storage_limit: number;
 };
-export declare type TrezorOperation = TrezorRevealOperation | TrezorTransactionOperation | TrezorOriginationOperation | TrezorDelegationOperation;
 export {};

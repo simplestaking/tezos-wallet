@@ -105,7 +105,7 @@ export type Mempool = {
 
 export type ManagerKey = {
     manager: string
-    key?: string
+    key: string
 }
 
 export type OriginateContract = {
