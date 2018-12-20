@@ -1,1 +1,3 @@
-export * from './originate';
+export * from './getContractCounter';
+export * from './getContractManagerKey';
+export * from './originateContract';

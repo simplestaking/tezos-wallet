@@ -2,13 +2,12 @@ import { of, from, throwError } from 'rxjs'
 import { flatMap, catchError, map, tap } from 'rxjs/operators'
 
 
-import * as utils from '../src/utils'
+import * as utils from '../src/common'
 import * as fs from 'fs'
 
 // support for node.js
 import './node'
-import { WalletType } from '../src/utils/enums';
-import { State, RpcError } from '../src/types';
+import { State, RpcError } from '../src/common';
 import { initializeWallet, activateWallet, confirmOperation, getWallet, transaction } from '../src';
 
 const config = {
@@ -27,7 +26,7 @@ const config = {
             url: 'http://zeronet.tzscan.io/',
         }
     },
-    type: WalletType.WEB,
+    type: 'web',
 }
 
 // go to https://faucet.tzalpha.net/ and save files to ./faucet directory

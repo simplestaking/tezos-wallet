@@ -1,8 +1,7 @@
 import { of } from 'rxjs'
-import { tap, map, flatMap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 
-import { Config } from '../src'
-import { initializeWallet, transaction, pendingOperation, confirmOperation } from '../src'
+import { Config, initializeWallet, transaction, pendingOperation, confirmOperation } from '../src'
 
 // support for node.js
 import './node'
