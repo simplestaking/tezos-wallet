@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { State, SetDelegate } from "../common";
 import { StateCounter, StateManagerKey } from "../contract";
 import { StateOperations } from "../operation";
+import { StateHead, StateSignOperation, StateOperation, StatePreapplyOperation, StateInjectionOperation } from '..';
 export declare type StateSetDelegate = {
     setDelegate: SetDelegate;
 };
@@ -22,4 +23,4 @@ export declare type StateSetDelegate = {
  * }))
  *
  */
-export declare const setDelegation: <T extends State>(selector: (state: T) => SetDelegate) => (source: Observable<T>) => Observable<T & StateSetDelegate & StateCounter & StateManagerKey & StateOperations & import("../src/head/getHead").StateHead & import("../src/operation/forgeOperation").StateOperation & State & import("../src/operation/signOperation").StateSignOperation & import("../src/operation/applyInjectOperation").StatePreapplyOperation & import("../src/operation/applyInjectOperation").StateInjectionOperation>;
+export declare const setDelegation: <T extends State>(selector: (state: T) => SetDelegate) => (source: Observable<T>) => Observable<T & StateSetDelegate & StateCounter & StateManagerKey & StateOperations & StateHead & StateOperation & State & StateSignOperation & StatePreapplyOperation & StateInjectionOperation>;

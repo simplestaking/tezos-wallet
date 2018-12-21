@@ -1,0 +1,12 @@
+# IDE configuration
+/.vscode
+
+# dependencies
+/node_modules
+
+# compilation output
+/lib
+
+# misc content
+/faucet
+/internal

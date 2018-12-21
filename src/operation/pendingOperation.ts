@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
-import { State, Mempool, PendingOperation, rpc } from "../common";
+import { State, Mempool, PendingOperation, rpc, MempoolOperation } from "../common";
 
 export type StateMempool = {
   mempool: Mempool

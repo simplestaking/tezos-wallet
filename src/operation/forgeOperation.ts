@@ -10,6 +10,8 @@ import { managerKey } from "../contract/getContractManagerKey";
 import { signOperationTrezor, signOperation } from "./signOperation";
 import { StateOperations } from "./operation";
 
+import {StateManagerKey, StateSignOperation, StateCounter} from '..';
+
 export type StateOperation = {
   operation: string
 };

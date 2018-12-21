@@ -5,6 +5,7 @@ import { State, SetDelegate, OperationMetadata, parseAmount } from "../common";
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
 import { operation, StateOperations } from "../operation";
 
+import {StateHead, StateSignOperation, StateOperation, StatePreapplyOperation, StateInjectionOperation } from '..';
 
 export type StateSetDelegate = {
   setDelegate: SetDelegate

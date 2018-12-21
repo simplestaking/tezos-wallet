@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { State } from "../common";
 import { StateHead } from "../head";
 import { StateOperations } from "./operation";
+import { StateManagerKey, StateSignOperation, StateCounter } from '..';
 export declare type StateOperation = {
     operation: string;
 };
@@ -11,4 +12,4 @@ export declare type StateOperation = {
  *
  *
  */
-export declare const forgeOperation: <T extends State & StateOperations>() => (source: Observable<T>) => Observable<T & StateHead & import("../src/contract/getContractCounter").StateCounter & import("../src/contract/getContractManagerKey").StateManagerKey & StateOperation & State & import("../src/operation/signOperation").StateSignOperation>;
+export declare const forgeOperation: <T extends State & StateOperations>() => (source: Observable<T>) => Observable<T & StateHead & StateCounter & StateManagerKey & StateOperation & State & StateSignOperation>;

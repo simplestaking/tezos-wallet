@@ -2,16 +2,17 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import {
-  State, OperationMetadata, OriginationOperationMetadata, OriginateContract, parseAmount
+  State, OperationMetadata, OriginationOperationMetadata, OriginatedContract, parseAmount
 } from "../common";
 import { operation, StateOperations } from "../operation";
 
 import { counter, StateCounter } from "./getContractCounter";
 import { managerKey, StateManagerKey } from './getContractManagerKey';
 
+import {StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateHead  } from '..';
 
 export type StateOriginateContract = {
-  originateContract: OriginateContract
+  originateContract: OriginatedContract
 };
 
 /**
@@ -33,7 +34,7 @@ export type StateOriginateContract = {
  * }))
  *  
  */
-export const originateContract = <T extends State>(selector: (state: T) => OriginateContract) => (source: Observable<T>) => source.pipe(
+export const originateContract = <T extends State>(selector: (state: T) => OriginatedContract) => (source: Observable<T>) => source.pipe(
 
   // get meta data for contract
   map(state => (

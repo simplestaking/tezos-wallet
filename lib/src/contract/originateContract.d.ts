@@ -1,10 +1,11 @@
 import { Observable } from "rxjs";
-import { State, OriginateContract } from "../common";
+import { State, OriginatedContract } from "../common";
 import { StateOperations } from "../operation";
 import { StateCounter } from "./getContractCounter";
 import { StateManagerKey } from './getContractManagerKey';
+import { StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateHead } from '..';
 export declare type StateOriginateContract = {
-    originateContract: OriginateContract;
+    originateContract: OriginatedContract;
 };
 /**
  * Originate smart contract from implicit wallet. Contract will be used for delegation.
@@ -25,4 +26,4 @@ export declare type StateOriginateContract = {
  * }))
  *
  */
-export declare const originateContract: <T extends State>(selector: (state: T) => OriginateContract) => (source: Observable<T>) => Observable<T & StateOriginateContract & StateCounter & StateManagerKey & StateOperations & import("../src/head/getHead").StateHead & import("../src/operation/forgeOperation").StateOperation & State & import("../src/operation/signOperation").StateSignOperation & import("../src/operation/applyInjectOperation").StatePreapplyOperation & import("../src/operation/applyInjectOperation").StateInjectionOperation>;
+export declare const originateContract: <T extends State>(selector: (state: T) => OriginatedContract) => (source: Observable<T>) => Observable<T & StateOriginateContract & StateCounter & StateManagerKey & StateOperations & StateHead & StateOperation & State & StateSignOperation & StatePreapplyOperation & StateInjectionOperation>;

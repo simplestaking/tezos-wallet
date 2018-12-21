@@ -4,6 +4,8 @@ import { OperationMetadata, State } from "../common";
 import { forgeOperation } from "./forgeOperation";
 import { applyAndInjectOperation } from "./applyInjectOperation";
 
+import {StateHead, StateInjectionOperation, StatePreapplyOperation, StateCounter, StateManagerKey, StateOperation, StateSignOperation} from '..';
+
 export type StateOperations = {
     operations: OperationMetadata[]
   };

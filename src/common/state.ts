@@ -1,11 +1,11 @@
-import { OperationMetadata } from "../common";
+import { OperationMetadata } from "./operations";
 
 import { TezosNode } from './config';
 import { RpcParams } from './rpc';
 
 
 export interface State {
-    activateWallet?: ActivateWallet
+    activateWallet?: ActivatedWallet
     confirmOperation?: ConfirmOperation
     counter?: number
     getWallet?: WalletDetail
@@ -13,7 +13,7 @@ export interface State {
     injectionOperation?: InjectionOperation
     manager_key?: ManagerKey
     mempool?: Mempool
-    originateContract?: OriginateContract
+    originateContract?: OriginatedContract
     operation?: string
     operations?: OperationMetadata[]
     packOperationParameters?: PackOperationParameters
@@ -26,7 +26,7 @@ export interface State {
     wallet: Wallet
 };
 
-export type ActivateWallet = {
+export type ActivatedWallet = {
     secret: string
 }
 
@@ -110,7 +110,7 @@ export type ManagerKey = {
     key: string
 }
 
-export type OriginateContract = {
+export type OriginatedContract = {
     fee: string
     amount: string
     to: string

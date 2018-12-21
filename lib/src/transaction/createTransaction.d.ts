@@ -2,6 +2,7 @@ import { Observable } from "rxjs";
 import { State, Transaction } from "../common";
 import { StateCounter, StateManagerKey } from "../contract";
 import { StateOperations } from "../operation";
+import { StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead } from '..';
 export declare type StateTransaction = {
     transaction: Transaction;
 };
@@ -28,4 +29,4 @@ export declare type StateTransaction = {
  * then(state => console.log('amount transfered'))
  *
  */
-export declare const transaction: <T extends State>(selector: (state: T) => Transaction) => (source: Observable<T>) => Observable<T & StateTransaction & StateCounter & StateManagerKey & StateOperations & import("../src/head/getHead").StateHead & import("../src/operation/forgeOperation").StateOperation & State & import("../src/operation/signOperation").StateSignOperation & import("../src/operation/applyInjectOperation").StatePreapplyOperation & import("../src/operation/applyInjectOperation").StateInjectionOperation>;
+export declare const transaction: <T extends State>(selector: (state: T) => Transaction) => (source: Observable<T>) => Observable<T & StateTransaction & StateCounter & StateManagerKey & StateOperations & StateHead & StateOperation & State & StateSignOperation & StatePreapplyOperation & StateInjectionOperation>;

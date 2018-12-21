@@ -1,5 +1,5 @@
 import * as sodium from 'libsodium-wrappers';
-import { of, throwError } from "rxjs";
+import { of, throwError, Observable } from "rxjs";
 import { map, tap, flatMap } from "rxjs/operators";
 
 import {

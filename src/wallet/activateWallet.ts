@@ -1,11 +1,13 @@
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
-import { State, ActivateWallet } from "../common";
+import { State, ActivatedWallet } from "../common";
 import { operation, StateOperations } from "../operation";
 
+import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead, StateCounter, StateManagerKey } from '..'
+
 export type StateActivateWallet = {
-  activateWallet: ActivateWallet
+  activateWallet: ActivatedWallet
 }
 
 
@@ -13,8 +15,9 @@ export type StateActivateWallet = {
   * Activate generated wallet address
   * 
   * @operation activate_account
+  * @returns Observable
   */
-export const activateWallet = <T extends State>(selector: (state: T) => ActivateWallet) => (source: Observable<T>) => source.pipe(
+export const activateWallet = <T extends State>(selector: (state: T) => ActivatedWallet) => (source: Observable<T>) => source.pipe(
 
   map(state => (
     {
