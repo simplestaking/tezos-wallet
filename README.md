@@ -15,13 +15,6 @@ Project is based on [RxJS](https://rxjs-dev.firebaseapp.com/) and relies on it a
 
 ``npm install rxjs@~6.3.2``
 
-In your webopack config add:
-```
-node: {
-    crypto: true, 
-    stream: true 
-}
-```
 
 ## Development
 

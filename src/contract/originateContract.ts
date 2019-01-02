@@ -9,7 +9,7 @@ import { operation, StateOperations } from "../operation";
 import { counter, StateCounter } from "./getContractCounter";
 import { managerKey, StateManagerKey } from './getContractManagerKey';
 
-import {StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateHead  } from '..';
+// import {StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateHead  } from '..';
 
 export type StateOriginateContract = {
   originateContract: OriginatedContract

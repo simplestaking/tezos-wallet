@@ -7,7 +7,7 @@ import { StateHead } from '../head';
 import { StateOperations } from "./operation";
 import { StateSignOperation } from "./signOperation";
 
-import {StateCounter} from '..';
+// import {StateCounter} from '..';
 
 export type StatePreapplyOperation = {
   preapply: PreapplyOperation

@@ -6,6 +6,7 @@
 
 # compilation output
 /lib
+/temp
 
 # misc content
 /faucet

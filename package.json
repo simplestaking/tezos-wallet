@@ -2,14 +2,14 @@
   "name": "tezos-wallet",
   "version": "1.0.0",
   "description": "",
-  "main": "./lib/src/index.js",
-  "types": "./lib/src/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc -p .",
-    "dev": "tsc --sourceMap false",
+    "dev": "tsc -p dev.tsconfig.json",
     "docs": "typedoc --out ./docs/ ./src/index.ts --mode file --theme markdown --name tezos-wallet",
     "watch": "tsc -w",
-    "ts-node": "ts-node faucet.ts"
+    "watch:dev": "tsc -w -p dev.tsconfig.json"
   },
   "author": "",
   "license": "ISC",
@@ -31,7 +31,7 @@
     "ts-node": "^7.0.1",
     "typedoc": "^0.13.0",
     "typedoc-plugin-markdown": "^1.1.19",
-    "typescript": "^2.9.2",
+    "typescript": "^3.2.2",
     "xmlhttprequest-ssl": "1.5.5"
   }
 }

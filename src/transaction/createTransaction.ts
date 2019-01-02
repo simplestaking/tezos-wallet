@@ -5,7 +5,7 @@ import {  State, Transaction, OperationMetadata, parseAmount} from "../common";
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
 import { operation, StateOperations } from "../operation";
 
-import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead } from '..'
+// import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead } from '..'
 
 export type StateTransaction = {
   transaction: Transaction

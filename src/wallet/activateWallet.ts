@@ -4,7 +4,7 @@ import { map } from "rxjs/operators";
 import { State, ActivatedWallet } from "../common";
 import { operation, StateOperations } from "../operation";
 
-import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead, StateCounter, StateManagerKey } from '..'
+//import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead, StateCounter, StateManagerKey } from '..'
 
 export type StateActivateWallet = {
   activateWallet: ActivatedWallet
