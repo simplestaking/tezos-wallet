@@ -79,7 +79,7 @@ ___
 
 ###  source
 
-**● source**: *`any`*
+**● source**: *`string`*
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[source](baseoperationmetadata.md#source)*
 

@@ -17,21 +17,22 @@ Project is based on [RxJS](https://rxjs-dev.firebaseapp.com/) and relies on it a
 
 `npm install rxjs@~6.3.2`
 
-In your webopack config add:
-
-```
-node: {
-    crypto: true, 
-    stream: true 
-}
-```
-
 Development
 -----------
 
 Import the libary methods as `import { initializeWallet, getWallet } from 'tezos-wallet';`
 
 Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
+
+Code
+----
+
+Code is well described and documentation generated using [Typedoc](http://typedoc.org/) can be viewed in [docs](/docs/README.md) folder.
+
+Examples
+--------
+
+Code samples describing usage can be found in [example](/examples/index.md) folder.
 
 ## Index
 
@@ -55,14 +56,20 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 ### Type aliases
 
 * [ActivatedWallet](#activatedwallet)
+* [BalanceUpdate](#balanceupdate)
 * [ConfirmOperation](#confirmoperation)
+* [ContractBalanceUpdate](#contractbalanceupdate)
+* [FeeBalanceUpdate](#feebalanceupdate)
 * [Head](#head)
+* [HeadConstants](#headconstants)
 * [InjectionOperation](#injectionoperation)
 * [ManagerKey](#managerkey)
 * [Mempool](#mempool)
 * [MempoolOperation](#mempooloperation)
+* [OperationApplicationResult](#operationapplicationresult)
 * [OperationMetadata](#operationmetadata)
-* [OriginateContract](#originatecontract)
+* [OperationValidationResult](#operationvalidationresult)
+* [OriginatedContract](#originatedcontract)
 * [PackOperationParameters](#packoperationparameters)
 * [PendingOperation](#pendingoperation)
 * [PreapplyOperation](#preapplyoperation)
@@ -71,6 +78,7 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 * [SignOperation](#signoperation)
 * [StateActivateWallet](#stateactivatewallet)
 * [StateConfirmOperation](#stateconfirmoperation)
+* [StateConstants](#stateconstants)
 * [StateCounter](#statecounter)
 * [StateHead](#statehead)
 * [StateInjectionOperation](#stateinjectionoperation)
@@ -85,6 +93,7 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 * [StateSetDelegate](#statesetdelegate)
 * [StateSignOperation](#statesignoperation)
 * [StateTransaction](#statetransaction)
+* [StateValidatedOperations](#statevalidatedoperations)
 * [StateWallet](#statewallet)
 * [StateWalletDetail](#statewalletdetail)
 * [Transaction](#transaction)
@@ -93,6 +102,7 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 * [TrezorOriginationOperation](#trezororiginationoperation)
 * [TrezorRevealOperation](#trezorrevealoperation)
 * [TrezorTransactionOperation](#trezortransactionoperation)
+* [ValidationResult](#validationresult)
 * [Wallet](#wallet)
 * [WalletDetail](#walletdetail)
 
@@ -105,6 +115,7 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 * [checkPropertyWithError](#checkpropertywitherror)
 * [concatKeys](#concatkeys)
 * [confirmOperation](#confirmoperation)
+* [constants](#constants)
 * [counter](#counter)
 * [forgeOperation](#forgeoperation)
 * [forgeOperationAtomic](#forgeoperationatomic)
@@ -118,6 +129,7 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 * [managerKey](#managerkey)
 * [newWallet](#newwallet)
 * [operation](#operation)
+* [operationIsValid](#operationisvalid)
 * [originateContract](#originatecontract)
 * [packOperationParameters](#packoperationparameters)
 * [packOperationParametersAtomic](#packoperationparametersatomic)
@@ -131,6 +143,9 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 * [signOperation](#signoperation)
 * [signOperationTrezor](#signoperationtrezor)
 * [transaction](#transaction)
+* [updateFeesForOperation](#updatefeesforoperation)
+* [validateOperation](#validateoperation)
+* [validateOperationAtomic](#validateoperationatomic)
 * [validateOriginationOperation](#validateoriginationoperation)
 * [validateRevealOperation](#validaterevealoperation)
 * [validateTransactionOperation](#validatetransactionoperation)
@@ -149,11 +164,21 @@ Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
 
 **Ƭ ActivatedWallet**: *`object`*
 
-*Defined in common/state.ts:29*
+*Defined in common/state.ts:31*
 
 #### Type declaration
 
  secret: `string`
+
+___
+<a id="balanceupdate"></a>
+
+###  BalanceUpdate
+
+**Ƭ BalanceUpdate**: * [ContractBalanceUpdate](#contractbalanceupdate) &#124; [FeeBalanceUpdate](#feebalanceupdate)
+*
+
+*Defined in common/operations.ts:65*
 
 ___
 <a id="confirmoperation"></a>
@@ -162,11 +187,49 @@ ___
 
 **Ƭ ConfirmOperation**: *`object`*
 
-*Defined in common/state.ts:33*
+*Defined in common/state.ts:35*
 
 #### Type declaration
 
  injectionOperation: [InjectionOperation](#injectionoperation)
+
+___
+<a id="contractbalanceupdate"></a>
+
+###  ContractBalanceUpdate
+
+**Ƭ ContractBalanceUpdate**: *`object`*
+
+*Defined in common/operations.ts:51*
+
+#### Type declaration
+
+ change: `string`
+
+ contract: `string`
+
+ kind: "contract"
+
+___
+<a id="feebalanceupdate"></a>
+
+###  FeeBalanceUpdate
+
+**Ƭ FeeBalanceUpdate**: *`object`*
+
+*Defined in common/operations.ts:57*
+
+#### Type declaration
+
+ category: "fees"
+
+ change: `string`
+
+ delegate: `string`
+
+ kind: "freezer"
+
+ level: `number`
 
 ___
 <a id="head"></a>
@@ -175,7 +238,7 @@ ___
 
 **Ƭ Head**: *`object`*
 
-*Defined in common/state.ts:37*
+*Defined in common/state.ts:67*
 
 #### Type declaration
 
@@ -244,13 +307,74 @@ ___
  protocol: `string`
 
 ___
+<a id="headconstants"></a>
+
+###  HeadConstants
+
+**Ƭ HeadConstants**: *`object`*
+
+*Defined in common/state.ts:39*
+
+#### Type declaration
+
+ block_reward: `string`
+
+ block_security_deposit: `string`
+
+ blocks_per_commitment: `number`
+
+ blocks_per_cycle: `number`
+
+ blocks_per_roll_snapshot: `number`
+
+ blocks_per_voting_period: `number`
+
+ cost_per_byte: `string`
+
+ endorsement_reward: `string`
+
+ endorsement_security_deposit: `string`
+
+ endorsers_per_block: `number`
+
+ hard_gas_limit_per_block: `string`
+
+ hard_gas_limit_per_operation: `string`
+
+ hard_storage_limit_per_operation: `string`
+
+ max_operation_data_length: `number`
+
+ max_proposals_per_delegate: `number`
+
+ max_revelations_per_block: `number`
+
+ michelson_maximum_type_size: `number`
+
+ nonce_length: `number`
+
+ origination_size: `number`
+
+ preserved_cycles: `number`
+
+ proof_of_work_nonce_size: `number`
+
+ proof_of_work_threshold: `string`
+
+ seed_nonce_revelation_tip: `string`
+
+ time_between_blocks: `string`[]
+
+ tokens_per_roll: `string`
+
+___
 <a id="injectionoperation"></a>
 
 ###  InjectionOperation
 
 **Ƭ InjectionOperation**: *`object`*
 
-*Defined in common/state.ts:89*
+*Defined in common/state.ts:119*
 
 #### Type declaration
 
@@ -261,7 +385,7 @@ ___
 
 **Ƭ ManagerKey**: *`object`*
 
-*Defined in common/state.ts:108*
+*Defined in common/state.ts:138*
 
 #### Type declaration
 
@@ -276,7 +400,7 @@ ___
 
 **Ƭ Mempool**: *`object`*
 
-*Defined in common/state.ts:100*
+*Defined in common/state.ts:130*
 
 #### Type declaration
 
@@ -297,7 +421,7 @@ ___
 
 **Ƭ MempoolOperation**: *`object`*
 
-*Defined in common/state.ts:93*
+*Defined in common/state.ts:123*
 
 #### Type declaration
 
@@ -308,6 +432,16 @@ ___
  hash: `string`
 
  signature: `string`
+
+___
+<a id="operationapplicationresult"></a>
+
+###  OperationApplicationResult
+
+**Ƭ OperationApplicationResult**: * [OperationValidationResult](#operationvalidationresult) & `object`
+*
+
+*Defined in common/operations.ts:80*
 
 ___
 <a id="operationmetadata"></a>
@@ -321,13 +455,23 @@ ___
 *Defined in common/operations.ts:42*
 
 ___
-<a id="originatecontract"></a>
+<a id="operationvalidationresult"></a>
 
-###  OriginateContract
+###  OperationValidationResult
 
-**Ƭ OriginateContract**: *`object`*
+**Ƭ OperationValidationResult**: * [OperationMetadata](#operationmetadata) & `object`
+*
 
-*Defined in common/state.ts:113*
+*Defined in common/operations.ts:67*
+
+___
+<a id="originatedcontract"></a>
+
+###  OriginatedContract
+
+**Ƭ OriginatedContract**: *`object`*
+
+*Defined in common/state.ts:143*
 
 #### Type declaration
 
@@ -344,7 +488,7 @@ ___
 
 **Ƭ PackOperationParameters**: *`object`*
 
-*Defined in common/state.ts:119*
+*Defined in common/state.ts:149*
 
 #### Type declaration
 
@@ -355,7 +499,7 @@ ___
 
 **Ƭ PendingOperation**: *`object`*
 
-*Defined in common/state.ts:123*
+*Defined in common/state.ts:153*
 
 #### Type declaration
 
@@ -368,11 +512,11 @@ ___
 
 **Ƭ PreapplyOperation**: *`object`*
 
-*Defined in common/state.ts:127*
+*Defined in common/state.ts:157*
 
 #### Type declaration
 
- contents: `object`[]
+ contents: [OperationValidationResult](#operationvalidationresult)[]
 
  signature: `string`
 
@@ -398,7 +542,7 @@ ___
 
 **Ƭ SetDelegate**: *`object`*
 
-*Defined in common/state.ts:136*
+*Defined in common/state.ts:162*
 
 #### Type declaration
 
@@ -413,7 +557,7 @@ ___
 
 **Ƭ SignOperation**: *`object`*
 
-*Defined in common/state.ts:141*
+*Defined in common/state.ts:167*
 
 #### Type declaration
 
@@ -430,7 +574,7 @@ ___
 
 **Ƭ StateActivateWallet**: *`object`*
 
-*Defined in wallet/activateWallet.ts:7*
+*Defined in wallet/activateWallet.ts:9*
 
 #### Type declaration
 
@@ -450,6 +594,19 @@ ___
  confirmOperation: `object`
 
  injectionOperation: [InjectionOperation](#injectionoperation)
+
+___
+<a id="stateconstants"></a>
+
+###  StateConstants
+
+**Ƭ StateConstants**: *`object`*
+
+*Defined in head/getConstants.ts:6*
+
+#### Type declaration
+
+ constants: [HeadConstants](#headconstants)
 
 ___
 <a id="statecounter"></a>
@@ -484,7 +641,7 @@ ___
 
 **Ƭ StateInjectionOperation**: *`object`*
 
-*Defined in operation/applyInjectOperation.ts:15*
+*Defined in operation/applyInjectOperation.ts:16*
 
 #### Type declaration
 
@@ -523,7 +680,7 @@ ___
 
 **Ƭ StateOperation**: *`object`*
 
-*Defined in operation/forgeOperation.ts:13*
+*Defined in operation/forgeOperation.ts:15*
 
 #### Type declaration
 
@@ -536,7 +693,7 @@ ___
 
 **Ƭ StateOperations**: *`object`*
 
-*Defined in operation/operation.ts:7*
+*Defined in operation/operation.ts:9*
 
 #### Type declaration
 
@@ -553,7 +710,7 @@ ___
 
 #### Type declaration
 
- originateContract: [OriginateContract](#originatecontract)
+ originateContract: [OriginatedContract](#originatedcontract)
 
 ___
 <a id="statepackoperationparameters"></a>
@@ -588,7 +745,7 @@ ___
 
 **Ƭ StatePreapplyOperation**: *`object`*
 
-*Defined in operation/applyInjectOperation.ts:11*
+*Defined in operation/applyInjectOperation.ts:12*
 
 #### Type declaration
 
@@ -601,7 +758,7 @@ ___
 
 **Ƭ StateSetDelegate**: *`object`*
 
-*Defined in delegate/setDelegate.ts:9*
+*Defined in delegate/setDelegate.ts:11*
 
 #### Type declaration
 
@@ -627,11 +784,24 @@ ___
 
 **Ƭ StateTransaction**: *`object`*
 
-*Defined in transaction/createTransaction.ts:9*
+*Defined in transaction/createTransaction.ts:11*
 
 #### Type declaration
 
  transaction: [Transaction](#transaction)
+
+___
+<a id="statevalidatedoperations"></a>
+
+###  StateValidatedOperations
+
+**Ƭ StateValidatedOperations**: *`object`*
+
+*Defined in operation/validateOperation.ts:10*
+
+#### Type declaration
+
+ validatedOperations: [ValidationResult](#validationresult)
 
 ___
 <a id="statewallet"></a>
@@ -666,7 +836,7 @@ ___
 
 **Ƭ Transaction**: *`object`*
 
-*Defined in common/state.ts:147*
+*Defined in common/state.ts:173*
 
 #### Type declaration
 
@@ -685,19 +855,19 @@ ___
 
 **Ƭ TrezorDelegationOperation**: *`object`*
 
-*Defined in common/operations.ts:88*
+*Defined in common/operations.ts:122*
 
 #### Type declaration
 
  counter: `number`
 
- delegate:  `Uint8Array` &#124; `null`
+ delegate: `string`
 
  fee: `number`
 
  gas_limit: `number`
 
- source: [TrezorOperationTarget](#trezoroperationtarget)
+ source: `string`
 
  storage_limit: `number`
 
@@ -708,7 +878,7 @@ ___
 
 **Ƭ TrezorOperationTarget**: *`object`*
 
-*Defined in common/operations.ts:51*
+*Defined in common/operations.ts:85*
 
 #### Type declaration
 
@@ -723,7 +893,7 @@ ___
 
 **Ƭ TrezorOriginationOperation**: *`object`*
 
-*Defined in common/operations.ts:75*
+*Defined in common/operations.ts:109*
 
 #### Type declaration
 
@@ -733,7 +903,7 @@ ___
 
  delegatable: `boolean`
 
- delegate:  `Uint8Array` &#124; `null`
+ delegate: `string`
 
  fee: `number`
 
@@ -741,7 +911,7 @@ ___
 
  manager_pubkey: `string`
 
- source: [TrezorOperationTarget](#trezoroperationtarget)
+ source: `string`
 
  spendable: `boolean`
 
@@ -754,7 +924,7 @@ ___
 
 **Ƭ TrezorRevealOperation**: *`object`*
 
-*Defined in common/operations.ts:56*
+*Defined in common/operations.ts:90*
 
 #### Type declaration
 
@@ -766,7 +936,7 @@ ___
 
  public_key: `string`
 
- source: [TrezorOperationTarget](#trezoroperationtarget)
+ source: `string`
 
  storage_limit: `number`
 
@@ -777,7 +947,7 @@ ___
 
 **Ƭ TrezorTransactionOperation**: *`object`*
 
-*Defined in common/operations.ts:65*
+*Defined in common/operations.ts:99*
 
 #### Type declaration
 
@@ -785,15 +955,28 @@ ___
 
  counter: `number`
 
- destination: [TrezorOperationTarget](#trezoroperationtarget)
+ destination: `string`
 
  fee: `number`
 
  gas_limit: `number`
 
- source: [TrezorOperationTarget](#trezoroperationtarget)
+ source: `string`
 
  storage_limit: `number`
+
+___
+<a id="validationresult"></a>
+
+###  ValidationResult
+
+**Ƭ ValidationResult**: *`object`*
+
+*Defined in common/state.ts:180*
+
+#### Type declaration
+
+ contents: [OperationValidationResult](#operationvalidationresult)[]
 
 ___
 <a id="wallet"></a>
@@ -802,7 +985,7 @@ ___
 
 **Ƭ Wallet**: *`object`*
 
-*Defined in common/state.ts:164*
+*Defined in common/state.ts:184*
 
 #### Type declaration
 
@@ -829,7 +1012,7 @@ ___
 
 **Ƭ WalletDetail**: *`object`*
 
-*Defined in common/state.ts:176*
+*Defined in common/state.ts:196*
 
 #### Type declaration
 
@@ -845,7 +1028,7 @@ ___
 
 ▸ **activateWallet**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in wallet/activateWallet.ts:18*
+*Defined in wallet/activateWallet.ts:20*
 
 Activate generated wallet address
 
@@ -868,7 +1051,7 @@ ___
 
 ▸ **applyAndInjectOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/applyInjectOperation.ts:25*
+*Defined in operation/applyInjectOperation.ts:26*
 
 Validates and inject operation into tezos blockain Can be applied to any prepared operation
 
@@ -987,6 +1170,23 @@ Polls mempool to check when operation is confirmed and moved to head
 **Returns:** `(Anonymous function)`
 
 ___
+<a id="constants"></a>
+
+### `<Const>` constants
+
+▸ **constants**<`T`>(): `(Anonymous function)`
+
+*Defined in head/getConstants.ts:13*
+
+Get head for operation
+
+**Type parameters:**
+
+#### T :  [State](interfaces/state.md)
+
+**Returns:** `(Anonymous function)`
+
+___
 <a id="counter"></a>
 
 ### `<Const>` counter
@@ -1010,7 +1210,7 @@ ___
 
 ▸ **forgeOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/forgeOperation.ts:24*
+*Defined in operation/forgeOperation.ts:26*
 
 Forge operation in blocchain. Converts operation into binary format and signs operation using script or Trezor
 
@@ -1027,7 +1227,7 @@ ___
 
 ▸ **forgeOperationAtomic**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/forgeOperation.ts:55*
+*Defined in operation/forgeOperation.ts:68*
 
 Converts operation to binary format on node
 
@@ -1142,7 +1342,7 @@ ___
 
 ▸ **injectOperations**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/applyInjectOperation.ts:77*
+*Defined in operation/applyInjectOperation.ts:78*
 
 Inbjects prevalidated operation to Tezos blockchain
 
@@ -1215,11 +1415,28 @@ ___
 
 ▸ **operation**(): `(Anonymous function)`
 
-*Defined in operation/operation.ts:15*
+*Defined in operation/operation.ts:17*
 
 Create operation in blockchain. Fully forge operation, validates it and inject into blockchain
 
 **Returns:** `(Anonymous function)`
+
+___
+<a id="operationisvalid"></a>
+
+###  operationIsValid
+
+▸ **operationIsValid**(operation: *[OperationValidationResult](#operationvalidationresult)*): `boolean`
+
+*Defined in operation/validateOperation.ts:96*
+
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| operation | [OperationValidationResult](#operationvalidationresult) |
+
+**Returns:** `boolean`
 
 ___
 <a id="originatecontract"></a>
@@ -1343,7 +1560,7 @@ ___
 
 ▸ **preapplyOperations**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/applyInjectOperation.ts:57*
+*Defined in operation/applyInjectOperation.ts:58*
 
 Prevalidates (preapply) operation on tezos node
 
@@ -1395,7 +1612,7 @@ ___
 
 ▸ **setDelegation**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in delegate/setDelegate.ts:31*
+*Defined in delegate/setDelegate.ts:33*
 
 Set delegation rights to tezos address
 
@@ -1465,7 +1682,7 @@ ___
 
 ▸ **transaction**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in transaction/createTransaction.ts:37*
+*Defined in transaction/createTransaction.ts:39*
 
 Send amount to another wallet
 
@@ -1479,6 +1696,55 @@ Fully covers send useace and get transaction to blockchain
 | Name | Type | Description |
 | ------ | ------ | ------ |
 | selector | `function` |  method returning transaction obejct |
+
+**Returns:** `(Anonymous function)`
+
+___
+<a id="updatefeesforoperation"></a>
+
+###  updateFeesForOperation
+
+▸ **updateFeesForOperation**(state: * [State](interfaces/state.md) & [StateHead](#statehead) & [StateCounter](#statecounter) & [StateManagerKey](#statemanagerkey) & [StateOperation](#stateoperation) & [StateOperations](#stateoperations)*):  [State](interfaces/state.md) & `object` & `object` & `object` & `object` & `object`
+
+*Defined in operation/forgeOperation.ts:81*
+
+**Parameters:**
+
+| Name | Type |
+| ------ | ------ |
+| state |  [State](interfaces/state.md) & [StateHead](#statehead) & [StateCounter](#statecounter) & [StateManagerKey](#statemanagerkey) & [StateOperation](#stateoperation) & [StateOperations](#stateoperations)|
+
+**Returns:**  [State](interfaces/state.md) & `object` & `object` & `object` & `object` & `object`
+
+___
+<a id="validateoperation"></a>
+
+### `<Const>` validateOperation
+
+▸ **validateOperation**<`T`>(): `(Anonymous function)`
+
+*Defined in operation/validateOperation.ts:14*
+
+**Type parameters:**
+
+#### T :   [State](interfaces/state.md) & [StateHead](#statehead) & [StateOperations](#stateoperations)
+
+**Returns:** `(Anonymous function)`
+
+___
+<a id="validateoperationatomic"></a>
+
+### `<Const>` validateOperationAtomic
+
+▸ **validateOperationAtomic**<`T`>(): `(Anonymous function)`
+
+*Defined in operation/validateOperation.ts:80*
+
+Serialize operation parameters on node
+
+**Type parameters:**
+
+#### T :   [State](interfaces/state.md) & [StateHead](#statehead) & [StateOperations](#stateoperations) & [StateSignOperation](#statesignoperation)
 
 **Returns:** `(Anonymous function)`
 

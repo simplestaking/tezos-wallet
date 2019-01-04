@@ -33,7 +33,7 @@ export const activateWallet = <T extends State>(selector: (state: T) => Activate
     operations.push({
       kind: "activate_account",
       pkh: state.wallet.publicKeyHash,
-      secret: state.activateWallet.secret
+      secret: state.activateWallet.secret      
     });
 
     return {

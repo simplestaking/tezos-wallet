@@ -4,7 +4,7 @@
         "module": "commonjs", 
         "sourceMap": false,
         "rootDir": ".",
-        "outDir": "temp",
+        "outDir": "./temp",
         "declaration": false
     },
     "include": [

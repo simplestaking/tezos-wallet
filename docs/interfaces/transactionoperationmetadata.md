@@ -50,7 +50,7 @@ ___
 
 ###  destination
 
-**● destination**: *`any`*
+**● destination**: *`string`*
 
 *Defined in common/operations.ts:17*
 
@@ -99,7 +99,7 @@ ___
 
 ###  source
 
-**● source**: *`any`*
+**● source**: *`string`*
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[source](baseoperationmetadata.md#source)*
 

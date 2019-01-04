@@ -12,6 +12,7 @@
 
 * [activateWallet](state.md#activatewallet)
 * [confirmOperation](state.md#confirmoperation)
+* [constants](state.md#constants)
 * [counter](state.md#counter)
 * [getWallet](state.md#getwallet)
 * [head](state.md#head)
@@ -28,6 +29,7 @@
 * [setDelegate](state.md#setdelegate)
 * [signOperation](state.md#signoperation)
 * [transaction](state.md#transaction)
+* [validatedOperations](state.md#validatedoperations)
 * [wallet](state.md#wallet)
 
 ---
@@ -52,6 +54,15 @@ ___
 *Defined in common/state.ts:9*
 
 ___
+<a id="constants"></a>
+
+### `<Optional>` constants
+
+**● constants**: *[HeadConstants](../#headconstants)*
+
+*Defined in common/state.ts:10*
+
+___
 <a id="counter"></a>
 
 ### `<Optional>` counter
@@ -59,7 +70,7 @@ ___
 **● counter**: * `undefined` &#124; `number`
 *
 
-*Defined in common/state.ts:10*
+*Defined in common/state.ts:11*
 
 ___
 <a id="getwallet"></a>
@@ -68,7 +79,7 @@ ___
 
 **● getWallet**: *[WalletDetail](../#walletdetail)*
 
-*Defined in common/state.ts:11*
+*Defined in common/state.ts:12*
 
 ___
 <a id="head"></a>
@@ -77,7 +88,7 @@ ___
 
 **● head**: *[Head](../#head)*
 
-*Defined in common/state.ts:12*
+*Defined in common/state.ts:13*
 
 ___
 <a id="injectionoperation"></a>
@@ -86,7 +97,7 @@ ___
 
 **● injectionOperation**: *[InjectionOperation](../#injectionoperation)*
 
-*Defined in common/state.ts:13*
+*Defined in common/state.ts:14*
 
 ___
 <a id="manager_key"></a>
@@ -95,7 +106,7 @@ ___
 
 **● manager_key**: *[ManagerKey](../#managerkey)*
 
-*Defined in common/state.ts:14*
+*Defined in common/state.ts:15*
 
 ___
 <a id="mempool"></a>
@@ -104,7 +115,7 @@ ___
 
 **● mempool**: *[Mempool](../#mempool)*
 
-*Defined in common/state.ts:15*
+*Defined in common/state.ts:16*
 
 ___
 <a id="operation"></a>
@@ -114,7 +125,7 @@ ___
 **● operation**: * `undefined` &#124; `string`
 *
 
-*Defined in common/state.ts:17*
+*Defined in common/state.ts:18*
 
 ___
 <a id="operations"></a>
@@ -123,16 +134,16 @@ ___
 
 **● operations**: *[OperationMetadata](../#operationmetadata)[]*
 
-*Defined in common/state.ts:18*
+*Defined in common/state.ts:19*
 
 ___
 <a id="originatecontract"></a>
 
 ### `<Optional>` originateContract
 
-**● originateContract**: *[OriginateContract](../#originatecontract)*
+**● originateContract**: *[OriginatedContract](../#originatedcontract)*
 
-*Defined in common/state.ts:16*
+*Defined in common/state.ts:17*
 
 ___
 <a id="packoperationparameters"></a>
@@ -141,7 +152,7 @@ ___
 
 **● packOperationParameters**: *[PackOperationParameters](../#packoperationparameters)*
 
-*Defined in common/state.ts:19*
+*Defined in common/state.ts:20*
 
 ___
 <a id="pendingoperation"></a>
@@ -150,7 +161,7 @@ ___
 
 **● pendingOperation**: *[PendingOperation](../#pendingoperation)*
 
-*Defined in common/state.ts:20*
+*Defined in common/state.ts:21*
 
 ___
 <a id="preapply"></a>
@@ -159,7 +170,7 @@ ___
 
 **● preapply**: *[PreapplyOperation](../#preapplyoperation)[]*
 
-*Defined in common/state.ts:21*
+*Defined in common/state.ts:22*
 
 ___
 <a id="rpc"></a>
@@ -168,7 +179,7 @@ ___
 
 **● rpc**: *[RpcParams](rpcparams.md)*
 
-*Defined in common/state.ts:22*
+*Defined in common/state.ts:23*
 
 ___
 <a id="setdelegate"></a>
@@ -177,7 +188,7 @@ ___
 
 **● setDelegate**: *[SetDelegate](../#setdelegate)*
 
-*Defined in common/state.ts:23*
+*Defined in common/state.ts:24*
 
 ___
 <a id="signoperation"></a>
@@ -186,7 +197,7 @@ ___
 
 **● signOperation**: *[SignOperation](../#signoperation)*
 
-*Defined in common/state.ts:24*
+*Defined in common/state.ts:25*
 
 ___
 <a id="transaction"></a>
@@ -195,7 +206,16 @@ ___
 
 **● transaction**: *[Transaction](../#transaction)*
 
-*Defined in common/state.ts:25*
+*Defined in common/state.ts:26*
+
+___
+<a id="validatedoperations"></a>
+
+### `<Optional>` validatedOperations
+
+**● validatedOperations**: *[ValidationResult](../#validationresult)*
+
+*Defined in common/state.ts:27*
 
 ___
 <a id="wallet"></a>
@@ -204,7 +224,7 @@ ___
 
 **● wallet**: *[Wallet](../#wallet)*
 
-*Defined in common/state.ts:26*
+*Defined in common/state.ts:28*
 
 ___
 

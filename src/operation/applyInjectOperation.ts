@@ -31,7 +31,7 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
   // preapply operation
   preapplyOperations(),
 
-  tap((state) => console.log("[+] operation: preapply ", state.preapply[0].contents[0].metadata.operation_result)),
+  tap(state => console.log("[+] operation: preapply ", state.preapply[0].contents[0].metadata.operation_result)),
 
   // check for errors
   flatMap(state => {

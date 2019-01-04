@@ -1,10 +1,9 @@
 import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
-import {
-  State, OperationMetadata, OriginationOperationMetadata, OriginatedContract, parseAmount
-} from "../common";
-import { operation, StateOperations } from "../operation";
+import { State, OperationMetadata, OriginationOperationMetadata, OriginatedContract, parseAmount } from "../common";
+import { operation, StateOperations, validateOperation } from "../operation";
+import { constants, head, StateConstants, StateHead } from "../head";
 
 import { counter, StateCounter } from "./getContractCounter";
 import { managerKey, StateManagerKey } from './getContractManagerKey';
@@ -49,6 +48,10 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
     console.log('[+] originate : from "' + state.wallet.publicKeyHash)
   }),
 
+  head(),
+
+  constants(),
+
   // get contract counter
   counter(),
 
@@ -70,9 +73,9 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
         kind: "reveal",
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
-        fee: parseAmount(state.originateContract.fee).toString(),
-        gas_limit: "10100",
-        storage_limit: "277",
+        fee: "0",
+        gas_limit: state.constants.hard_gas_limit_per_operation,
+        storage_limit: state.constants.hard_storage_limit_per_operation,
         counter: (++state.counter).toString(),
       })
     }
@@ -82,8 +85,8 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.originateContract.fee).toString(),
       balance: parseAmount(state.originateContract.amount).toString(),
-      gas_limit: "10100",
-      storage_limit: "277",
+      gas_limit: state.constants.hard_gas_limit_per_operation,
+      storage_limit: state.constants.hard_storage_limit_per_operation,
       counter: (++state.counter).toString(),
       spendable: true,
       delegatable: true,
@@ -96,8 +99,11 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
     return {
       ...state as any,
       operations: operations
-    } as T & StateOriginateContract & StateCounter & StateManagerKey & StateOperations
+    } as T & StateOriginateContract & StateHead & StateConstants & StateCounter & StateManagerKey & StateOperations
   }),
+
+  // run operation on node and calculate its gas consumption and storage size
+  validateOperation(),
 
   // create operation 
   operation()

@@ -87,8 +87,8 @@ export function keys(): WalletBase
 export function keys(mnemonic: string, password: string): WalletBase
 export function keys(mnemonic?: string, password?: string): WalletBase {
 
-    mnemonic = mnemonic ? mnemonic : bip39.generateMnemonic(160)
-    password = mnemonic ? password : ''
+    mnemonic = mnemonic ? mnemonic : bip39.generateMnemonic(160);
+    password = mnemonic ? password : '';
 
     let seed = bip39.mnemonicToSeed(mnemonic, password).slice(0, 32);
     // ED25516 

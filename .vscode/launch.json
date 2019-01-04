@@ -8,9 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Node",
-            "program": "${workspaceFolder}\\lib\\faucet.js",
+            "program": "${workspaceFolder}\\temp\\internal\\faucet.js",
             "outFiles": [
-                "${workspaceFolder}/lib/*.js"
+                "${workspaceFolder}/temp/*.js"
             ]
         },
         {

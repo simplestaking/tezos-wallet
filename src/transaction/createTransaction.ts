@@ -1,9 +1,10 @@
-import { Observable } from "rxjs";
+import { Observable} from "rxjs";
 import { map, tap } from "rxjs/operators";
 
-import {  State, Transaction, OperationMetadata, parseAmount} from "../common";
+import { State, Transaction, OperationMetadata, parseAmount, TransactionOperationMetadata } from "../common";
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
-import { operation, StateOperations } from "../operation";
+import { operation, StateOperations, validateOperation } from "../operation";
+import { constants, StateConstants, head, StateHead } from "../head";
 
 // import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead } from '..'
 
@@ -39,10 +40,15 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
 
   map(state => (
     {
-    ...state as any,
-    transaction: selector(state)
-  } as T & StateTransaction
+      ...state as any,
+      transaction: selector(state)
+    } as T & StateTransaction
   )),
+
+  // get head constants for estimating transaction costs
+  constants(),
+
+  head(),
 
   // get contract counter
   counter(),
@@ -52,7 +58,8 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] transaction: ' + state.transaction.amount + ' ꜩ  fee:' + state.transaction.fee + ' ' + 'from "' + state.wallet.publicKeyHash + '" to "' + state.transaction.to + '"')
+    // ꜩ  fee:' + state.transaction.fee + ' '
+    console.log(`[+] transaction: ${state.transaction.amount} from "${state.wallet.publicKeyHash}" to "${state.transaction.to}"`);
   }),
 
   // prepare config for operation
@@ -69,32 +76,40 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         kind: "reveal",
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
-        fee: "10000",
-        gas_limit: "15000",
-        storage_limit: "277",
+        fee: "0",
+        gas_limit: state.constants.hard_gas_limit_per_operation,
+        storage_limit: state.constants.hard_storage_limit_per_operation,
         counter: (++state.counter).toString()
       })
     }
 
-    operations.push({
+    const transaction: TransactionOperationMetadata = {
       kind: "transaction",
       source: state.wallet.publicKeyHash,
       destination: state.transaction.to,
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
-      gas_limit: "11000", // "250000", 
-      storage_limit: "277",
-      parameters: state.transaction.parameters,
+      gas_limit: state.constants.hard_gas_limit_per_operation,
+      storage_limit: state.constants.hard_storage_limit_per_operation,      
       counter: (++state.counter).toString()
-    });
+    };
+
+    if(state.transaction.parameters){
+      transaction.parameters = state.transaction.parameters;
+    }
+
+    operations.push(transaction);
 
     return {
       ...state as any,
       operations: operations
-    } as T & StateTransaction & StateCounter & StateManagerKey & StateOperations
+    } as T & StateTransaction & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations
   }),
-  // tap((state) => console.log("[+] trasaction: operation " , state.operations)),
 
+  // run operation on node and calculate its gas consumption and storage size
+  validateOperation(),
+  
   // create operation 
   operation()
-) 
+)
+

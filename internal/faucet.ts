@@ -90,37 +90,37 @@ utils.ready().then(() => {
             })),
 
             // activate wallet
-            activateWallet(stateWallet => ({
-                secret: <string>stateWallet.wallet.secret
-            })),
+            // activateWallet(stateWallet => ({
+            //     secret: <string>stateWallet.wallet.secret
+            // })),
 
-            // wait for transaction to be confirmed
-            confirmOperation(stateWallet => ({
-                injectionOperation: stateWallet.injectionOperation,
-            })),
+            // // wait for transaction to be confirmed
+            // confirmOperation(stateWallet => ({
+            //     injectionOperation: stateWallet.injectionOperation,
+            // })),
 
-            // continue if wallet was activated already, otherwise throw error
-            catchError<State, State>((error: RpcError) => {
+            // // continue if wallet was activated already, otherwise throw error
+            // catchError<State, State>((error: RpcError) => {
 
-                // ignore activation error and proceed if already activated
-                return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
-                    of({ ...error.state }) : 
-                    throwError(error)
-            }),
+            //     // ignore activation error and proceed if already activated
+            //     return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
+            //         of({ ...error.state }) : 
+            //         throwError(error)
+            // }),
 
             // get wallet info
             getWallet(),
 
-            tap((stateWallet) => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000))),
+            tap(stateWallet => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000))),
 
-            // send XTZ if balance is > 100 xt
-            flatMap(stateWallet => (stateWallet.getWallet.balance / 1000000) > 1 ?
+            // send XTZ if balance is > 1 xt
+            flatMap((stateWallet: any) => (stateWallet.getWallet.balance / 1000000) > 1 ?
                 of(stateWallet).pipe(                    
 
                     // send xtz
                     transaction(stateWallet => ({
                         to: config.transaction.to,
-                        amount: ((stateWallet.getWallet.balance / 1000000) - 100).toString(),
+                        amount: "1",
                         // amount: 0.1,
                         fee: config.transaction.fee,
                     })),

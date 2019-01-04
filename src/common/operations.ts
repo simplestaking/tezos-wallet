@@ -1,5 +1,5 @@
 interface BaseOperationMetadata {
-    source: any
+    source: string
     fee: string
     counter: string
     gas_limit: string
@@ -14,7 +14,7 @@ export interface RevealOperationMetadata extends BaseOperationMetadata {
 export interface TransactionOperationMetadata extends BaseOperationMetadata {
     kind: 'transaction'
     amount: string
-    destination: any
+    destination: string
     parameters?: Record<string, any>
 }
 
@@ -25,12 +25,12 @@ export interface OriginationOperationMetadata extends BaseOperationMetadata {
     balance: string
     spendable: boolean
     delegatable: boolean
-    delegate: any
+    delegate: string
 }
 
 export interface DelegationOperationMetadata extends BaseOperationMetadata {
     kind: 'delegation'
-    delegate?: any
+    delegate?: string
 }
 
 export interface ActivateWalletOperationMetadata {
@@ -44,52 +44,86 @@ export type OperationMetadata = BaseOperationMetadata &
         RevealOperationMetadata |
         TransactionOperationMetadata |
         OriginationOperationMetadata |
-        DelegationOperationMetadata | 
+        DelegationOperationMetadata |
         ActivateWalletOperationMetadata
     );
 
+export type ContractBalanceUpdate = {
+    kind: "contract",
+    contract: string,
+    change: string // stringified number
+};
+
+export type FeeBalanceUpdate = {
+    kind: "freezer",
+    category: "fees",
+    delegate: string,
+    level: number,
+    change: string // stringified number
+};
+
+export type BalanceUpdate = ContractBalanceUpdate | FeeBalanceUpdate;
+
+export type OperationValidationResult = OperationMetadata & {
+    metadata: {
+        balance_updates: never[]
+        operation_result: {
+            status: "applied" | "failed"
+            balance_updates: ContractBalanceUpdate[]
+            errors: any
+            consumed_gas: string // stringified number
+            storage_size?: string // stringified number
+        }
+    }
+};
+
+export type OperationApplicationResult = OperationValidationResult & {
+    balance_updates: BalanceUpdate[]
+}
+
+// ?
 type TrezorOperationTarget = {
     tag: number
     hash: Uint8Array | null
 }
 
 export type TrezorRevealOperation = {
-        source: TrezorOperationTarget
-        public_key: string
-        fee: number
-        counter: number
-        gas_limit: number
-        storage_limit: number    
+    source: string
+    public_key: string
+    fee: number
+    counter: number
+    gas_limit: number
+    storage_limit: number
 }
 
 export type TrezorTransactionOperation = {
-        source: TrezorOperationTarget
-        destination: TrezorOperationTarget
-        amount: number
-        fee: number
-        counter: number
-        gas_limit: number
-        storage_limit: number    
+    source: string
+    destination: string
+    amount: number
+    fee: number
+    counter: number
+    gas_limit: number
+    storage_limit: number
 }
 
 export type TrezorOriginationOperation = {
-        source: TrezorOperationTarget
-        manager_pubkey: string
-        balance: number
-        spendable: boolean
-        delegatable: boolean
-        delegate: Uint8Array | null
-        fee: number
-        counter: number
-        gas_limit: number
-        storage_limit: number    
+    source: string
+    manager_pubkey: string
+    balance: number
+    spendable: boolean
+    delegatable: boolean
+    delegate: string
+    fee: number
+    counter: number
+    gas_limit: number
+    storage_limit: number
 }
 
 export type TrezorDelegationOperation = {
-        source: TrezorOperationTarget
-        delegate: Uint8Array | null
-        fee: number
-        counter: number
-        gas_limit: number
-        storage_limit: number    
+    source: string
+    delegate: string
+    fee: number
+    counter: number
+    gas_limit: number
+    storage_limit: number
 }

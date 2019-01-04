@@ -1,4 +1,4 @@
-import { OperationMetadata } from "./operations";
+import { OperationMetadata, OperationValidationResult } from "./operations";
 
 import { TezosNode } from './config';
 import { RpcParams } from './rpc';
@@ -7,6 +7,7 @@ import { RpcParams } from './rpc';
 export interface State {
     activateWallet?: ActivatedWallet
     confirmOperation?: ConfirmOperation
+    constants?: HeadConstants
     counter?: number
     getWallet?: WalletDetail
     head?: Head
@@ -23,6 +24,7 @@ export interface State {
     setDelegate?: SetDelegate
     signOperation?: SignOperation
     transaction?: Transaction
+    validatedOperations?: ValidationResult
     wallet: Wallet
 };
 
@@ -32,6 +34,34 @@ export type ActivatedWallet = {
 
 export type ConfirmOperation = {
     injectionOperation: InjectionOperation
+}
+
+export type HeadConstants = {
+    proof_of_work_nonce_size: number // 8
+    nonce_length: number // 32
+    max_revelations_per_block: number // 32
+    max_operation_data_length: number // 16384
+    max_proposals_per_delegate: number // 20
+    preserved_cycles: number // 5
+    blocks_per_cycle: number // 128
+    blocks_per_commitment: number // 32
+    blocks_per_roll_snapshot: number // 8 
+    blocks_per_voting_period: number // 32768
+    time_between_blocks: string[ ] // ["20"]
+    endorsers_per_block: number // 32
+    hard_gas_limit_per_operation: string // "4000000"
+    hard_gas_limit_per_block: string // "40000000"
+    proof_of_work_threshold: string // "70368744177663"
+    tokens_per_roll: string // "10000000000"
+    michelson_maximum_type_size: number // 1000
+    seed_nonce_revelation_tip: string // "125000"
+    origination_size: number // 257
+    block_security_deposit: string // "512000000"
+    endorsement_security_deposit: string // "64000000"
+    block_reward: string // "16000000"
+    endorsement_reward: string // "2000000"
+    cost_per_byte: string // "1000"
+    hard_storage_limit_per_operation: string // "600000"
 }
 
 export type Head = {
@@ -125,11 +155,7 @@ export type PendingOperation = {
 }
 
 export type PreapplyOperation = {
-    contents: {
-        metadata: {
-            operation_result: any
-        }
-    }[]
+    contents: OperationValidationResult[]
     signature: string
 }
 
@@ -149,17 +175,11 @@ export type Transaction = {
     fee: string
     to: string
     parameters?: Record<string, any>
-
 }
 
-// contractParameters?: {
-//     payreq: {
-//         parameters: any
-//         destination: string
-//         amount: number
-//     }
-//     trezorParams: any
-//  }
+export type ValidationResult = {
+   contents: OperationValidationResult[]
+}
 
 export type Wallet = {
     mnemonic?: string

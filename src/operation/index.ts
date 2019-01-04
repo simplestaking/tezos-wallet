@@ -5,3 +5,4 @@ export * from './confirmOperation';
 export * from './packOperationData';
 export * from './pendingOperation';
 export * from './signOperation';
+export * from './validateOperation';

@@ -59,7 +59,7 @@ ___
 
 ###  source
 
-**● source**: *`any`*
+**● source**: *`string`*
 
 *Defined in common/operations.ts:2*
 

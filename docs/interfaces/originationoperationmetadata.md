@@ -62,7 +62,7 @@ ___
 
 ###  delegate
 
-**● delegate**: *`any`*
+**● delegate**: *`string`*
 
 *Defined in common/operations.ts:28*
 
@@ -122,7 +122,7 @@ ___
 
 ###  source
 
-**● source**: *`any`*
+**● source**: *`string`*
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[source](baseoperationmetadata.md#source)*
 

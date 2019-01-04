@@ -39,7 +39,8 @@ ___
 
 ### `<Optional>` delegate
 
-**● delegate**: *`any`*
+**● delegate**: * `undefined` &#124; `string`
+*
 
 *Defined in common/operations.ts:33*
 
@@ -79,7 +80,7 @@ ___
 
 ###  source
 
-**● source**: *`any`*
+**● source**: *`string`*
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[source](baseoperationmetadata.md#source)*
 
