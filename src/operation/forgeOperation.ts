@@ -1,4 +1,4 @@
-import { Observable, throwError } from "rxjs";
+import { Observable, throwError, of } from "rxjs";
 import { flatMap, tap, map } from "rxjs/operators";
 
 import { State, rpc } from "../common";
@@ -41,11 +41,11 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
     console.log('Size', state.operation.length)
   }),
 
-  map(updateFeesForOperation),
+  updateFeesForOperation(),
 
-  // forge again with correct fees
-  // @TODO: do we need to forge again as params changed?
-  //forgeOperationAtomic(),
+  tap(state => {
+    console.log('#### Re-Forged operation', state.operation)
+  }),
 
   // add signature to state     
   flatMap(state => {
@@ -78,35 +78,49 @@ export const forgeOperationAtomic = <T extends State & StateHead & StateOperatio
   }))
 ) as Observable<T & StateOperation>
 
-function updateFeesForOperation(state: State & StateHead & StateCounter & StateManagerKey & StateOperation & StateOperations) {
+const updateFeesForOperation = <T extends State & StateHead & StateCounter & StateManagerKey & StateOperation & StateOperations>() => (source: Observable<T>) => source.pipe(
 
-  state.operations.forEach(operation => {
+  flatMap(state => {
 
-    // ignore fees calculation for wallet activation
-    // @TODO: should it be considered??
-    if(operation.kind === "activate_account"){
-      return;
-    }
+    // we have to re-forge operations if the fees changed
+    // otherwise signature would not match
+    let feesModified = false;
 
-    // value in nanotez
-    // depends on gas limit and operation byte size in blockchain
-    // operation is hex therefore we can say that char is 1 byte
-    const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + state.operation.length;
-    const fee = parseFloat(operation.fee);
+    state.operations.forEach(operation => {
 
-    // ensuring that fee is in nanotez however we expect it to be provided in tez!
-    const feeAsNano = fee > 1000 ? fee : fee * 1000000; // convert from tez to nanotez
+      // ignore fees calculation for wallet activation
+      // @TODO: should it be considered??
+      if (operation.kind === "activate_account") {
+        return of(state);
+      }
 
-    console.log(`[+] fees: defined "${fee}" estimated "${estimatedFee}"`);
+      // value in nanotez
+      // depends on gas limit and operation byte size in blockchain
+      // operation is hex therefore we can say that char is 1 byte
+      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + state.operation.length;
+      const fee = parseFloat(operation.fee);
 
-    if (estimatedFee > feeAsNano) {
-      console.warn('Defined fee is lower than fail safe minimal fee! Overriding it.');
+      console.log(`[+] fees: defined "${fee}" estimated "${estimatedFee}"`);
 
-      operation.fee = estimatedFee.toString();
-      // shall we throw error here?
-      //return throwError(fee);
+      if (estimatedFee > fee) {
+        console.warn('Defined fee is lower than fail safe minimal fee! Overriding it.');
+
+        operation.fee = estimatedFee.toString();
+
+        feesModified = true;
+        // shall we throw error here?
+        //return throwError(fee);
+      }
+    })
+
+    if (feesModified) {
+
+      // forge again as operation did change
+      return of(state).
+        pipe(forgeOperationAtomic());
+
+    } else {
+      return of(state);
     }
   })
-
-  return state;
-}
+);

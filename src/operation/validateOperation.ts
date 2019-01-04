@@ -36,9 +36,9 @@ export const validateOperation = <T extends State & StateHead & StateOperations>
 
       // modify values with simulation results
       if (operation) {
-
-        // we follow tezos-client and add conservative 100 units on the top of estimation
-        operation.gas_limit = (parseInt(validated.metadata.operation_result.consumed_gas) + 100).toString();
+        
+        // use estimated gas from node
+        operation.gas_limit = validated.metadata.operation_result.consumed_gas;
         // storage limit is precise, no need to modify it
         operation.storage_limit = validated.metadata.operation_result.storage_size || "0";
 

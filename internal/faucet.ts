@@ -15,8 +15,8 @@ const config = {
         // hw_trezor_zero
         to: 'tz1UQfd6Hqbfy9x4yQAA9XdkZih57aZYYtnC',
         // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
-        amount: '1.23',
-        fee: '1',
+        amount: '5.23',
+        fee: '0.001',
     },
     node: {
         name: 'zeronet',
@@ -90,23 +90,23 @@ utils.ready().then(() => {
             })),
 
             // activate wallet
-            // activateWallet(stateWallet => ({
-            //     secret: <string>stateWallet.wallet.secret
-            // })),
+            activateWallet(stateWallet => ({
+                secret: <string>stateWallet.wallet.secret
+            })),
 
-            // // wait for transaction to be confirmed
-            // confirmOperation(stateWallet => ({
-            //     injectionOperation: stateWallet.injectionOperation,
-            // })),
+            // wait for transaction to be confirmed
+            confirmOperation(stateWallet => ({
+                injectionOperation: stateWallet.injectionOperation,
+            })),
 
-            // // continue if wallet was activated already, otherwise throw error
-            // catchError<State, State>((error: RpcError) => {
+            // continue if wallet was activated already, otherwise throw error
+            catchError<State, State>((error: RpcError) => {
 
-            //     // ignore activation error and proceed if already activated
-            //     return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
-            //         of({ ...error.state }) : 
-            //         throwError(error)
-            // }),
+                // ignore activation error and proceed if already activated
+                return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
+                    of({ ...error.state }) : 
+                    throwError(error)
+            }),
 
             // get wallet info
             getWallet(),
@@ -120,7 +120,7 @@ utils.ready().then(() => {
                     // send xtz
                     transaction(stateWallet => ({
                         to: config.transaction.to,
-                        amount: "1",
+                        amount: config.transaction.amount,
                         // amount: 0.1,
                         fee: config.transaction.fee,
                     })),
@@ -143,7 +143,7 @@ utils.ready().then(() => {
         )),
 
     ).subscribe(data => {
-        // console.log('[result]', data)
+        console.log('[result]', data)
     })
 
 })
