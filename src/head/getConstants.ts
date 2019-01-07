@@ -8,7 +8,9 @@ export type StateConstants = {
 };
 
 /**
- * Get head for operation
+ * Get constants used in block
+ * 
+ * @url "/chains/main/blocks/head/context/constants"
  */
 export const constants = <T extends State>() => (source: Observable<T>) => source.pipe(
 

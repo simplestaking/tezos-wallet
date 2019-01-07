@@ -56,8 +56,7 @@ export const validateOperation = <T extends State & StateHead & StateOperations>
           // fee is not estimated here as we do not know operation byte size yet!
           // operation must be forged to find this out
 
-          console.log('@@@@@@@@')
-          console.log('operation enhanced', operation)
+          console.log('Operation gas consumption set', operation);
 
         } else {
           // this should never happen...

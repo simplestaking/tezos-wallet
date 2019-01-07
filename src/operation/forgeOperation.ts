@@ -36,16 +36,16 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
 
   forgeOperationAtomic(),
 
-  tap(state => {
-    console.log('#### Forged operation', state.operation)
-    console.log('Size', state.operation.length)
-  }),
+  // tap(state => {
+  //   console.log('#### Forged operation', state.operation)
+  //   console.log('Size', state.operation.length)
+  // }),
 
   updateFeesForOperation(),
 
-  tap(state => {
-    console.log('#### Re-Forged operation', state.operation)
-  }),
+  // tap(state => {
+  //   console.log('#### Re-Forged operation', state.operation)
+  // }),
 
   // add signature to state     
   flatMap(state => {
@@ -78,6 +78,13 @@ export const forgeOperationAtomic = <T extends State & StateHead & StateOperatio
   }))
 ) as Observable<T & StateOperation>
 
+
+/**
+ * Estimates minimal fee for the operation and compares provided defined fees with minimal
+ * If provided fee is insuficient its overriden
+ * 
+ * When fee is modified operation has to be re-forged so signature is matching operation content
+ */
 const updateFeesForOperation = <T extends State & StateHead & StateCounter & StateManagerKey & StateOperation & StateOperations>() => (source: Observable<T>) => source.pipe(
 
   flatMap(state => {
@@ -99,15 +106,16 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
       // operation is hex therefore we can say that char is 1 byte
       const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + state.operation.length;
       const fee = parseFloat(operation.fee);
-
+      
+      console.log(`Estimated operation size is "${state.operation.length}" bytes`)
       console.log(`[+] fees: defined "${fee}" estimated "${estimatedFee}"`);
 
       if (estimatedFee > fee) {
         console.warn('Defined fee is lower than fail safe minimal fee! Overriding it.');
 
         operation.fee = estimatedFee.toString();
-
         feesModified = true;
+
         // shall we throw error here?
         //return throwError(fee);
       }

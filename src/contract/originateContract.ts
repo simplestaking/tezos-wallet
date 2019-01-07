@@ -2,7 +2,7 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 
 import { State, OperationMetadata, OriginationOperationMetadata, OriginatedContract, parseAmount } from "../common";
-import { operation, StateOperations, validateOperation } from "../operation";
+import { operation, StateOperations, validateOperation, StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateValidatedOperations } from "../operation";
 import { constants, head, StateConstants, StateHead } from "../head";
 
 import { counter, StateCounter } from "./getContractCounter";
@@ -45,7 +45,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] originate : from "' + state.wallet.publicKeyHash)
+    console.log(`[+] originate : from "${state.wallet.publicKeyHash}"`);
   }),
 
   head(),
@@ -103,8 +103,14 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
   }),
 
   // run operation on node and calculate its gas consumption and storage size
-  validateOperation(),
+  validateOperation(), 
 
   // create operation 
-  operation()
-)
+  operation(),
+
+  tap<T & StatePreapplyOperation>(state => {
+    const origination = state.preapply[0].contents.filter(op => op.kind === "origination")[0];
+
+    origination && console.log(`[+] Originated contract address: "${origination.metadata.operation_result.originated_contracts}"`);
+  })
+) as Observable<T & StateHead & StateCounter & StateManagerKey & StateOperation & StateOriginateContract & StateSignOperation & StatePreapplyOperation & StateInjectionOperation & StateValidatedOperations>

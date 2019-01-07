@@ -7,3 +7,4 @@ Initial release supporting Tezos:
 - checking operation status
 - creating new wallet
 - activating wallet
+- gas limit, storage limit and fees are automatically estimated

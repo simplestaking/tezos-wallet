@@ -90,7 +90,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
       gas_limit: state.constants.hard_gas_limit_per_operation,
-      storage_limit: state.constants.hard_storage_limit_per_operation,
+      storage_limit: "257",
       counter: (++state.counter).toString()
     };
 

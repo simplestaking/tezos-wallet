@@ -27,7 +27,7 @@ export const confirmOperation = <T extends State>(selector: (state: T) => Confir
     } as T & StateConfirmOperation
   )),
 
-  tap((state) => console.log('[-] pending: operation "' + state.confirmOperation.injectionOperation + '"')),
+  tap((state) => console.log(`[-] pending: operation "${state.confirmOperation.injectionOperation}"`)),
 
   // wait 3 sec for operation 
   delay(3000),

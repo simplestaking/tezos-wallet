@@ -51,11 +51,11 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
 
   // display transaction info to console
   tap(state => {
-    console.log('[+] setDelegate: from "' + state.wallet.publicKeyHash + '" to "' + state.setDelegate.to + '"')
+    console.log(`[+] setDelegate: from "${state.wallet.publicKeyHash}" to "${state.setDelegate.to }"`);
   }),
 
   tap(state => {
-    console.log('[+] wallet: from "' + state.wallet)
+    console.log(`[+] wallet: from "${state.wallet}"`);
   }),
 
   // prepare config for operation
@@ -84,7 +84,7 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.setDelegate.fee).toString(),
       gas_limit: state.constants.hard_gas_limit_per_operation,
-      storage_limit: "257",
+      storage_limit: state.constants.hard_storage_limit_per_operation,
       counter: (++state.counter).toString(),
       delegate: !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })

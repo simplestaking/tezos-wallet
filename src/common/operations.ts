@@ -73,6 +73,7 @@ export type OperationValidationResult = OperationMetadata & {
             errors: any
             consumed_gas: string // stringified number
             storage_size?: string // stringified number
+            originated_contracts?: string
         }
     }
 };
