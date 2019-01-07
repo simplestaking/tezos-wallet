@@ -4,3 +4,4 @@ export * from './rpc';
 export * from './config';
 export * from './operations';
 export * from './state';
+export * from './errors';

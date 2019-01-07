@@ -21,7 +21,7 @@ export type StateInjectionOperation = {
  * Validates and inject operation into tezos blockain
  * Can be applied to any prepared operation
  * 
- * @throws error when operation validation fails on node
+ * @throws InjectionError when operation validation fails on node
  */
 export const applyAndInjectOperation = <T extends State & StateHead & StateOperations & StateSignOperation>() => (source: Observable<T>) => source.pipe(
 
@@ -39,7 +39,10 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
 
     // @@TODO: no such a field as operation_result
     return result.operation_result && result.operation_result.status === "failed" ?
-      throwError({ response: result.operation_result.errors }) :
+      throwError({ 
+        state,
+        response: result.operation_result.errors 
+      }) :
       of(state)
   }),
 

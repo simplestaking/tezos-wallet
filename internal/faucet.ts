@@ -100,11 +100,11 @@ utils.ready().then(() => {
             })),
 
             // continue if wallet was activated already, otherwise throw error
-            catchError<State, State>((error: RpcError) => {
+            catchError((error: RpcError) => {
 
                 // ignore activation error and proceed if already activated
                 return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
-                    of({ ...error.state }) : 
+                    of({ ...error.state }) :
                     throwError(error)
             }),
 
@@ -113,26 +113,36 @@ utils.ready().then(() => {
 
             tap(stateWallet => console.log('[+] getWallet: balance', (stateWallet.getWallet.balance / 1000000))),
 
-            // send XTZ if balance is > 1 xt
-            flatMap((stateWallet: any) => (stateWallet.getWallet.balance / 1000000) > 1 ?
-                of(stateWallet).pipe(                    
+            // send xtz
+            transaction(stateWallet => ({
+                to: config.transaction.to,
+                amount: (stateWallet.getWallet.balance / 1000000 / 10).toString(),
+                // amount: 0.1,
+                fee: config.transaction.fee,
+            })),
 
-                    // send xtz
-                    transaction(stateWallet => ({
-                        to: config.transaction.to,
-                        amount: config.transaction.amount,
-                        // amount: 0.1,
-                        fee: config.transaction.fee,
-                    })),
+            catchError((error) => {
 
-                    // wait for transacation to be confirmed
-                    confirmOperation(stateWallet => ({
-                        injectionOperation: stateWallet.injectionOperation,
-                    })),
+                // retry transaction with lowered amount to fit balance without fee
+                if(error.response[0].id === 'proto.alpha.contract.balance_too_low'){
 
-                ) :
-                of(stateWallet)
-            ),
+                    return of({ ...error.state }).pipe(
+                        transaction(state => ({
+                            to: config.transaction.to,
+                            amount: (error.response[0].balance / 1000000).toString(),
+                            fee: config.transaction.fee
+                        }))
+                    )
+                } else {
+                    console.error('Unhandled transaction error', error.response[0].id, error);
+                    return throwError(error); 
+                }
+            }),
+
+            // wait for transacation to be confirmed
+            confirmOperation(stateWallet => ({
+                injectionOperation: stateWallet.injectionOperation,
+            })),
 
             // // originate contract
             // originateContract(stateWallet => ({

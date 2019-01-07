@@ -1,7 +1,7 @@
 import { Observable, of, throwError } from 'rxjs';
 import { State, rpc, ValidationResult, OperationValidationResult } from '../common';
 
-import { StateHead } from 'head';
+import { StateHead } from '../head';
 import { StateOperations } from './operation';
 import { flatMap } from 'rxjs/operators';
 import { signOperationTrezor, signOperation, StateSignOperation } from './signOperation';
@@ -11,6 +11,12 @@ export type StateValidatedOperations = {
   validatedOperations: ValidationResult
 }
 
+
+/**
+ * Validates operation on node to ensure, that operation can be executed and prefills gas consumption and storage size data
+ * 
+ * @throws ValidationError when validation can't succeed with error details
+ */
 export const validateOperation = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
 
   forgeOperationAtomic(),
@@ -30,29 +36,34 @@ export const validateOperation = <T extends State & StateHead & StateOperations>
 
   flatMap(state => {
 
-    state.validatedOperations.contents.forEach(validated => {
-      // we asume here no batching!
-      const operation = state.operations.find(op => op.kind === validated.kind);
+    // update detailes of successfull operations
+    state.validatedOperations.contents.
+      filter(op => op.metadata.operation_result.status === "applied").
+      forEach(validated => {
+        // we asume here no batching!
+        const operation = state.operations.find(op => op.kind === validated.kind);
 
-      // modify values with simulation results
-      if (operation) {
-        
-        // use estimated gas from node
-        operation.gas_limit = validated.metadata.operation_result.consumed_gas;
-        // storage limit is precise, no need to modify it
-        operation.storage_limit = validated.metadata.operation_result.storage_size || "0";
 
-        // fee is not estimated here as we do not know operation byte size yet!
-        // operation must be forged to find this out
 
-        console.log('@@@@@@@@')
-        console.log('operation enhanced', operation)
+        // modify values with simulation results
+        if (operation) {
 
-      } else {
-        // this should never happen...
-        console.error("Update operation data failed. Cannot find operation", validated);
-      }
-    })
+          // use estimated gas from node
+          operation.gas_limit = validated.metadata.operation_result.consumed_gas;
+          // storage limit is precise, no need to modify it
+          operation.storage_limit = validated.metadata.operation_result.storage_size || "0";
+
+          // fee is not estimated here as we do not know operation byte size yet!
+          // operation must be forged to find this out
+
+          console.log('@@@@@@@@')
+          console.log('operation enhanced', operation)
+
+        } else {
+          // this should never happen...
+          console.error("Update operation data failed. Cannot find operation", validated);
+        }
+      })
 
 
     if (state.validatedOperations.contents.every(operationIsValid)) {
@@ -65,7 +76,11 @@ export const validateOperation = <T extends State & StateHead & StateOperations>
 
       console.error("[+] some operation would not be accepted be node", invalidOperations);
 
-      return throwError(invalidOperations)
+      return throwError({
+        state,
+        // flat map validation errors
+        response: invalidOperations.map(op => op.metadata.operation_result.errors[0])
+      })
     }
   })
 

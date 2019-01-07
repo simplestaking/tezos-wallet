@@ -1,9 +1,9 @@
-import { Observable} from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Observable, of, throwError } from "rxjs";
+import { map, tap, catchError } from "rxjs/operators";
 
 import { State, Transaction, OperationMetadata, parseAmount, TransactionOperationMetadata } from "../common";
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
-import { operation, StateOperations, validateOperation } from "../operation";
+import { operation, StateOperations, validateOperation, StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation } from "../operation";
 import { constants, StateConstants, head, StateHead } from "../head";
 
 // import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead } from '..'
@@ -90,11 +90,11 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
       gas_limit: state.constants.hard_gas_limit_per_operation,
-      storage_limit: state.constants.hard_storage_limit_per_operation,      
+      storage_limit: state.constants.hard_storage_limit_per_operation,
       counter: (++state.counter).toString()
     };
 
-    if(state.transaction.parameters){
+    if (state.transaction.parameters) {
       transaction.parameters = state.transaction.parameters;
     }
 
@@ -108,8 +108,28 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
 
   // run operation on node and calculate its gas consumption and storage size
   validateOperation(),
-  
+
   // create operation 
-  operation()
-)
+  operation(),
+
+  
+  // catchError(error => {
+
+  //   // autorecover from case when fundings is insuficient in case of account exhaustation
+  //   if (error.response[0].id === "proto.alpha.contract.balance_too_low") {
+
+  //     return of({
+  //       ...error.state
+  //     }).pipe(        
+  //       transaction(state => ({
+  //         ...state.transaction,
+  //         amount: (error.response[0]['balance'] / 1000000).toString()
+  //       }))
+  //     );
+
+  //   } else {
+  //     return throwError(error);
+  //   }
+  // })
+) //as Observable<T & StateHead & StateCounter & StateManagerKey & StateOperation & State & StateSignOperation & StatePreapplyOperation & StateInjectionOperation>
 
