@@ -50,8 +50,8 @@ export const validateOperation = <T extends State & StateHead & StateOperations>
 
           // use estimated gas from node
           operation.gas_limit = validated.metadata.operation_result.consumed_gas;
-          // storage limit is precise, no need to modify it
-          operation.storage_limit = validated.metadata.operation_result.storage_size || "0";
+          // add storage size to the expected storage consumption (e.g. origination has implicit consumption of 257)  
+          operation.storage_limit = (parseInt(operation.storage_limit) + parseInt(validated.metadata.operation_result.storage_size || "0")).toString();
 
           // fee is not estimated here as we do not know operation byte size yet!
           // operation must be forged to find this out

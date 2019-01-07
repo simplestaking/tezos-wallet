@@ -75,7 +75,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
         source: state.wallet.publicKeyHash,
         fee: "0",
         gas_limit: state.constants.hard_gas_limit_per_operation,
-        storage_limit: state.constants.hard_storage_limit_per_operation,
+        storage_limit: "257",
         counter: (++state.counter).toString(),
       })
     }
@@ -86,7 +86,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
       fee: parseAmount(state.originateContract.fee).toString(),
       balance: parseAmount(state.originateContract.amount).toString(),
       gas_limit: state.constants.hard_gas_limit_per_operation,
-      storage_limit: state.constants.hard_storage_limit_per_operation,
+      storage_limit: "257",
       counter: (++state.counter).toString(),
       spendable: true,
       delegatable: true,

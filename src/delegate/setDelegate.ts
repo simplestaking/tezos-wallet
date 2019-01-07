@@ -3,7 +3,7 @@ import { map, tap } from "rxjs/operators";
 
 import { State, SetDelegate, OperationMetadata, parseAmount } from "../common";
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
-import { operation, StateOperations, validateOperation } from "../operation";
+import { operation, StateOperations, validateOperation, StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation } from "../operation";
 import { constants, head, StateHead, StateConstants } from "../head";
 
 // import {StateHead, StateSignOperation, StateOperation, StatePreapplyOperation, StateInjectionOperation } from '..';
@@ -74,7 +74,7 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.setDelegate.fee).toString(),
         gas_limit: state.constants.hard_gas_limit_per_operation,
-        storage_limit: state.constants.hard_storage_limit_per_operation,
+        storage_limit: "257",
         counter: (++state.counter).toString(),
       })
     }
@@ -84,7 +84,7 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.setDelegate.fee).toString(),
       gas_limit: state.constants.hard_gas_limit_per_operation,
-      storage_limit: state.constants.hard_storage_limit_per_operation,
+      storage_limit: "257",
       counter: (++state.counter).toString(),
       delegate: !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })
@@ -99,4 +99,4 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
 
   // create operation 
   operation()
-);
+) as Observable<T & StateHead & StateCounter & StateManagerKey & StateOperation & State & StateSignOperation & StatePreapplyOperation & StateInjectionOperation>
