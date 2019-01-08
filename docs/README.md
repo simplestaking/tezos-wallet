@@ -59,10 +59,13 @@ Code samples describing usage can be found in [example](/examples/index.md) fold
 * [BalanceUpdate](#balanceupdate)
 * [ConfirmOperation](#confirmoperation)
 * [ContractBalanceUpdate](#contractbalanceupdate)
+* [ErrorKind](#errorkind)
 * [FeeBalanceUpdate](#feebalanceupdate)
 * [Head](#head)
 * [HeadConstants](#headconstants)
+* [InjectionError](#injectionerror)
 * [InjectionOperation](#injectionoperation)
+* [LowFeeError](#lowfeeerror)
 * [ManagerKey](#managerkey)
 * [Mempool](#mempool)
 * [MempoolOperation](#mempooloperation)
@@ -102,6 +105,7 @@ Code samples describing usage can be found in [example](/examples/index.md) fold
 * [TrezorOriginationOperation](#trezororiginationoperation)
 * [TrezorRevealOperation](#trezorrevealoperation)
 * [TrezorTransactionOperation](#trezortransactionoperation)
+* [ValidationError](#validationerror)
 * [ValidationResult](#validationresult)
 * [Wallet](#wallet)
 * [WalletDetail](#walletdetail)
@@ -209,6 +213,16 @@ ___
  contract: `string`
 
  kind: "contract"
+
+___
+<a id="errorkind"></a>
+
+###  ErrorKind
+
+**Ƭ ErrorKind**: * "temporary" &#124; "permanent"
+*
+
+*Defined in common/errors.ts:4*
 
 ___
 <a id="feebalanceupdate"></a>
@@ -368,6 +382,21 @@ ___
  tokens_per_roll: `string`
 
 ___
+<a id="injectionerror"></a>
+
+###  InjectionError
+
+**Ƭ InjectionError**: *`object`*
+
+*Defined in common/errors.ts:24*
+
+#### Type declaration
+
+ response: `object`[]
+
+ state: `S`
+
+___
 <a id="injectionoperation"></a>
 
 ###  InjectionOperation
@@ -377,6 +406,21 @@ ___
 *Defined in common/state.ts:119*
 
 #### Type declaration
+
+___
+<a id="lowfeeerror"></a>
+
+###  LowFeeError
+
+**Ƭ LowFeeError**: *`object`*
+
+*Defined in common/errors.ts:33*
+
+#### Type declaration
+
+ response: `object`[]
+
+ state: `S`
 
 ___
 <a id="managerkey"></a>
@@ -441,7 +485,7 @@ ___
 **Ƭ OperationApplicationResult**: * [OperationValidationResult](#operationvalidationresult) & `object`
 *
 
-*Defined in common/operations.ts:80*
+*Defined in common/operations.ts:81*
 
 ___
 <a id="operationmetadata"></a>
@@ -527,13 +571,13 @@ ___
 
 **Ƭ RpcError**: *`object`*
 
-*Defined in common/rpc.ts:12*
+*Defined in common/errors.ts:6*
 
 #### Type declaration
 
  response: `object`[]
 
- state: [State](interfaces/state.md)
+ state: `S`
 
 ___
 <a id="setdelegate"></a>
@@ -855,7 +899,7 @@ ___
 
 **Ƭ TrezorDelegationOperation**: *`object`*
 
-*Defined in common/operations.ts:122*
+*Defined in common/operations.ts:123*
 
 #### Type declaration
 
@@ -878,7 +922,7 @@ ___
 
 **Ƭ TrezorOperationTarget**: *`object`*
 
-*Defined in common/operations.ts:85*
+*Defined in common/operations.ts:86*
 
 #### Type declaration
 
@@ -893,7 +937,7 @@ ___
 
 **Ƭ TrezorOriginationOperation**: *`object`*
 
-*Defined in common/operations.ts:109*
+*Defined in common/operations.ts:110*
 
 #### Type declaration
 
@@ -924,7 +968,7 @@ ___
 
 **Ƭ TrezorRevealOperation**: *`object`*
 
-*Defined in common/operations.ts:90*
+*Defined in common/operations.ts:91*
 
 #### Type declaration
 
@@ -947,7 +991,7 @@ ___
 
 **Ƭ TrezorTransactionOperation**: *`object`*
 
-*Defined in common/operations.ts:99*
+*Defined in common/operations.ts:100*
 
 #### Type declaration
 
@@ -964,6 +1008,21 @@ ___
  source: `string`
 
  storage_limit: `number`
+
+___
+<a id="validationerror"></a>
+
+###  ValidationError
+
+**Ƭ ValidationError**: *`object`*
+
+*Defined in common/errors.ts:15*
+
+#### Type declaration
+
+ response: `object`[]
+
+ state: `S`
 
 ___
 <a id="validationresult"></a>
@@ -1176,9 +1235,9 @@ ___
 
 ▸ **constants**<`T`>(): `(Anonymous function)`
 
-*Defined in head/getConstants.ts:13*
+*Defined in head/getConstants.ts:15*
 
-Get head for operation
+Get constants used in block
 
 **Type parameters:**
 
@@ -1342,7 +1401,7 @@ ___
 
 ▸ **injectOperations**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/applyInjectOperation.ts:78*
+*Defined in operation/applyInjectOperation.ts:81*
 
 Inbjects prevalidated operation to Tezos blockchain
 
@@ -1428,7 +1487,7 @@ ___
 
 ▸ **operationIsValid**(operation: *[OperationValidationResult](#operationvalidationresult)*): `boolean`
 
-*Defined in operation/validateOperation.ts:96*
+*Defined in operation/validateOperation.ts:108*
 
 **Parameters:**
 
@@ -1560,7 +1619,7 @@ ___
 
 ▸ **preapplyOperations**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/applyInjectOperation.ts:58*
+*Defined in operation/applyInjectOperation.ts:61*
 
 Prevalidates (preapply) operation on tezos node
 
@@ -1590,7 +1649,7 @@ ___
 
 ▸ **rpc**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in common/rpc.ts:26*
+*Defined in common/rpc.ts:20*
 
 Remote procedure call (RPC) on tezos node Returns state object with rpc result under property defined in rpc parameters
 
@@ -1702,19 +1761,21 @@ Fully covers send useace and get transaction to blockchain
 ___
 <a id="updatefeesforoperation"></a>
 
-###  updateFeesForOperation
+### `<Const>` updateFeesForOperation
 
-▸ **updateFeesForOperation**(state: * [State](interfaces/state.md) & [StateHead](#statehead) & [StateCounter](#statecounter) & [StateManagerKey](#statemanagerkey) & [StateOperation](#stateoperation) & [StateOperations](#stateoperations)*):  [State](interfaces/state.md) & `object` & `object` & `object` & `object` & `object`
+▸ **updateFeesForOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/forgeOperation.ts:81*
+*Defined in operation/forgeOperation.ts:88*
 
-**Parameters:**
+Estimates minimal fee for the operation and compares provided defined fees with minimal If provided fee is insuficient its overriden
 
-| Name | Type |
-| ------ | ------ |
-| state |  [State](interfaces/state.md) & [StateHead](#statehead) & [StateCounter](#statecounter) & [StateManagerKey](#statemanagerkey) & [StateOperation](#stateoperation) & [StateOperations](#stateoperations)|
+When fee is modified operation has to be re-forged so signature is matching operation content
 
-**Returns:**  [State](interfaces/state.md) & `object` & `object` & `object` & `object` & `object`
+**Type parameters:**
+
+#### T :   [State](interfaces/state.md) & [StateHead](#statehead) & [StateCounter](#statecounter) & [StateManagerKey](#statemanagerkey) & [StateOperation](#stateoperation) & [StateOperations](#stateoperations)
+
+**Returns:** `(Anonymous function)`
 
 ___
 <a id="validateoperation"></a>
@@ -1723,7 +1784,9 @@ ___
 
 ▸ **validateOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/validateOperation.ts:14*
+*Defined in operation/validateOperation.ts:20*
+
+Validates operation on node to ensure, that operation can be executed and prefills gas consumption and storage size data
 
 **Type parameters:**
 
@@ -1738,7 +1801,7 @@ ___
 
 ▸ **validateOperationAtomic**<`T`>(): `(Anonymous function)`
 
-*Defined in operation/validateOperation.ts:80*
+*Defined in operation/validateOperation.ts:92*
 
 Serialize operation parameters on node
 

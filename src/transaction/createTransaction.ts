@@ -110,26 +110,6 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
   validateOperation(),
 
   // create operation 
-  operation(),
-
-  
-  // catchError(error => {
-
-  //   // autorecover from case when fundings is insuficient in case of account exhaustation
-  //   if (error.response[0].id === "proto.alpha.contract.balance_too_low") {
-
-  //     return of({
-  //       ...error.state
-  //     }).pipe(        
-  //       transaction(state => ({
-  //         ...state.transaction,
-  //         amount: (error.response[0]['balance'] / 1000000).toString()
-  //       }))
-  //     );
-
-  //   } else {
-  //     return throwError(error);
-  //   }
-  // })
-) //as Observable<T & StateHead & StateCounter & StateManagerKey & StateOperation & State & StateSignOperation & StatePreapplyOperation & StateInjectionOperation>
+  operation()
+)
 

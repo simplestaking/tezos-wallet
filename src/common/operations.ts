@@ -68,7 +68,7 @@ export type OperationValidationResult = OperationMetadata & {
     metadata: {
         balance_updates: never[]
         operation_result: {
-            status: "applied" | "failed"
+            status: "applied" | "failed" | "backtracked"
             balance_updates: ContractBalanceUpdate[]
             errors: any
             consumed_gas: string // stringified number

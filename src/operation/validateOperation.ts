@@ -43,8 +43,6 @@ export const validateOperation = <T extends State & StateHead & StateOperations>
         // we asume here no batching!
         const operation = state.operations.find(op => op.kind === validated.kind);
 
-
-
         // modify values with simulation results
         if (operation) {
 

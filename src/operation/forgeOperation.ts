@@ -1,14 +1,14 @@
 import { Observable, throwError, of } from "rxjs";
 import { flatMap, tap, map } from "rxjs/operators";
 
-import { State, rpc } from "../common";
+import { State, rpc, OperationMetadata } from "../common";
 import { head, StateHead } from "../head";
 // prevent circular dependency
 import { counter, StateCounter } from '../contract/getContractCounter';
 import { managerKey, StateManagerKey } from "../contract/getContractManagerKey";
 
 import { signOperationTrezor, signOperation } from "./signOperation";
-import { StateOperations } from "./operation";
+import { StateOperations, operation } from "./operation";
 
 // import {StateManagerKey, StateSignOperation, StateCounter} from '..';
 
@@ -21,7 +21,7 @@ export type StateOperation = {
  * Forge operation in blocchain.
  * Converts operation into binary format and signs operation using script or Trezor
  * 
- * 
+ * @throws LowFeeError [[LowFeeError]]
  */
 export const forgeOperation = <T extends State & StateOperations>() => (source: Observable<T>) => source.pipe(
 
@@ -92,6 +92,7 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
     // we have to re-forge operations if the fees changed
     // otherwise signature would not match
     let feesModified = false;
+    const modifiedOps: OperationMetadata[] = [];
 
     state.operations.forEach(operation => {
 
@@ -106,7 +107,7 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
       // operation is hex therefore we can say that char is 1 byte
       const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + state.operation.length;
       const fee = parseFloat(operation.fee);
-      
+
       console.log(`Estimated operation size is "${state.operation.length}" bytes`)
       console.log(`[+] fees: defined "${fee}" estimated "${estimatedFee}"`);
 
@@ -115,17 +116,25 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
 
         operation.fee = estimatedFee.toString();
         feesModified = true;
-
-        // shall we throw error here?
-        //return throwError(fee);
+        modifiedOps.push(operation);
       }
     })
 
     if (feesModified) {
 
       // forge again as operation did change
-      return of(state).
-        pipe(forgeOperationAtomic());
+      // return of(state).
+      //   pipe(forgeOperationAtomic());
+
+      // shall we throw error here?
+      return throwError({
+        state,
+        response: modifiedOps.map(op => ({
+          id: "tezos-wallet.fee.insuficient",
+          kind: "temporary",
+          operation: op
+        }))
+      });
 
     } else {
       return of(state);
