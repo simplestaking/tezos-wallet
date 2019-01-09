@@ -9,6 +9,7 @@
     "dev": "tsc -p dev.tsconfig.json",
     "docs": "typedoc --out ./docs/ ./src/index.ts --mode file --theme markdown --name tezos-wallet",
     "watch": "tsc -w",
+    "v": "tsc -w",
     "watch:dev": "tsc -w -p dev.tsconfig.json"
   },
   "author": "",
