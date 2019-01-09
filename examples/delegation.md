@@ -51,7 +51,7 @@ of([]).pipe(
     // delegate amount on originated contract
     setDelegation(state => ({        
         to: 'wallet address',
-        fee: '0'
+        fee: '0.01'
     })),
 
     // wait until operation is confirmed & moved from mempool to head

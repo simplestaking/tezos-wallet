@@ -19,7 +19,8 @@
     "bs58check": "2.1.1",
     "buffer": "~5.2.1",
     "libsodium": "0.7.3",
-    "libsodium-wrappers": "0.7.3"
+    "libsodium-wrappers": "0.7.3",
+    "trezor-connect": "^6.0.3"
   },
   "peerDependencies": {
     "rxjs": "~6.3.2"

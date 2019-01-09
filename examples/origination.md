@@ -51,8 +51,8 @@ of([]).pipe(
     // originate a contract account with defined amount
     originateContract(state => ({        
         to: 'wallet address',
-        amount: '0.001',
-        fee: '0'
+        amount: '0.01',
+        fee: '0.01'
     })),
 
     // wait until operation is confirmed & moved from mempool to head

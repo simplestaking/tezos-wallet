@@ -4,7 +4,7 @@ Initial release supporting Tezos:
 - contract origination
 - delegation
 - transaction
-- checking operation status
-- creating new wallet
-- activating wallet
+- check operation status
+- create new wallet
+- activate wallet
 - gas limit, storage limit and fees are automatically estimated

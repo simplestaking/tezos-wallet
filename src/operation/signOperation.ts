@@ -50,7 +50,7 @@ export function signOperation<T extends State & StateHead & StateOperation>(stat
         throw new TypeError('[signOperation] Operation not available in state');
     }
 
-    // convert preapplied operation from hex format to by array
+    // convert pre applied operation from hex format to by array
     const operation = sodium.from_hex(state.operation);
 
     if (typeof state.wallet.publicKey === 'undefined') {
@@ -223,7 +223,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
 
         tap(() => console.warn('[TrezorConnect][signOperationTrezor] message', JSON.stringify(message))),
 
-        // wait for resopnse from Trezor
+        // wait for response from Trezor
         flatMap<T, TrezorConnectResponse>(() => (<any>window).TrezorConnect.tezosSignTransaction(message)),
 
         //  handle error from Trezor
@@ -237,7 +237,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             return of(response)
         }),
 
-        tap((response) => { console.warn('[TrezorConnect][tezosSignTransaction] reponse', response.payload) }),
+        tap((response) => { console.warn('[TrezorConnect][tezosSignTransaction] response', response.payload) }),
         map(response => (
             {
                 ...state as any,

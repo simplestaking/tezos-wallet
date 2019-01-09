@@ -22,7 +22,7 @@ Development
 
 Import the libary methods as `import { initializeWallet, getWallet } from 'tezos-wallet';`
 
-Library is tested with Typescript versions 2.9.2 and latest 3.2.2.
+Library is tested with Typescript versions 3.2.2.
 
 Code
 ----
