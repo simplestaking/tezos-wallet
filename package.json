@@ -1,7 +1,7 @@
 {
   "name": "tezos-wallet",
-  "version": "1.0.0",
-  "description": "",
+  "version": "1.0.4",
+  "description": "Tezos wallet simplifies communication with Tezos nodes and significantly reduces burden of working with Tezos network.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
@@ -12,8 +12,11 @@
     "v": "tsc -w",
     "watch:dev": "tsc -w -p dev.tsconfig.json"
   },
-  "author": "",
-  "license": "ISC",
+  "files": [
+    "docs/**/*",
+    "examples/**/*",
+    "lib/**/*"
+  ],
   "dependencies": {
     "bip39": "2.5.0",
     "bs58check": "2.1.1",
@@ -34,6 +37,20 @@
     "typedoc": "^0.13.0",
     "typedoc-plugin-markdown": "^1.1.19",
     "typescript": "^3.2.2",
-    "xmlhttprequest-ssl": "1.5.5"
-  }
+    "xmlhttprequest-ssl": "1.5.5" 
+  },
+  "author": "Juraj Selep <jurajselep@gmail.com>",
+  "license": "ISC",
+  "homepage": "https://simplestaking.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/simplestaking/tezos-wallet.git"
+  },
+  "bugs": {
+    "url": "https://github.com/simplestaking/tezos-wallet/issues"
+  },
+  "keywords": [
+    "tezos",
+    "tezos wallet"
+  ]
 }
