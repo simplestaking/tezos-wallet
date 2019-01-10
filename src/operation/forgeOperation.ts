@@ -102,10 +102,10 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
         return of(state);
       }
 
-      // value in nanotez
+      // value in mutez
       // depends on gas limit and operation byte size in blockchain
-      // operation is hex therefore we can say that char is 1 byte
-      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + state.operation.length;
+      // operation is hex therefore we can say that char is 0.5 byte
+      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + (state.operation.length / 2);
       const fee = parseFloat(operation.fee);
 
       console.log(`Estimated operation size is "${state.operation.length}" bytes`)
