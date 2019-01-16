@@ -34,7 +34,7 @@
 
 **● counter**: *`string`*
 
-*Defined in common/operations.ts:4*
+*Defined in [common/operations.ts:4](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L4)*
 
 ___
 <a id="fee"></a>
@@ -43,7 +43,7 @@ ___
 
 **● fee**: *`string`*
 
-*Defined in common/operations.ts:3*
+*Defined in [common/operations.ts:3](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L3)*
 
 ___
 <a id="gas_limit"></a>
@@ -52,7 +52,7 @@ ___
 
 **● gas_limit**: *`string`*
 
-*Defined in common/operations.ts:5*
+*Defined in [common/operations.ts:5](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L5)*
 
 ___
 <a id="source"></a>
@@ -61,7 +61,7 @@ ___
 
 **● source**: *`string`*
 
-*Defined in common/operations.ts:2*
+*Defined in [common/operations.ts:2](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L2)*
 
 ___
 <a id="storage_limit"></a>
@@ -70,7 +70,7 @@ ___
 
 **● storage_limit**: *`string`*
 
-*Defined in common/operations.ts:6*
+*Defined in [common/operations.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L6)*
 
 ___
 

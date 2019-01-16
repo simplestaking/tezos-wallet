@@ -15,27 +15,27 @@ Fees are in nanotez (1 nanotez is 0.000 001 tez)
 **Delegations**
 - storage_limit : 0
 - gas_limit : 10000
-- opbytes : ~170
-- fee : 1270
+- opbytes : ~147
+- fee : 1257
 
 **Originations**
 - storage_limit : 257
 - gas_limit : 10000
-- opbytes : ~228
-- fee : ~1328 + 257 000 burn from source account
+- opbytes : ~179
+- fee : ~1289 + 257 000 burn from source account
 
 
 **Transactions to KT1/active implicit account***
 - storage_limit : 0
-- gas_limit : 10100
-- opbytes : ~184
-- fee : 1294
+- gas_limit : 10200
+- opbytes : ~155
+- fee : 1275
 
 **Transactions to inactive implicit account**
 - storage_limit : 257
 - gas_limit : 10100
-- opbytes : ~184
-- fee : 1294 + 257 000 burn from source account
+- opbytes : ~155
+- fee : 1275 + 257 000 burn from source account
 
 **Emptying an implicit account**
 - gas_limit: add 160

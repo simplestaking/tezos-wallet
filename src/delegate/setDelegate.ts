@@ -1,8 +1,8 @@
-import { Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { map, tap, flatMap } from "rxjs/operators";
 
 import { State, SetDelegate, OperationMetadata, parseAmount } from "../common";
-import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
+import { counter, managerKey, StateCounter, StateManagerKey, StateOriginateContract } from "../contract";
 import { operation, StateOperations, validateOperation, StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation } from "../operation";
 import { constants, head, StateHead, StateConstants } from "../head";
 
@@ -60,6 +60,7 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
 
   // prepare config for operation
   map(state => {
+    const withTestRun = state.setDelegate.testRun || false;
     const operations: OperationMetadata[] = [];
 
     if (state.manager_key.key === undefined) {
@@ -73,8 +74,8 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.setDelegate.fee).toString(),
-        gas_limit: state.constants.hard_gas_limit_per_operation,
-        storage_limit: "257",
+        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10100",
+        storage_limit: "0",
         counter: (++state.counter).toString(),
       })
     }
@@ -83,8 +84,8 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
       kind: "delegation",
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.setDelegate.fee).toString(),
-      gas_limit: state.constants.hard_gas_limit_per_operation,
-      storage_limit: state.constants.hard_storage_limit_per_operation,
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10100",
+      storage_limit: "0",
       counter: (++state.counter).toString(),
       delegate: !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
     })
@@ -95,7 +96,10 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
     } as T & StateSetDelegate & StateHead & StateConstants & StateCounter & StateManagerKey & StateOperations
   }),
 
-  validateOperation(),
+  // run operation on node and calculate its gas consumption and storage size
+  flatMap(state => {
+    return (state.setDelegate.testRun ? validateOperation() : of(state)) as  Observable<T & StateSetDelegate & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations>;
+  }),
 
   // create operation 
   operation()

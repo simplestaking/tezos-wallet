@@ -144,6 +144,7 @@ export type OriginatedContract = {
     fee: string
     amount: string
     to: string
+    testRun?: boolean
 }
 
 export type PackOperationParameters = {
@@ -162,6 +163,7 @@ export type PreapplyOperation = {
 export type SetDelegate = {
     fee: string
     to: string
+    testRun?: boolean
 }
 
 export type SignOperation = {
@@ -175,6 +177,7 @@ export type Transaction = {
     fee: string
     to: string
     parameters?: Record<string, any>
+    testRun?: boolean
 }
 
 export type ValidationResult = {
