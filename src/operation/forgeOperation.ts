@@ -1,3 +1,4 @@
+import * as sodium from 'libsodium-wrappers';
 import { Observable, throwError, of } from "rxjs";
 import { flatMap, tap, map } from "rxjs/operators";
 
@@ -104,11 +105,12 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
 
       // value in mutez
       // depends on gas limit and operation byte size in blockchain
-      // operation is hex therefore we can say that char is 0.5 byte
-      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + (state.operation.length / 2);
+      // 64 bytes is for signature appended to operation
+      const operationByteSize = sodium.from_hex(state.operation).length + 64;
+      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + operationByteSize;      
       const fee = parseFloat(operation.fee);
 
-      console.log(`Estimated operation size is "${state.operation.length}" bytes`)
+      console.log(`Estimated operation size is "${operationByteSize}" bytes`)
       console.log(`[+] fees: defined "${fee}" estimated "${estimatedFee}"`);
 
       if (estimatedFee > fee) {

@@ -1,5 +1,5 @@
 import { Observable, of, throwError } from "rxjs";
-import { map, tap, catchError } from "rxjs/operators";
+import { map, tap, catchError, flatMap, switchMap } from "rxjs/operators";
 
 import { State, Transaction, OperationMetadata, parseAmount, TransactionOperationMetadata } from "../common";
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
@@ -64,6 +64,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
 
   // prepare config for operation
   map(state => {
+    const withTestRun = state.transaction.testRun || false;
     const operations: OperationMetadata[] = [];
 
     if (state.manager_key.key === undefined) {
@@ -76,9 +77,9 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         kind: "reveal",
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
-        fee: "0",
-        gas_limit: state.constants.hard_gas_limit_per_operation,
-        storage_limit: "257",
+        fee: parseAmount(state.transaction.fee).toString(),
+        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10100",
+        storage_limit: "0",
         counter: (++state.counter).toString()
       })
     }
@@ -89,7 +90,8 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       destination: state.transaction.to,
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
-      gas_limit: state.constants.hard_gas_limit_per_operation,
+      // extra 100 gas is for safety as its done by tezos client
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10200", 
       storage_limit: "257",
       counter: (++state.counter).toString()
     };
@@ -107,7 +109,10 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
   }),
 
   // run operation on node and calculate its gas consumption and storage size
-  validateOperation(),
+  flatMap(state => {
+
+    return (state.transaction.testRun ? validateOperation() : of(state)) as  Observable<T & StateTransaction & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations>;
+  }),
 
   // create operation 
   operation()

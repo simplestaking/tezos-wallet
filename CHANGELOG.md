@@ -8,3 +8,8 @@ Initial release supporting Tezos:
 - create new wallet
 - activate wallet
 - gas limit, storage limit and fees are automatically estimated
+
+# 1.1.0
+
+Improved fees calculation to be more precise
+Operations test run on node (run_operation rpc call) is now optional

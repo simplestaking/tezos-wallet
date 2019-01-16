@@ -24,7 +24,7 @@
 
 **● branch**: *`any`*
 
-*Defined in operation/signOperation.ts:17*
+*Defined in [operation/signOperation.ts:17](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L17)*
 
 ___
 <a id="operation"></a>
@@ -33,7 +33,7 @@ ___
 
 **● operation**: *`object`*
 
-*Defined in operation/signOperation.ts:18*
+*Defined in [operation/signOperation.ts:18](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L18)*
 
 #### Type declaration
 
@@ -52,7 +52,7 @@ ___
 
 **● path**: *`string`*
 
-*Defined in operation/signOperation.ts:16*
+*Defined in [operation/signOperation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L16)*
 
 ___
 

@@ -1,5 +1,5 @@
-import { Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { Observable, of } from "rxjs";
+import { map, tap, flatMap } from "rxjs/operators";
 
 import { State, OperationMetadata, OriginationOperationMetadata, OriginatedContract, parseAmount } from "../common";
 import { operation, StateOperations, validateOperation, StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateValidatedOperations } from "../operation";
@@ -7,6 +7,7 @@ import { constants, head, StateConstants, StateHead } from "../head";
 
 import { counter, StateCounter } from "./getContractCounter";
 import { managerKey, StateManagerKey } from './getContractManagerKey';
+import { StateTransaction } from "index";
 
 // import {StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation, StateHead  } from '..';
 
@@ -60,6 +61,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
 
   // prepare config for operation
   map(state => {
+    const withTestRun = state.originateContract.testRun || false;
     const operations: OperationMetadata[] = [];
 
     // revealed wallet already has a manager
@@ -73,9 +75,9 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
         kind: "reveal",
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
-        fee: "0",
-        gas_limit: state.constants.hard_gas_limit_per_operation,
-        storage_limit: "257",
+        fee: parseAmount(state.originateContract.fee).toString(),
+        gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10100",
+        storage_limit: "0",
         counter: (++state.counter).toString(),
       })
     }
@@ -85,7 +87,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.originateContract.fee).toString(),
       balance: parseAmount(state.originateContract.amount).toString(),
-      gas_limit: state.constants.hard_gas_limit_per_operation,
+      gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10100",
       storage_limit: "257",
       counter: (++state.counter).toString(),
       spendable: true,
@@ -103,7 +105,9 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
   }),
 
   // run operation on node and calculate its gas consumption and storage size
-  validateOperation(), 
+  flatMap(state => {
+    return (state.originateContract.testRun ? validateOperation() : of(state)) as  Observable<T & StateOriginateContract & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations>;
+  }),
 
   // create operation 
   operation(),
