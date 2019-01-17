@@ -1,6 +1,6 @@
 {
   "name": "tezos-wallet",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Tezos wallet simplifies communication with Tezos nodes and significantly reduces burden of working with Tezos network.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",

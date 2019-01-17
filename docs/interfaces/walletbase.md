@@ -26,7 +26,7 @@
 **● mnemonic**: * `undefined` &#124; `string`
 *
 
-*Defined in [common/crypto.ts:8](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L8)*
+*Defined in [common/crypto.ts:8](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L8)*
 
 ___
 <a id="publickey"></a>
@@ -35,7 +35,7 @@ ___
 
 **● publicKey**: *`string`*
 
-*Defined in [common/crypto.ts:10](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L10)*
+*Defined in [common/crypto.ts:10](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L10)*
 
 ___
 <a id="publickeyhash"></a>
@@ -44,7 +44,7 @@ ___
 
 **● publicKeyHash**: *`string`*
 
-*Defined in [common/crypto.ts:11](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L11)*
+*Defined in [common/crypto.ts:11](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L11)*
 
 ___
 <a id="secretkey"></a>
@@ -53,7 +53,7 @@ ___
 
 **● secretKey**: *`string`*
 
-*Defined in [common/crypto.ts:9](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L9)*
+*Defined in [common/crypto.ts:9](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L9)*
 
 ___
 

@@ -168,7 +168,7 @@ Code samples describing usage can be found in [example](/examples/index.md) fold
 
 **Ƭ ActivatedWallet**: *`object`*
 
-*Defined in [common/state.ts:31](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L31)*
+*Defined in [common/state.ts:31](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L31)*
 
 #### Type declaration
 
@@ -182,7 +182,7 @@ ___
 **Ƭ BalanceUpdate**: * [ContractBalanceUpdate](#contractbalanceupdate) &#124; [FeeBalanceUpdate](#feebalanceupdate)
 *
 
-*Defined in [common/operations.ts:65](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L65)*
+*Defined in [common/operations.ts:65](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L65)*
 
 ___
 <a id="confirmoperation"></a>
@@ -191,7 +191,7 @@ ___
 
 **Ƭ ConfirmOperation**: *`object`*
 
-*Defined in [common/state.ts:35](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L35)*
+*Defined in [common/state.ts:35](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L35)*
 
 #### Type declaration
 
@@ -204,7 +204,7 @@ ___
 
 **Ƭ ContractBalanceUpdate**: *`object`*
 
-*Defined in [common/operations.ts:51](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L51)*
+*Defined in [common/operations.ts:51](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L51)*
 
 #### Type declaration
 
@@ -222,7 +222,7 @@ ___
 **Ƭ ErrorKind**: * "temporary" &#124; "permanent"
 *
 
-*Defined in [common/errors.ts:4](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/errors.ts#L4)*
+*Defined in [common/errors.ts:4](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/errors.ts#L4)*
 
 ___
 <a id="feebalanceupdate"></a>
@@ -231,7 +231,7 @@ ___
 
 **Ƭ FeeBalanceUpdate**: *`object`*
 
-*Defined in [common/operations.ts:57](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L57)*
+*Defined in [common/operations.ts:57](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L57)*
 
 #### Type declaration
 
@@ -252,7 +252,7 @@ ___
 
 **Ƭ Head**: *`object`*
 
-*Defined in [common/state.ts:67](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L67)*
+*Defined in [common/state.ts:67](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L67)*
 
 #### Type declaration
 
@@ -327,7 +327,7 @@ ___
 
 **Ƭ HeadConstants**: *`object`*
 
-*Defined in [common/state.ts:39](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L39)*
+*Defined in [common/state.ts:39](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L39)*
 
 #### Type declaration
 
@@ -388,7 +388,7 @@ ___
 
 **Ƭ InjectionError**: *`object`*
 
-*Defined in [common/errors.ts:24](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/errors.ts#L24)*
+*Defined in [common/errors.ts:24](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/errors.ts#L24)*
 
 #### Type declaration
 
@@ -403,7 +403,7 @@ ___
 
 **Ƭ InjectionOperation**: *`object`*
 
-*Defined in [common/state.ts:119](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L119)*
+*Defined in [common/state.ts:119](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L119)*
 
 #### Type declaration
 
@@ -414,7 +414,7 @@ ___
 
 **Ƭ LowFeeError**: *`object`*
 
-*Defined in [common/errors.ts:33](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/errors.ts#L33)*
+*Defined in [common/errors.ts:33](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/errors.ts#L33)*
 
 #### Type declaration
 
@@ -429,7 +429,7 @@ ___
 
 **Ƭ ManagerKey**: *`object`*
 
-*Defined in [common/state.ts:138](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L138)*
+*Defined in [common/state.ts:138](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L138)*
 
 #### Type declaration
 
@@ -444,7 +444,7 @@ ___
 
 **Ƭ Mempool**: *`object`*
 
-*Defined in [common/state.ts:130](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L130)*
+*Defined in [common/state.ts:130](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L130)*
 
 #### Type declaration
 
@@ -465,7 +465,7 @@ ___
 
 **Ƭ MempoolOperation**: *`object`*
 
-*Defined in [common/state.ts:123](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L123)*
+*Defined in [common/state.ts:123](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L123)*
 
 #### Type declaration
 
@@ -485,7 +485,7 @@ ___
 **Ƭ OperationApplicationResult**: * [OperationValidationResult](#operationvalidationresult) & `object`
 *
 
-*Defined in [common/operations.ts:81](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L81)*
+*Defined in [common/operations.ts:81](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L81)*
 
 ___
 <a id="operationmetadata"></a>
@@ -496,7 +496,7 @@ ___
 
 *
 
-*Defined in [common/operations.ts:42](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L42)*
+*Defined in [common/operations.ts:42](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L42)*
 
 ___
 <a id="operationvalidationresult"></a>
@@ -506,7 +506,7 @@ ___
 **Ƭ OperationValidationResult**: * [OperationMetadata](#operationmetadata) & `object`
 *
 
-*Defined in [common/operations.ts:67](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L67)*
+*Defined in [common/operations.ts:67](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L67)*
 
 ___
 <a id="originatedcontract"></a>
@@ -515,7 +515,7 @@ ___
 
 **Ƭ OriginatedContract**: *`object`*
 
-*Defined in [common/state.ts:143](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L143)*
+*Defined in [common/state.ts:143](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L143)*
 
 #### Type declaration
 
@@ -534,7 +534,7 @@ ___
 
 **Ƭ PackOperationParameters**: *`object`*
 
-*Defined in [common/state.ts:150](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L150)*
+*Defined in [common/state.ts:150](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L150)*
 
 #### Type declaration
 
@@ -545,7 +545,7 @@ ___
 
 **Ƭ PendingOperation**: *`object`*
 
-*Defined in [common/state.ts:154](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L154)*
+*Defined in [common/state.ts:154](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L154)*
 
 #### Type declaration
 
@@ -558,7 +558,7 @@ ___
 
 **Ƭ PreapplyOperation**: *`object`*
 
-*Defined in [common/state.ts:158](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L158)*
+*Defined in [common/state.ts:158](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L158)*
 
 #### Type declaration
 
@@ -573,7 +573,7 @@ ___
 
 **Ƭ RpcError**: *`object`*
 
-*Defined in [common/errors.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/errors.ts#L6)*
+*Defined in [common/errors.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/errors.ts#L6)*
 
 #### Type declaration
 
@@ -588,7 +588,7 @@ ___
 
 **Ƭ SetDelegate**: *`object`*
 
-*Defined in [common/state.ts:163](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L163)*
+*Defined in [common/state.ts:163](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L163)*
 
 #### Type declaration
 
@@ -605,7 +605,7 @@ ___
 
 **Ƭ SignOperation**: *`object`*
 
-*Defined in [common/state.ts:169](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L169)*
+*Defined in [common/state.ts:169](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L169)*
 
 #### Type declaration
 
@@ -622,7 +622,7 @@ ___
 
 **Ƭ StateActivateWallet**: *`object`*
 
-*Defined in [wallet/activateWallet.ts:9](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/activateWallet.ts#L9)*
+*Defined in [wallet/activateWallet.ts:9](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/activateWallet.ts#L9)*
 
 #### Type declaration
 
@@ -635,7 +635,7 @@ ___
 
 **Ƭ StateConfirmOperation**: *`object`*
 
-*Defined in [operation/confirmOperation.ts:8](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/confirmOperation.ts#L8)*
+*Defined in [operation/confirmOperation.ts:8](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/confirmOperation.ts#L8)*
 
 #### Type declaration
 
@@ -650,7 +650,7 @@ ___
 
 **Ƭ StateConstants**: *`object`*
 
-*Defined in [head/getConstants.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/head/getConstants.ts#L6)*
+*Defined in [head/getConstants.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/head/getConstants.ts#L6)*
 
 #### Type declaration
 
@@ -663,7 +663,7 @@ ___
 
 **Ƭ StateCounter**: *`object`*
 
-*Defined in [contract/getContractCounter.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/contract/getContractCounter.ts#L6)*
+*Defined in [contract/getContractCounter.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/contract/getContractCounter.ts#L6)*
 
 #### Type declaration
 
@@ -676,7 +676,7 @@ ___
 
 **Ƭ StateHead**: *`object`*
 
-*Defined in [head/getHead.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/head/getHead.ts#L6)*
+*Defined in [head/getHead.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/head/getHead.ts#L6)*
 
 #### Type declaration
 
@@ -689,7 +689,7 @@ ___
 
 **Ƭ StateInjectionOperation**: *`object`*
 
-*Defined in [operation/applyInjectOperation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/applyInjectOperation.ts#L16)*
+*Defined in [operation/applyInjectOperation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/applyInjectOperation.ts#L16)*
 
 #### Type declaration
 
@@ -702,7 +702,7 @@ ___
 
 **Ƭ StateManagerKey**: *`object`*
 
-*Defined in [contract/getContractManagerKey.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/contract/getContractManagerKey.ts#L6)*
+*Defined in [contract/getContractManagerKey.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/contract/getContractManagerKey.ts#L6)*
 
 #### Type declaration
 
@@ -715,7 +715,7 @@ ___
 
 **Ƭ StateMempool**: *`object`*
 
-*Defined in [operation/pendingOperation.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/pendingOperation.ts#L6)*
+*Defined in [operation/pendingOperation.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/pendingOperation.ts#L6)*
 
 #### Type declaration
 
@@ -728,7 +728,7 @@ ___
 
 **Ƭ StateOperation**: *`object`*
 
-*Defined in [operation/forgeOperation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/forgeOperation.ts#L16)*
+*Defined in [operation/forgeOperation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/forgeOperation.ts#L16)*
 
 #### Type declaration
 
@@ -741,7 +741,7 @@ ___
 
 **Ƭ StateOperations**: *`object`*
 
-*Defined in [operation/operation.ts:9](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/operation.ts#L9)*
+*Defined in [operation/operation.ts:9](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/operation.ts#L9)*
 
 #### Type declaration
 
@@ -754,7 +754,7 @@ ___
 
 **Ƭ StateOriginateContract**: *`object`*
 
-*Defined in [contract/originateContract.ts:14](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/contract/originateContract.ts#L14)*
+*Defined in [contract/originateContract.ts:14](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/contract/originateContract.ts#L14)*
 
 #### Type declaration
 
@@ -767,7 +767,7 @@ ___
 
 **Ƭ StatePackOperationParameters**: *`object`*
 
-*Defined in [operation/packOperationData.ts:7](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/packOperationData.ts#L7)*
+*Defined in [operation/packOperationData.ts:7](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/packOperationData.ts#L7)*
 
 #### Type declaration
 
@@ -780,7 +780,7 @@ ___
 
 **Ƭ StatePendingOperation**: *`object`*
 
-*Defined in [operation/pendingOperation.ts:10](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/pendingOperation.ts#L10)*
+*Defined in [operation/pendingOperation.ts:10](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/pendingOperation.ts#L10)*
 
 #### Type declaration
 
@@ -793,7 +793,7 @@ ___
 
 **Ƭ StatePreapplyOperation**: *`object`*
 
-*Defined in [operation/applyInjectOperation.ts:12](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/applyInjectOperation.ts#L12)*
+*Defined in [operation/applyInjectOperation.ts:12](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/applyInjectOperation.ts#L12)*
 
 #### Type declaration
 
@@ -806,7 +806,7 @@ ___
 
 **Ƭ StateSetDelegate**: *`object`*
 
-*Defined in [delegate/setDelegate.ts:11](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/delegate/setDelegate.ts#L11)*
+*Defined in [delegate/setDelegate.ts:11](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/delegate/setDelegate.ts#L11)*
 
 #### Type declaration
 
@@ -819,7 +819,7 @@ ___
 
 **Ƭ StateSignOperation**: *`object`*
 
-*Defined in [operation/signOperation.ts:35](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L35)*
+*Defined in [operation/signOperation.ts:35](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/signOperation.ts#L35)*
 
 #### Type declaration
 
@@ -832,7 +832,7 @@ ___
 
 **Ƭ StateTransaction**: *`object`*
 
-*Defined in [transaction/createTransaction.ts:11](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/transaction/createTransaction.ts#L11)*
+*Defined in [transaction/createTransaction.ts:11](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/transaction/createTransaction.ts#L11)*
 
 #### Type declaration
 
@@ -845,7 +845,7 @@ ___
 
 **Ƭ StateValidatedOperations**: *`object`*
 
-*Defined in [operation/validateOperation.ts:10](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/validateOperation.ts#L10)*
+*Defined in [operation/validateOperation.ts:10](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/validateOperation.ts#L10)*
 
 #### Type declaration
 
@@ -858,7 +858,7 @@ ___
 
 **Ƭ StateWallet**: *`object`*
 
-*Defined in [wallet/initializeWallet.ts:8](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/initializeWallet.ts#L8)*
+*Defined in [wallet/initializeWallet.ts:8](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/initializeWallet.ts#L8)*
 
 #### Type declaration
 
@@ -871,7 +871,7 @@ ___
 
 **Ƭ StateWalletDetail**: *`object`*
 
-*Defined in [wallet/getWallet.ts:5](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/getWallet.ts#L5)*
+*Defined in [wallet/getWallet.ts:5](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/getWallet.ts#L5)*
 
 #### Type declaration
 
@@ -884,7 +884,7 @@ ___
 
 **Ƭ Transaction**: *`object`*
 
-*Defined in [common/state.ts:175](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L175)*
+*Defined in [common/state.ts:175](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L175)*
 
 #### Type declaration
 
@@ -905,7 +905,7 @@ ___
 
 **Ƭ TrezorDelegationOperation**: *`object`*
 
-*Defined in [common/operations.ts:123](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L123)*
+*Defined in [common/operations.ts:124](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L124)*
 
 #### Type declaration
 
@@ -928,7 +928,7 @@ ___
 
 **Ƭ TrezorOperationTarget**: *`object`*
 
-*Defined in [common/operations.ts:86](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L86)*
+*Defined in [common/operations.ts:86](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L86)*
 
 #### Type declaration
 
@@ -943,7 +943,7 @@ ___
 
 **Ƭ TrezorOriginationOperation**: *`object`*
 
-*Defined in [common/operations.ts:110](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L110)*
+*Defined in [common/operations.ts:110](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L110)*
 
 #### Type declaration
 
@@ -959,7 +959,9 @@ ___
 
  gas_limit: `number`
 
- manager_pubkey: `string`
+`Optional`  managerPubkey:  `undefined` &#124; `string`
+
+`Optional`  manager_pubkey:  `undefined` &#124; `string`
 
  source: `string`
 
@@ -974,7 +976,7 @@ ___
 
 **Ƭ TrezorRevealOperation**: *`object`*
 
-*Defined in [common/operations.ts:91](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L91)*
+*Defined in [common/operations.ts:91](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L91)*
 
 #### Type declaration
 
@@ -997,7 +999,7 @@ ___
 
 **Ƭ TrezorTransactionOperation**: *`object`*
 
-*Defined in [common/operations.ts:100](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L100)*
+*Defined in [common/operations.ts:100](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L100)*
 
 #### Type declaration
 
@@ -1022,7 +1024,7 @@ ___
 
 **Ƭ ValidationError**: *`object`*
 
-*Defined in [common/errors.ts:15](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/errors.ts#L15)*
+*Defined in [common/errors.ts:15](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/errors.ts#L15)*
 
 #### Type declaration
 
@@ -1037,7 +1039,7 @@ ___
 
 **Ƭ ValidationResult**: *`object`*
 
-*Defined in [common/state.ts:183](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L183)*
+*Defined in [common/state.ts:183](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L183)*
 
 #### Type declaration
 
@@ -1050,7 +1052,7 @@ ___
 
 **Ƭ Wallet**: *`object`*
 
-*Defined in [common/state.ts:187](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L187)*
+*Defined in [common/state.ts:187](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L187)*
 
 #### Type declaration
 
@@ -1077,7 +1079,7 @@ ___
 
 **Ƭ WalletDetail**: *`object`*
 
-*Defined in [common/state.ts:199](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/state.ts#L199)*
+*Defined in [common/state.ts:199](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/state.ts#L199)*
 
 #### Type declaration
 
@@ -1093,7 +1095,7 @@ ___
 
 ▸ **activateWallet**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [wallet/activateWallet.ts:20](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/activateWallet.ts#L20)*
+*Defined in [wallet/activateWallet.ts:20](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/activateWallet.ts#L20)*
 
 Activate generated wallet address
 
@@ -1116,7 +1118,7 @@ ___
 
 ▸ **applyAndInjectOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/applyInjectOperation.ts:26](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/applyInjectOperation.ts#L26)*
+*Defined in [operation/applyInjectOperation.ts:26](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/applyInjectOperation.ts#L26)*
 
 Validates and inject operation into tezos blockain Can be applied to any prepared operation
 
@@ -1133,7 +1135,7 @@ ___
 
 ▸ **base58CheckDecode**(this: *`void`*, prefix: *`Uint8Array`*, encoded: *`string`*): `Buffer`
 
-*Defined in [common/crypto.ts:52](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L52)*
+*Defined in [common/crypto.ts:52](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L52)*
 
 Decodes base58 encoded string into byte array and removes defined prefix
 
@@ -1154,7 +1156,7 @@ ___
 
 ▸ **bs58checkEncode**(this: *`void`*, prefix: *`Uint8Array`*, payload: *`Uint8Array`*): `string`
 
-*Defined in [common/crypto.ts:38](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L38)*
+*Defined in [common/crypto.ts:38](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L38)*
 
 Encode byte array into base58check format using defined prefix
 
@@ -1175,7 +1177,7 @@ ___
 
 ▸ **checkPropertyWithError**(o: *`Object`*, propName: *`string`*, methodName: *`string`*): `void`
 
-*Defined in [common/validation.ts:41](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/validation.ts#L41)*
+*Defined in [common/validation.ts:41](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/validation.ts#L41)*
 
 Ensure that defined property exists in object and throw syntax error if not
 
@@ -1196,7 +1198,7 @@ ___
 
 ▸ **concatKeys**(this: *`void`*, privateKey: *`Uint8Array`*, publicKey: *`Uint8Array`*): `Uint8Array`
 
-*Defined in [common/crypto.ts:62](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L62)*
+*Defined in [common/crypto.ts:62](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L62)*
 
 Concat together private and public key
 
@@ -1217,7 +1219,7 @@ ___
 
 ▸ **confirmOperation**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [operation/confirmOperation.ts:21](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/confirmOperation.ts#L21)*
+*Defined in [operation/confirmOperation.ts:21](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/confirmOperation.ts#L21)*
 
 Wait until operation is confirmed & moved from mempool to head
 
@@ -1241,7 +1243,7 @@ ___
 
 ▸ **constants**<`T`>(): `(Anonymous function)`
 
-*Defined in [head/getConstants.ts:15](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/head/getConstants.ts#L15)*
+*Defined in [head/getConstants.ts:15](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/head/getConstants.ts#L15)*
 
 Get constants used in block
 
@@ -1258,7 +1260,7 @@ ___
 
 ▸ **counter**<`T`>(): `(Anonymous function)`
 
-*Defined in [contract/getContractCounter.ts:16](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/contract/getContractCounter.ts#L16)*
+*Defined in [contract/getContractCounter.ts:16](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/contract/getContractCounter.ts#L16)*
 
 Get contract counter
 
@@ -1275,7 +1277,7 @@ ___
 
 ▸ **forgeOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/forgeOperation.ts:27](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/forgeOperation.ts#L27)*
+*Defined in [operation/forgeOperation.ts:27](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/forgeOperation.ts#L27)*
 
 Forge operation in blocchain. Converts operation into binary format and signs operation using script or Trezor
 
@@ -1292,7 +1294,7 @@ ___
 
 ▸ **forgeOperationAtomic**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/forgeOperation.ts:69](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/forgeOperation.ts#L69)*
+*Defined in [operation/forgeOperation.ts:69](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/forgeOperation.ts#L69)*
 
 Converts operation to binary format on node
 
@@ -1309,7 +1311,7 @@ ___
 
 ▸ **getWallet**<`T`>(): `(Anonymous function)`
 
-*Defined in [wallet/getWallet.ts:14](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/getWallet.ts#L14)*
+*Defined in [wallet/getWallet.ts:14](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/getWallet.ts#L14)*
 
 Get wallet details as balance
 
@@ -1326,7 +1328,7 @@ ___
 
 ▸ **hasAppliedOperationInMempool**(this: *[StateConfirmOperation](#stateconfirmoperation)*, operation: *[MempoolOperation](#mempooloperation)*): `boolean`
 
-*Defined in [operation/confirmOperation.ts:68](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/confirmOperation.ts#L68)*
+*Defined in [operation/confirmOperation.ts:68](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/confirmOperation.ts#L68)*
 
 Check if mempool contains operation among applied
 *__this__*: state with operation to confirm
@@ -1347,7 +1349,7 @@ ___
 
 ▸ **hasRefusedOperationInMempool**(this: *[StateConfirmOperation](#stateconfirmoperation)*, operation: *[MempoolOperation](#mempooloperation)*): `boolean`
 
-*Defined in [operation/confirmOperation.ts:59](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/confirmOperation.ts#L59)*
+*Defined in [operation/confirmOperation.ts:59](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/confirmOperation.ts#L59)*
 
 Check if mempool contains operation among refused
 *__this__*: state with operation to confirm
@@ -1368,7 +1370,7 @@ ___
 
 ▸ **head**<`T`>(): `(Anonymous function)`
 
-*Defined in [head/getHead.ts:13](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/head/getHead.ts#L13)*
+*Defined in [head/getHead.ts:13](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/head/getHead.ts#L13)*
 
 Get head for operation
 
@@ -1385,7 +1387,7 @@ ___
 
 ▸ **initializeWallet**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [wallet/initializeWallet.ts:17](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/initializeWallet.ts#L17)*
+*Defined in [wallet/initializeWallet.ts:17](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/initializeWallet.ts#L17)*
 
 Waits for sodium to initialize and prepares wallet for working with it Should be the first step of every workflow
 
@@ -1407,7 +1409,7 @@ ___
 
 ▸ **injectOperations**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/applyInjectOperation.ts:81](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/applyInjectOperation.ts#L81)*
+*Defined in [operation/applyInjectOperation.ts:81](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/applyInjectOperation.ts#L81)*
 
 Inbjects prevalidated operation to Tezos blockchain
 
@@ -1426,13 +1428,13 @@ ___
 
 ▸ **keys**(mnemonic: *`string`*, password: *`string`*): [WalletBase](interfaces/walletbase.md)
 
-*Defined in [common/crypto.ts:86](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L86)*
+*Defined in [common/crypto.ts:86](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L86)*
 
 Generates wallet new wallet or uses provided mnemonic and password
 
 **Returns:** [WalletBase](interfaces/walletbase.md)
 
-*Defined in [common/crypto.ts:87](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L87)*
+*Defined in [common/crypto.ts:87](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L87)*
 
 **Parameters:**
 
@@ -1450,7 +1452,7 @@ ___
 
 ▸ **managerKey**<`T`>(): `(Anonymous function)`
 
-*Defined in [contract/getContractManagerKey.ts:13](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/contract/getContractManagerKey.ts#L13)*
+*Defined in [contract/getContractManagerKey.ts:13](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/contract/getContractManagerKey.ts#L13)*
 
 Get manager key for contract
 
@@ -1467,7 +1469,7 @@ ___
 
 ▸ **newWallet**(): `(Anonymous function)`
 
-*Defined in [wallet/newWallet.ts:9](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/wallet/newWallet.ts#L9)*
+*Defined in [wallet/newWallet.ts:9](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/wallet/newWallet.ts#L9)*
 
 Generate new menomonic, private, public key & tezos wallet address
 
@@ -1480,7 +1482,7 @@ ___
 
 ▸ **operation**(): `(Anonymous function)`
 
-*Defined in [operation/operation.ts:17](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/operation.ts#L17)*
+*Defined in [operation/operation.ts:17](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/operation.ts#L17)*
 
 Create operation in blockchain. Fully forge operation, validates it and inject into blockchain
 
@@ -1493,7 +1495,7 @@ ___
 
 ▸ **operationIsValid**(operation: *[OperationValidationResult](#operationvalidationresult)*): `boolean`
 
-*Defined in [operation/validateOperation.ts:108](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/validateOperation.ts#L108)*
+*Defined in [operation/validateOperation.ts:108](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/validateOperation.ts#L108)*
 
 **Parameters:**
 
@@ -1510,7 +1512,7 @@ ___
 
 ▸ **originateContract**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [contract/originateContract.ts:37](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/contract/originateContract.ts#L37)*
+*Defined in [contract/originateContract.ts:37](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/contract/originateContract.ts#L37)*
 
 Originate smart contract from implicit wallet. Contract will be used for delegation. Complete operations stack
 
@@ -1532,7 +1534,7 @@ ___
 
 ▸ **packOperationParameters**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/packOperationData.ts:14](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/packOperationData.ts#L14)*
+*Defined in [operation/packOperationData.ts:14](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/packOperationData.ts#L14)*
 
 Serialize operation parameters into binary format
 
@@ -1549,7 +1551,7 @@ ___
 
 ▸ **packOperationParametersAtomic**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/packOperationData.ts:30](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/packOperationData.ts#L30)*
+*Defined in [operation/packOperationData.ts:30](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/packOperationData.ts#L30)*
 
 Serialize operation parameters on node
 
@@ -1566,7 +1568,7 @@ ___
 
 ▸ **parseAmount**(this: *`void`*, amount: *`string`*): `number`
 
-*Defined in [common/crypto.ts:76](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L76)*
+*Defined in [common/crypto.ts:76](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L76)*
 
 Convert string amount notation into number in milions
 
@@ -1586,7 +1588,7 @@ ___
 
 ▸ **pendingOperation**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [operation/pendingOperation.ts:19](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/pendingOperation.ts#L19)*
+*Defined in [operation/pendingOperation.ts:19](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/pendingOperation.ts#L19)*
 
 Gets list of applied and refused operations in mempool for specific wallet
 
@@ -1608,7 +1610,7 @@ ___
 
 ▸ **pendingOperationsAtomic**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/pendingOperation.ts:51](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/pendingOperation.ts#L51)*
+*Defined in [operation/pendingOperation.ts:51](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/pendingOperation.ts#L51)*
 
 Gets mempool operations
 
@@ -1625,7 +1627,7 @@ ___
 
 ▸ **preapplyOperations**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/applyInjectOperation.ts:61](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/applyInjectOperation.ts#L61)*
+*Defined in [operation/applyInjectOperation.ts:61](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/applyInjectOperation.ts#L61)*
 
 Prevalidates (preapply) operation on tezos node
 
@@ -1642,7 +1644,7 @@ ___
 
 ▸ **ready**(): `Promise`<`void`>
 
-*Defined in [common/crypto.ts:114](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L114)*
+*Defined in [common/crypto.ts:114](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L114)*
 
 Get sodium ready state
 
@@ -1655,7 +1657,7 @@ ___
 
 ▸ **rpc**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [common/rpc.ts:20](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/rpc.ts#L20)*
+*Defined in [common/rpc.ts:20](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/rpc.ts#L20)*
 
 Remote procedure call (RPC) on tezos node Returns state object with rpc result under property defined in rpc parameters
 
@@ -1677,7 +1679,7 @@ ___
 
 ▸ **setDelegation**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [delegate/setDelegate.ts:33](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/delegate/setDelegate.ts#L33)*
+*Defined in [delegate/setDelegate.ts:33](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/delegate/setDelegate.ts#L33)*
 
 Set delegation rights to tezos address
 
@@ -1699,7 +1701,7 @@ ___
 
 ▸ **signOperation**<`T`>(state: *`T`*): `Observable`< `T` & [State](interfaces/state.md) & `object` & `object` & `object`>
 
-*Defined in [operation/signOperation.ts:45](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L45)*
+*Defined in [operation/signOperation.ts:45](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/signOperation.ts#L45)*
 
 Sign operation in state. Software signing is used.
 *__throws__*: TypeError when operation is not available in state
@@ -1723,7 +1725,7 @@ ___
 
 ▸ **signOperationTrezor**<`T`>(state: *`T`*): `Observable`< `T` & [State](interfaces/state.md) & `object` & `object` & `object`>
 
-*Defined in [operation/signOperation.ts:109](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L109)*
+*Defined in [operation/signOperation.ts:109](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/signOperation.ts#L109)*
 
 Sign operation using hardware Trezor wallet
 *__throws__*: Typerror when operation is not available
@@ -1747,7 +1749,7 @@ ___
 
 ▸ **transaction**<`T`>(selector: *`function`*): `(Anonymous function)`
 
-*Defined in [transaction/createTransaction.ts:39](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/transaction/createTransaction.ts#L39)*
+*Defined in [transaction/createTransaction.ts:39](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/transaction/createTransaction.ts#L39)*
 
 Send amount to another wallet
 
@@ -1771,7 +1773,7 @@ ___
 
 ▸ **updateFeesForOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/forgeOperation.ts:89](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/forgeOperation.ts#L89)*
+*Defined in [operation/forgeOperation.ts:89](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/forgeOperation.ts#L89)*
 
 Estimates minimal fee for the operation and compares provided defined fees with minimal If provided fee is insuficient its overriden
 
@@ -1790,7 +1792,7 @@ ___
 
 ▸ **validateOperation**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/validateOperation.ts:20](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/validateOperation.ts#L20)*
+*Defined in [operation/validateOperation.ts:20](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/validateOperation.ts#L20)*
 
 Validates operation on node to ensure, that operation can be executed and prefills gas consumption and storage size data
 
@@ -1807,7 +1809,7 @@ ___
 
 ▸ **validateOperationAtomic**<`T`>(): `(Anonymous function)`
 
-*Defined in [operation/validateOperation.ts:92](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/validateOperation.ts#L92)*
+*Defined in [operation/validateOperation.ts:92](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/validateOperation.ts#L92)*
 
 Serialize operation parameters on node
 
@@ -1824,7 +1826,7 @@ ___
 
 ▸ **validateOriginationOperation**(operation: *[OperationMetadata](#operationmetadata)*): `void`
 
-*Defined in [common/validation.ts:27](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/validation.ts#L27)*
+*Defined in [common/validation.ts:27](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/validation.ts#L27)*
 
 Check origination operation metadata in runtime to prevent hidden failues
 
@@ -1843,7 +1845,7 @@ ___
 
 ▸ **validateRevealOperation**(operation: *[OperationMetadata](#operationmetadata)*): `void`
 
-*Defined in [common/validation.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/validation.ts#L6)*
+*Defined in [common/validation.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/validation.ts#L6)*
 
 Check reveal operation metadata in runtime to prevent hidden failues
 
@@ -1862,7 +1864,7 @@ ___
 
 ▸ **validateTransactionOperation**(operation: *[OperationMetadata](#operationmetadata)*): `void`
 
-*Defined in [common/validation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/validation.ts#L16)*
+*Defined in [common/validation.ts:16](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/validation.ts#L16)*
 
 Check transaction operation metadata in runtime to prevent hidden failues
 
@@ -1884,7 +1886,7 @@ ___
 
 **prefix**: *`object`*
 
-*Defined in [common/crypto.ts:18](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L18)*
+*Defined in [common/crypto.ts:18](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L18)*
 
 Prefix table
 
@@ -1894,7 +1896,7 @@ Prefix table
 
 **● B**: *`Uint8Array`* =  new Uint8Array([1, 52])
 
-*Defined in [common/crypto.ts:23](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L23)*
+*Defined in [common/crypto.ts:23](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L23)*
 
 ___
 <a id="prefix.kt1"></a>
@@ -1903,7 +1905,7 @@ ___
 
 **● KT1**: *`Uint8Array`* =  new Uint8Array([2, 90, 121])
 
-*Defined in [common/crypto.ts:22](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L22)*
+*Defined in [common/crypto.ts:22](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L22)*
 
 ___
 <a id="prefix.edpk"></a>
@@ -1912,7 +1914,7 @@ ___
 
 **● edpk**: *`Uint8Array`* =  new Uint8Array([13, 15, 37, 217])
 
-*Defined in [common/crypto.ts:24](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L24)*
+*Defined in [common/crypto.ts:24](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L24)*
 
 ___
 <a id="prefix.edsig"></a>
@@ -1921,7 +1923,7 @@ ___
 
 **● edsig**: *`Uint8Array`* =  new Uint8Array([9, 245, 205, 134, 18])
 
-*Defined in [common/crypto.ts:29](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L29)*
+*Defined in [common/crypto.ts:29](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L29)*
 
 ___
 <a id="prefix.edsk32"></a>
@@ -1930,7 +1932,7 @@ ___
 
 **● edsk32**: *`Uint8Array`* =  new Uint8Array([13, 15, 58, 7])
 
-*Defined in [common/crypto.ts:28](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L28)*
+*Defined in [common/crypto.ts:28](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L28)*
 
 ___
 <a id="prefix.edsk64"></a>
@@ -1939,7 +1941,7 @@ ___
 
 **● edsk64**: *`Uint8Array`* =  new Uint8Array([43, 246, 78, 7])
 
-*Defined in [common/crypto.ts:27](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L27)*
+*Defined in [common/crypto.ts:27](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L27)*
 
 ___
 <a id="prefix.operation"></a>
@@ -1948,7 +1950,7 @@ ___
 
 **● operation**: *`Uint8Array`* =  new Uint8Array([5, 116])
 
-*Defined in [common/crypto.ts:30](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L30)*
+*Defined in [common/crypto.ts:30](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L30)*
 
 ___
 <a id="prefix.p2pk"></a>
@@ -1957,7 +1959,7 @@ ___
 
 **● p2pk**: *`Uint8Array`* =  new Uint8Array([3, 178, 139, 127])
 
-*Defined in [common/crypto.ts:26](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L26)*
+*Defined in [common/crypto.ts:26](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L26)*
 
 ___
 <a id="prefix.sppk"></a>
@@ -1966,7 +1968,7 @@ ___
 
 **● sppk**: *`Uint8Array`* =  new Uint8Array([3, 254, 226, 86])
 
-*Defined in [common/crypto.ts:25](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L25)*
+*Defined in [common/crypto.ts:25](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L25)*
 
 ___
 <a id="prefix.tz1"></a>
@@ -1975,7 +1977,7 @@ ___
 
 **● tz1**: *`Uint8Array`* =  new Uint8Array([6, 161, 159])
 
-*Defined in [common/crypto.ts:19](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L19)*
+*Defined in [common/crypto.ts:19](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L19)*
 
 ___
 <a id="prefix.tz2"></a>
@@ -1984,7 +1986,7 @@ ___
 
 **● tz2**: *`Uint8Array`* =  new Uint8Array([6, 161, 161])
 
-*Defined in [common/crypto.ts:20](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L20)*
+*Defined in [common/crypto.ts:20](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L20)*
 
 ___
 <a id="prefix.tz3"></a>
@@ -1993,7 +1995,7 @@ ___
 
 **● tz3**: *`Uint8Array`* =  new Uint8Array([6, 161, 164])
 
-*Defined in [common/crypto.ts:21](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/crypto.ts#L21)*
+*Defined in [common/crypto.ts:21](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/crypto.ts#L21)*
 
 ___
 

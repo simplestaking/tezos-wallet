@@ -136,7 +136,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     fee: parseInt(operation.fee),
                     counter: parseInt(operation.counter),
                     gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
+                    storage_limit: parseInt(operation.storage_limit)
                 }
                 break;
             }
@@ -152,7 +152,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     fee: parseInt(operation.fee),
                     counter: parseInt(operation.counter),
                     gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
+                    storage_limit: parseInt(operation.storage_limit)
                 }
                 break;
 
@@ -179,10 +179,12 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'origination': {
                 validateOriginationOperation(operation);
 
+                const managerKeyName = state.wallet.node.name === "main" ? "managerPubkey" : "manager_pubkey";
+
                 // add origination to operation
                 message.operation.origination = {
-                    source: operation.source,
-                    manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : <string>operation.managerPubkey,
+                    source: operation.source,                    
+                    [managerKeyName]: operation[managerKeyName],
                     balance: parseInt(operation.balance),
                     fee: parseInt(operation.fee),
                     counter: parseInt(operation.counter),
@@ -190,7 +192,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     storage_limit: parseInt(operation.storage_limit),
                     spendable: operation.spendable,
                     delegatable: operation.delegatable,
-                    delegate: operation.delegate,
+                    delegate: operation.delegate
                     // find encodig format http://doc.tzalpha.net/api/p2p.html
                     //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
                 }
@@ -207,7 +209,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     fee: parseInt(operation.fee),
                     counter: parseInt(operation.counter),
                     gas_limit: parseInt(operation.gas_limit),
-                    storage_limit: parseInt(operation.storage_limit),
+                    storage_limit: parseInt(operation.storage_limit)
                 }
                 break;
             }

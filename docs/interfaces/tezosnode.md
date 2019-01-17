@@ -25,7 +25,7 @@
 
 **● display**: *`string`*
 
-*Defined in [common/config.ts:11](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/config.ts#L11)*
+*Defined in [common/config.ts:11](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L11)*
 
 ___
 <a id="name"></a>
@@ -34,7 +34,7 @@ ___
 
 **● name**: *`string`*
 
-*Defined in [common/config.ts:12](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/config.ts#L12)*
+*Defined in [common/config.ts:12](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L12)*
 
 ___
 <a id="tzscan"></a>
@@ -43,7 +43,7 @@ ___
 
 **● tzscan**: *[TZScanNode](tzscannode.md)*
 
-*Defined in [common/config.ts:14](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/config.ts#L14)*
+*Defined in [common/config.ts:14](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L14)*
 
 ___
 <a id="url"></a>
@@ -52,7 +52,7 @@ ___
 
 **● url**: *`string`*
 
-*Defined in [common/config.ts:13](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/config.ts#L13)*
+*Defined in [common/config.ts:13](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L13)*
 
 ___
 

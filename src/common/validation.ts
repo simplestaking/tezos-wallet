@@ -26,7 +26,7 @@ export function validateTransactionOperation(operation: OperationMetadata) {
  */
 export function validateOriginationOperation(operation: OperationMetadata) {
 
-    ['manager_pubkey', 'balance', 'spendable', 'delegatable', 'delegate'].forEach(
+    ['balance', 'spendable', 'delegatable', 'delegate'].forEach(
         prop => checkPropertyWithError(operation, prop, 'validateOriginationOperation')
     );
 }

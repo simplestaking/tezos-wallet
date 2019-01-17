@@ -22,7 +22,7 @@
 
 **● payload**: *`object`*
 
-*Defined in [operation/signOperation.ts:27](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/operation/signOperation.ts#L27)*
+*Defined in [operation/signOperation.ts:27](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/operation/signOperation.ts#L27)*
 
 #### Type declaration
 

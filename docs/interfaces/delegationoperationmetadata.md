@@ -32,7 +32,7 @@
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[counter](baseoperationmetadata.md#counter)*
 
-*Defined in [common/operations.ts:4](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L4)*
+*Defined in [common/operations.ts:4](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L4)*
 
 ___
 <a id="delegate"></a>
@@ -42,7 +42,7 @@ ___
 **● delegate**: * `undefined` &#124; `string`
 *
 
-*Defined in [common/operations.ts:33](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L33)*
+*Defined in [common/operations.ts:33](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L33)*
 
 ___
 <a id="fee"></a>
@@ -53,7 +53,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[fee](baseoperationmetadata.md#fee)*
 
-*Defined in [common/operations.ts:3](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L3)*
+*Defined in [common/operations.ts:3](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L3)*
 
 ___
 <a id="gas_limit"></a>
@@ -64,7 +64,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[gas_limit](baseoperationmetadata.md#gas_limit)*
 
-*Defined in [common/operations.ts:5](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L5)*
+*Defined in [common/operations.ts:5](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L5)*
 
 ___
 <a id="kind"></a>
@@ -73,7 +73,7 @@ ___
 
 **● kind**: *"delegation"*
 
-*Defined in [common/operations.ts:32](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L32)*
+*Defined in [common/operations.ts:32](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L32)*
 
 ___
 <a id="source"></a>
@@ -84,7 +84,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[source](baseoperationmetadata.md#source)*
 
-*Defined in [common/operations.ts:2](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L2)*
+*Defined in [common/operations.ts:2](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L2)*
 
 ___
 <a id="storage_limit"></a>
@@ -95,7 +95,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[storage_limit](baseoperationmetadata.md#storage_limit)*
 
-*Defined in [common/operations.ts:6](https://github.com/simplestaking/tezos-wallet/blob/8c18c9f/src/common/operations.ts#L6)*
+*Defined in [common/operations.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L6)*
 
 ___
 

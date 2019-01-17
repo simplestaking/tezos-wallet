@@ -109,7 +109,8 @@ export type TrezorTransactionOperation = {
 
 export type TrezorOriginationOperation = {
     source: string
-    manager_pubkey: string
+    manager_pubkey?: string
+    managerPubkey?: string
     balance: number
     spendable: boolean
     delegatable: boolean
