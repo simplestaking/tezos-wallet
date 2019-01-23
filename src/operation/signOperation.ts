@@ -179,12 +179,10 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'origination': {
                 validateOriginationOperation(operation);
 
-                const managerKeyName = state.wallet.node.name === "main" ? "managerPubkey" : "manager_pubkey";
-
                 // add origination to operation
                 message.operation.origination = {
                     source: operation.source,                    
-                    [managerKeyName]: operation[managerKeyName],
+                    manager_pubkey: operation.manager_pubkey ? operation.manager_pubkey : <string>operation.managerPubkey,
                     balance: parseInt(operation.balance),
                     fee: parseInt(operation.fee),
                     counter: parseInt(operation.counter),
