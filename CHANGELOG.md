@@ -14,3 +14,6 @@ Initial release supporting Tezos:
 
 ### 1.1.1
 - fixed origination operation with Trezor on mainet (manager_pubkey used instead of managerPubkey)
+
+### 1.1.2
+- fixed manager_pubkey handling for Trezor Connect
