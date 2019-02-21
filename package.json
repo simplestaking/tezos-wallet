@@ -23,7 +23,9 @@
     "buffer": "~5.2.1",
     "libsodium": "0.7.3",
     "libsodium-wrappers": "0.7.3",
-    "trezor-connect": "^6.0.3"
+    "libsodium-wrappers-sumo": "^0.7.4",
+    "trezor-connect": "^6.0.3",
+    "zxcvbn": "^4.4.2"
   },
   "peerDependencies": {
     "rxjs": "~6.3.2"
@@ -32,6 +34,7 @@
     "@types/bip39": "^2.4.0",
     "@types/libsodium-wrappers": "^0.7.0",
     "@types/node": "^10.12.11",
+    "@types/zxcvbn": "^4.4.0",
     "rxjs": "~6.3.2",
     "ts-node": "^7.0.1",
     "typedoc": "^0.13.0",

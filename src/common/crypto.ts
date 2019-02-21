@@ -1,4 +1,7 @@
 import * as sodium from 'libsodium-wrappers';
+import * as sodiumSumo from 'libsodium-wrappers-sumo';
+import * as crypto from 'crypto';
+import * as zxcvbn from 'zxcvbn';
 import * as bs58check from 'bs58check';
 import * as bip39 from 'bip39';
 import { Buffer } from 'buffer';
@@ -9,6 +12,13 @@ export interface WalletBase {
     secretKey: string
     publicKey: string
     publicKeyHash: string
+}
+
+export interface EncryptedWallet {
+    version: string;
+    salt: string;
+    ciphertext: string;
+    kdf: string;
 }
 
 
@@ -31,17 +41,21 @@ export const prefix = {
 }
 
 /**
- * Encode byte array into base58check format using defined prefix
+ * Encode byte array into base58check format using optional prefix
  * @param prefix 
  * @param payload 
  */
-export function bs58checkEncode(this: void, prefix: Uint8Array, payload: Uint8Array) {
-    const n = new Uint8Array(prefix.length + payload.length);
-
-    n.set(prefix);
-    n.set(payload, prefix.length);
-
-    return bs58check.encode(Buffer.from(n));
+export function bs58checkEncode(this: void, prefix: Uint8Array | null, payload: Uint8Array | any) {
+    if (prefix) {
+        const n = new Uint8Array(prefix.length + payload.length);
+        n.set(prefix);
+        n.set(payload, prefix.length);
+        return bs58check.encode(Buffer.from(n));
+    } else {
+        const n = new Uint8Array(payload.length);
+        n.set(payload);
+        return bs58check.encode(Buffer.from(n));
+    }
 }
 
 /**
@@ -108,7 +122,109 @@ export function keys(mnemonic?: string, password?: string): WalletBase {
     }
 }
 
+
 /**
  * Get sodium ready state
  */
 export const ready = () => sodium.ready;
+
+
+/**
+ * Encrypt wallet
+ */
+export const encryptKeys = (wallet: WalletBase, passphrase: string) : EncryptedWallet => {
+
+	const keys = JSON.stringify({
+			publicKey: wallet.publicKey,
+			publicKeyHash: wallet.publicKeyHash,
+			secretKey: wallet.secretKey //encode secretKey
+	});
+	const salt = generateSaltForPwHash();
+
+	console.log("encryptKeys: ", keys, passphrase )
+
+	let encryptedKeys: Uint8Array;
+	// try {
+    //     encryptedKeys = encryptMessage(keys, passphrase, salt);
+	// } catch (err) {
+    //     console.log(err);
+    // }
+    encryptedKeys = encryptMessage(keys, passphrase, salt);
+
+	return {
+		version: '1',
+		salt: bs58checkEncode(null, salt),
+		ciphertext: bs58checkEncode(null, encryptedKeys),
+		kdf: 'Argon2'
+	}
+
+}
+
+/**
+* Encrypts a given message using a passphrase
+* @param {string} message  Message to encrypt
+* @param {string} passphrase   User-supplied passphrase
+* @param {Buffer} salt Salt for key derivation
+* @returns {Buffer}    Concatenated bytes of nonce and cipher text
+*/
+function encryptMessage(message: string, passphrase: string, salt: Buffer): Buffer {
+
+	const passwordStrength = getPasswordStrength(passphrase);
+	if (passwordStrength < 3) {
+	    throw new Error('The password is not strength enought!');
+	}
+
+	const messageBytes = sodium.from_string(message);
+	const keyBytes = sodiumSumo.crypto_pwhash(
+			sodium.crypto_box_SEEDBYTES,
+			passphrase,
+			salt,
+			sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+			sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
+			sodium.crypto_pwhash_ALG_DEFAULT
+	);
+	const nonce = Buffer.from(sodium.randombytes_buf(sodium.crypto_box_NONCEBYTES));
+	const cipherText = Buffer.from(sodium.crypto_secretbox_easy(messageBytes, nonce, keyBytes));
+	return Buffer.concat([nonce, cipherText]);
+}
+
+/**
+ * Decrypts a given message using a passphrase
+ * @param {Buffer} nonce_and_ciphertext Concatenated bytes of nonce and cipher text
+ * @param {string} passphrase   User-supplied passphrase
+ * @param {Buffer} salt Salt for key derivation
+ * @returns {any}   Decrypted message
+ */
+export function decryptMessage(nonce_and_ciphertext: Buffer, passphrase: string, salt: Buffer ): string {
+	const keyBytes = sodiumSumo.crypto_pwhash(
+			sodium.crypto_box_SEEDBYTES,
+			passphrase,
+			salt,
+			sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+			sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
+			sodium.crypto_pwhash_ALG_DEFAULT
+	);
+	if (nonce_and_ciphertext.length < sodium.crypto_secretbox_NONCEBYTES + sodium.crypto_secretbox_MACBYTES) {
+			throw new Error("The cipher text is of insufficient length");
+	}
+	const nonce = nonce_and_ciphertext.slice(0, sodium.crypto_secretbox_NONCEBYTES);
+	const ciphertext = nonce_and_ciphertext.slice(sodium.crypto_secretbox_NONCEBYTES);
+	return sodium.crypto_secretbox_open_easy(ciphertext, nonce, keyBytes, 'text');
+}
+
+/**
+* Generates a salt for key derivation.
+* @returns {Buffer}    Salt
+*/
+function generateSaltForPwHash() {
+	return crypto.randomBytes(sodium.crypto_pwhash_SALTBYTES)
+}
+
+/**
+ * Checking the password strength using zxcvbn
+ * @returns {number}    Password score
+ */
+function getPasswordStrength(password: string): number {
+    const results = zxcvbn(password);
+    return results.score;
+}
