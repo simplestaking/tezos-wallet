@@ -110,7 +110,7 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
       const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + operationByteSize;      
       const fee = parseFloat(operation.fee);
 
-      console.log(`Estimated operation size is "${operationByteSize}" bytes`)
+      console.log(`[+] fees: Estimated operation size is "${operationByteSize}" bytes`)
       console.log(`[+] fees: defined "${fee}" estimated "${estimatedFee}"`);
 
       if (estimatedFee > fee) {

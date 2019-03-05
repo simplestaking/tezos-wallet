@@ -13,12 +13,12 @@ export type StatePackOperationParameters = {
  */
 export const packOperationParameters = <T extends State & StateOperations>() => (source: Observable<T>) => source.pipe(
 
-  tap(state => console.log('[+] packOperationParameters', state)),
+  tap(state => console.log('[+] packOperationParameters: ', state)),
 
   // get packed transaction parameters  
   packOperationParametersAtomic(),
 
-  tap(state => console.log('[+] packOperationParameters', state.packOperationParameters))
+  tap(state => console.log('[+] packOperationParameters: ', state.packOperationParameters))
 );
 
 

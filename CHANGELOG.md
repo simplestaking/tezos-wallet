@@ -17,3 +17,6 @@ Initial release supporting Tezos:
 
 ### 1.1.2
 - fixed manager_pubkey handling for Trezor Connect
+
+### 1.2
+- Support for new trezor-connect 7.0.1

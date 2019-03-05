@@ -122,7 +122,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
     // add operations to message 
     state.operations.map((operation) => {
 
-        console.log('[signOperationTrezor] operation', operation)
+        console.log('[+][signOperationTrezor] operation', operation)
 
         switch (operation.kind) {
 
