@@ -19,7 +19,6 @@
 * [fee](originationoperationmetadata.md#fee)
 * [gas_limit](originationoperationmetadata.md#gas_limit)
 * [kind](originationoperationmetadata.md#kind)
-* [managerPubkey](originationoperationmetadata.md#managerpubkey)
 * [manager_pubkey](originationoperationmetadata.md#manager_pubkey)
 * [source](originationoperationmetadata.md#source)
 * [spendable](originationoperationmetadata.md#spendable)
@@ -96,16 +95,6 @@ ___
 **● kind**: *"origination"*
 
 *Defined in [common/operations.ts:22](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L22)*
-
-___
-<a id="managerpubkey"></a>
-
-### `<Optional>` managerPubkey
-
-**● managerPubkey**: * `undefined` &#124; `string`
-*
-
-*Defined in [common/operations.ts:24](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L24)*
 
 ___
 <a id="manager_pubkey"></a>

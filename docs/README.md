@@ -959,9 +959,7 @@ ___
 
  gas_limit: `number`
 
-`Optional`  managerPubkey:  `undefined` &#124; `string`
-
-`Optional`  manager_pubkey:  `undefined` &#124; `string`
+manager_pubkey: `string`
 
  source: `string`
 

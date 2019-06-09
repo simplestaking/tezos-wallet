@@ -93,7 +93,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
       spendable: true,
       delegatable: true,
       delegate: state.originateContract.to,
-      [state.wallet.node.name === "main" ? "managerPubkey" : "manager_pubkey"]: state.manager_key.manager
+      manager_pubkey: state.manager_key.manager
     };
 
     operations.push(originationOperation);

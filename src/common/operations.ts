@@ -20,8 +20,7 @@ export interface TransactionOperationMetadata extends BaseOperationMetadata {
 
 export interface OriginationOperationMetadata extends BaseOperationMetadata {
     kind: 'origination'
-    manager_pubkey?: string
-    managerPubkey?: string
+    manager_pubkey: string
     balance: string
     spendable: boolean
     delegatable: boolean
@@ -109,8 +108,7 @@ export type TrezorTransactionOperation = {
 
 export type TrezorOriginationOperation = {
     source: string
-    manager_pubkey?: string
-    managerPubkey?: string
+    manager_pubkey: string
     balance: number
     spendable: boolean
     delegatable: boolean
