@@ -78,7 +78,8 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.transaction.fee).toString(),
-        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10100",
+        // extra gas is for safety 
+        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10300",
         storage_limit: "0",
         counter: (++state.counter).toString()
       })
@@ -90,8 +91,8 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       destination: state.transaction.to,
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
-      // extra 100 gas is for safety as its done by tezos client
-      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10200", 
+      // extra gas is for safety 
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10400", 
       storage_limit: "257",
       counter: (++state.counter).toString()
     };

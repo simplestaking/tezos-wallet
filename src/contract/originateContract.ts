@@ -76,7 +76,8 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.originateContract.fee).toString(),
-        gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10100",
+        // extra  gas is for safety 
+        gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10300",
         storage_limit: "0",
         counter: (++state.counter).toString(),
       })
@@ -87,7 +88,8 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.originateContract.fee).toString(),
       balance: parseAmount(state.originateContract.amount).toString(),
-      gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10100",
+      // extra gas is for safety 
+      gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10300",
       storage_limit: "257",
       counter: (++state.counter).toString(),
       spendable: true,

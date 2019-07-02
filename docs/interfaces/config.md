@@ -27,7 +27,7 @@
 
 **● node**: *[TezosNode](tezosnode.md)*
 
-*Defined in [common/config.ts:5](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L5)*
+*Defined in [common/config.ts:5](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/config.ts#L5)*
 
 ___
 <a id="path"></a>
@@ -37,7 +37,7 @@ ___
 **● path**: * `undefined` &#124; `string`
 *
 
-*Defined in [common/config.ts:7](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L7)*
+*Defined in [common/config.ts:7](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/config.ts#L7)*
 
 ___
 <a id="publickey"></a>
@@ -46,7 +46,7 @@ ___
 
 **● publicKey**: *`string`*
 
-*Defined in [common/config.ts:3](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L3)*
+*Defined in [common/config.ts:3](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/config.ts#L3)*
 
 ___
 <a id="publickeyhash"></a>
@@ -55,7 +55,7 @@ ___
 
 **● publicKeyHash**: *`string`*
 
-*Defined in [common/config.ts:4](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L4)*
+*Defined in [common/config.ts:4](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/config.ts#L4)*
 
 ___
 <a id="secretkey"></a>
@@ -64,7 +64,7 @@ ___
 
 **● secretKey**: *`string`*
 
-*Defined in [common/config.ts:2](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L2)*
+*Defined in [common/config.ts:2](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/config.ts#L2)*
 
 ___
 <a id="type"></a>
@@ -74,7 +74,7 @@ ___
 **● type**: * "web" &#124; "TREZOR_T" &#124; "TREZOR_P"
 *
 
-*Defined in [common/config.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/config.ts#L6)*
+*Defined in [common/config.ts:6](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/config.ts#L6)*
 
 ___
 

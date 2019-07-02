@@ -33,7 +33,7 @@ Fees are in nanotez (1 nanotez is 0.000 001 tez)
 
 **Transactions to inactive implicit account**
 - storage_limit : 257
-- gas_limit : 10100
+- gas_limit : 10200
 - opbytes : ~155
 - fee : 1275 + 257 000 burn from source account
 

@@ -23,3 +23,6 @@ Initial release supporting Tezos:
 
 ### 1.2.1
 - fixed manager_pubkey handling for Trezor Connect
+
+### 1.2.2
+- added extra gas for safety 

@@ -34,7 +34,7 @@
 
 **● balance**: *`string`*
 
-*Defined in [common/operations.ts:25](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L25)*
+*Defined in [common/operations.ts:24](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L24)*
 
 ___
 <a id="counter"></a>
@@ -45,7 +45,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[counter](baseoperationmetadata.md#counter)*
 
-*Defined in [common/operations.ts:4](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L4)*
+*Defined in [common/operations.ts:4](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L4)*
 
 ___
 <a id="delegatable"></a>
@@ -54,7 +54,7 @@ ___
 
 **● delegatable**: *`boolean`*
 
-*Defined in [common/operations.ts:27](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L27)*
+*Defined in [common/operations.ts:26](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L26)*
 
 ___
 <a id="delegate"></a>
@@ -63,7 +63,7 @@ ___
 
 **● delegate**: *`string`*
 
-*Defined in [common/operations.ts:28](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L28)*
+*Defined in [common/operations.ts:27](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L27)*
 
 ___
 <a id="fee"></a>
@@ -74,7 +74,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[fee](baseoperationmetadata.md#fee)*
 
-*Defined in [common/operations.ts:3](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L3)*
+*Defined in [common/operations.ts:3](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L3)*
 
 ___
 <a id="gas_limit"></a>
@@ -85,7 +85,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[gas_limit](baseoperationmetadata.md#gas_limit)*
 
-*Defined in [common/operations.ts:5](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L5)*
+*Defined in [common/operations.ts:5](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L5)*
 
 ___
 <a id="kind"></a>
@@ -94,17 +94,16 @@ ___
 
 **● kind**: *"origination"*
 
-*Defined in [common/operations.ts:22](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L22)*
+*Defined in [common/operations.ts:22](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L22)*
 
 ___
 <a id="manager_pubkey"></a>
 
-### `<Optional>` manager_pubkey
+###  manager_pubkey
 
-**● manager_pubkey**: * `undefined` &#124; `string`
-*
+**● manager_pubkey**: *`string`*
 
-*Defined in [common/operations.ts:23](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L23)*
+*Defined in [common/operations.ts:23](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L23)*
 
 ___
 <a id="source"></a>
@@ -115,7 +114,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[source](baseoperationmetadata.md#source)*
 
-*Defined in [common/operations.ts:2](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L2)*
+*Defined in [common/operations.ts:2](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L2)*
 
 ___
 <a id="spendable"></a>
@@ -124,7 +123,7 @@ ___
 
 **● spendable**: *`boolean`*
 
-*Defined in [common/operations.ts:26](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L26)*
+*Defined in [common/operations.ts:25](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L25)*
 
 ___
 <a id="storage_limit"></a>
@@ -135,7 +134,7 @@ ___
 
 *Inherited from [BaseOperationMetadata](baseoperationmetadata.md).[storage_limit](baseoperationmetadata.md#storage_limit)*
 
-*Defined in [common/operations.ts:6](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L6)*
+*Defined in [common/operations.ts:6](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L6)*
 
 ___
 

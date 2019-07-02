@@ -24,7 +24,7 @@
 
 **● kind**: *"activate_account"*
 
-*Defined in [common/operations.ts:37](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L37)*
+*Defined in [common/operations.ts:36](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L36)*
 
 ___
 <a id="pkh"></a>
@@ -33,7 +33,7 @@ ___
 
 **● pkh**: *`string`*
 
-*Defined in [common/operations.ts:38](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L38)*
+*Defined in [common/operations.ts:37](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L37)*
 
 ___
 <a id="secret"></a>
@@ -42,7 +42,7 @@ ___
 
 **● secret**: *`string`*
 
-*Defined in [common/operations.ts:39](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/operations.ts#L39)*
+*Defined in [common/operations.ts:38](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/operations.ts#L38)*
 
 ___
 

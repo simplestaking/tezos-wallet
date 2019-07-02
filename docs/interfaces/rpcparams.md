@@ -24,7 +24,7 @@
 
 **● path**: *`string`*
 
-*Defined in [common/rpc.ts:7](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/rpc.ts#L7)*
+*Defined in [common/rpc.ts:7](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/rpc.ts#L7)*
 
 ___
 <a id="payload"></a>
@@ -33,7 +33,7 @@ ___
 
 **● payload**: *`any`*
 
-*Defined in [common/rpc.ts:9](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/rpc.ts#L9)*
+*Defined in [common/rpc.ts:9](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/rpc.ts#L9)*
 
 ___
 <a id="url"></a>
@@ -42,7 +42,7 @@ ___
 
 **● url**: *`string`*
 
-*Defined in [common/rpc.ts:8](https://github.com/simplestaking/tezos-wallet/blob/456a549/src/common/rpc.ts#L8)*
+*Defined in [common/rpc.ts:8](https://github.com/simplestaking/tezos-wallet/blob/ab7aece/src/common/rpc.ts#L8)*
 
 ___
 

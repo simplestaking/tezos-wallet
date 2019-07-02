@@ -74,7 +74,8 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
         public_key: state.wallet.publicKey || '',
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.setDelegate.fee).toString(),
-        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10100",
+        // extra gas is for safety 
+        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10300",
         storage_limit: "0",
         counter: (++state.counter).toString(),
       })
@@ -84,7 +85,8 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
       kind: "delegation",
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.setDelegate.fee).toString(),
-      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10100",
+      // extra gas is for safety 
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10300",
       storage_limit: "0",
       counter: (++state.counter).toString(),
       delegate: !state.setDelegate.to ? state.wallet.publicKeyHash : state.setDelegate.to,
