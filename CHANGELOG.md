@@ -26,3 +26,6 @@ Initial release supporting Tezos:
 
 ### 1.2.2
 - added extra gas for safety 
+
+### 1.2.3
+- fixed mempool check 

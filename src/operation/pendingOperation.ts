@@ -31,11 +31,11 @@ export const pendingOperation = <T extends State>(selector: (state: T) => Pendin
   map((state) => ({
     applied: [
       ...state.mempool.applied
-        .filter((operation) => operation.contents[0].source === state.pendingOperation.publicKeyHash)
+        .filter((operation) => operation.contents && operation.contents[0].source === state.pendingOperation.publicKeyHash)
     ],
     refused: [
       ...state.mempool.refused
-        .filter((operation) => operation.contents[0].source === state.pendingOperation.publicKeyHash)
+        .filter((operation) => operation.contents && operation.contents[0].source === state.pendingOperation.publicKeyHash)
     ]
   })),
 
