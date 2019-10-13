@@ -32,3 +32,6 @@ Initial release supporting Tezos:
 
 ### 1.2.4
 - fixed manage_key for Babylon update
+
+### 1.2.5
+- Support for new trezor-connect 8.0.6
