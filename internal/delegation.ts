@@ -1,7 +1,7 @@
 import { of } from 'rxjs'
 import { tap } from 'rxjs/operators';
 
-import { Config, initializeWallet, transaction, pendingOperation, confirmOperation } from '../src'
+import { Config, initializeWallet, setDelegation, pendingOperation, confirmOperation } from '../src'
 
 // support for node.js
 import './node'
@@ -41,15 +41,15 @@ walletObservable.pipe(
     })),
 
     // originate contract
-    transaction(stateWallet => ({
-        to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
+    setDelegation(stateWallet => ({
+        to: 'tz1boot2oCjTjUN6xDNoVmtCLRdh8cc92P1u',
         amount: '0.001',
         fee: '0.01'
     })),
 
     // originate contract
     tap(state => pendingOperation(stateWallet => ({
-        publicKeyHash: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
+        publicKeyHash: 'tz1boot2oCjTjUN6xDNoVmtCLRdh8cc92P1u',
     }))
     ),
 
