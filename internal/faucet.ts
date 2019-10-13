@@ -12,8 +12,7 @@ import { initializeWallet, activateWallet, confirmOperation, getWallet, transact
 
 const config = {
     transaction: {
-        // hw_trezor_zero
-        to: 'tz1UQfd6Hqbfy9x4yQAA9XdkZih57aZYYtnC',
+        to: 'tz1L1YBz3nDNypeHPbSXECZbLdYVyJaGhv7w',
         // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
         amount: '5.23',
         fee: '0.0013',
@@ -21,7 +20,7 @@ const config = {
     node: {
         name: 'zeronet',
         display: 'Zeronet',
-        url: 'https://zeronet.simplestaking.com:3000',
+        url: 'http://zeronet-node.tzscan.io',
         tzscan: {
             url: 'http://zeronet.tzscan.io/',
         }

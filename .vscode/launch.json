@@ -8,9 +8,9 @@
             "type": "node",
             "request": "launch",
             "name": "Node",
-            "program": "${workspaceFolder}\\temp\\internal\\originate.js",
+            "program": "${workspaceFolder}\/internal\/transaction.js",
             "outFiles": [
-                "${workspaceFolder}/temp/*.js"
+                "${workspaceFolder}/*.js"
             ]
         },
         {

@@ -65,7 +65,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
     const operations: OperationMetadata[] = [];
 
     // revealed wallet already has a manager
-    if (state.manager_key.key === undefined) {
+    if (state.manager_key === null) {
 
       if (typeof state.wallet.publicKey === 'undefined') {
         console.warn('[originateContract] Public key not available in wallet. Using empty string.');

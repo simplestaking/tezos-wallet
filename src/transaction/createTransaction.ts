@@ -67,7 +67,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
     const withTestRun = state.transaction.testRun || false;
     const operations: OperationMetadata[] = [];
 
-    if (state.manager_key.key === undefined) {
+    if (state.manager_key === null) {
 
       if (typeof state.wallet.publicKey === undefined) {
         console.warn(`[transaction] Wallet public key not available!`);

@@ -16,7 +16,7 @@ const wallet: Config = {
     node: {
         name: 'mainnet',
         display: 'Mainnet',
-        url: 'https://mainnet.simplestaking.com:3000',
+        url: 'http://zeronet-node.tzscan.io',
         tzscan: {
             url: 'http://tzscan.io/',
         }
@@ -28,6 +28,8 @@ const walletObservable = of([])
 
 // create observable with state  
 walletObservable.pipe(
+
+    tap(() => console.log('[walletObservable]')),
 
     // wait for sodium to initialize
     initializeWallet(stateWallet => ({
@@ -44,7 +46,7 @@ walletObservable.pipe(
     transaction(stateWallet => ({
         to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
         amount: '0.001',
-        fee: '0'
+        fee: '0.01'
     })),
 
     // originate contract

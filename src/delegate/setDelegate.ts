@@ -63,7 +63,7 @@ export const setDelegation = <T extends State>(selector: (state: T) => SetDelega
     const withTestRun = state.setDelegate.testRun || false;
     const operations: OperationMetadata[] = [];
 
-    if (state.manager_key.key === undefined) {
+    if (state.manager_key === null) {
 
       if (typeof state.wallet.publicKey === 'undefined') {
         console.warn('[setDelegation] Public key not available in wallet. Using empty string.');

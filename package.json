@@ -1,6 +1,6 @@
 {
   "name": "tezos-wallet",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Tezos wallet simplifies communication with Tezos nodes and significantly reduces burden of working with Tezos network.",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -34,7 +34,7 @@
     "@types/node": "^10.12.11",
     "rxjs": "6.3.2",
     "ts-node": "^7.0.1",
-    "typedoc": "^0.13.0",
+    "typedoc": "^0.15.0",
     "typedoc-plugin-markdown": "~1.1.19",
     "typescript": "3.2.2",
     "xmlhttprequest-ssl": "1.5.5"

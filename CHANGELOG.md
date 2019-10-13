@@ -29,3 +29,6 @@ Initial release supporting Tezos:
 
 ### 1.2.3
 - fixed mempool check 
+
+### 1.2.4
+- fixed manage_key for Babylon update

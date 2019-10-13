@@ -31,7 +31,7 @@ export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (sou
             // post 
             ajax.post(state.wallet.node.url + state.rpc.url, state.rpc.payload, { 'Content-Type': 'application/json' }).pipe(
                 // without response do not run it
-                filter(event => event.response),
+                // filter(event => event.response),
                 // use only response
                 map(event => (
                     { ...state, [state.rpc.path]: event.response }
@@ -48,7 +48,7 @@ export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (sou
             // get 
             ajax.get(state.wallet.node.url + state.rpc.url, { 'Content-Type': 'application/json' }).pipe(
                 // without response do not run it
-                filter(event => event.response),
+                // filter(event => event.response),
                 // use only response
                 map(event => (
                     { ...state, [state.rpc.path]: event.response }
