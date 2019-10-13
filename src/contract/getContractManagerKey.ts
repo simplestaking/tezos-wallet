@@ -1,10 +1,10 @@
 import { Observable } from "rxjs";
 
-import { State, ManagerKey, rpc } from "../common";
+import { State, rpc } from "../common";
 
 
 export type StateManagerKey = {
-  manager_key: ManagerKey
+  manager_key: string
 }
    
   /**

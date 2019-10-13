@@ -12,7 +12,7 @@ export interface State {
     getWallet?: WalletDetail
     head?: Head
     injectionOperation?: InjectionOperation
-    manager_key?: ManagerKey
+    manager_key?: string
     mempool?: Mempool
     originateContract?: OriginatedContract
     operation?: string
@@ -133,11 +133,6 @@ export type Mempool = {
     branch_refused: MempoolOperation[]
     refused: MempoolOperation[]
     unprocessed: MempoolOperation[]
-}
-
-export type ManagerKey = {
-    manager: string
-    key: string
 }
 
 export type OriginatedContract = {

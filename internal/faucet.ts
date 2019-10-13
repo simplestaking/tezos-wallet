@@ -14,8 +14,8 @@ const config = {
     transaction: {
         to: 'tz1L1YBz3nDNypeHPbSXECZbLdYVyJaGhv7w',
         // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
-        amount: '5.23',
-        fee: '0.0013',
+        amount: '5',
+        fee: '0.01',
     },
     node: {
         name: 'zeronet',
@@ -102,7 +102,7 @@ utils.ready().then(() => {
             catchError((error: RpcError) => {
 
                 // ignore activation error and proceed if already activated
-                return error.response && error.response[0].id === 'proto.alpha.operation.invalid_activation' ?
+                return error.response && error.response[0].id === 'proto.005-PsBABY5H.operation.invalid_activation' ?
                     of({ ...error.state }) :
                     throwError(error)
             }),
