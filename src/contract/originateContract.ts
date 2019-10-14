@@ -92,8 +92,6 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
       gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10300",
       storage_limit: "257",
       counter: (++state.counter).toString(),
-      spendable: true,
-      delegatable: true,
       delegate: state.originateContract.to,
       manager_pubkey: state.manager_key
     };
