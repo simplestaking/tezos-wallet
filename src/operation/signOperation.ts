@@ -154,6 +154,31 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     gas_limit: parseInt(operation.gas_limit),
                     storage_limit: parseInt(operation.storage_limit)
                 }
+
+                // TODO: 
+                // app params for manager smart contract management
+                // if (operation.parameters_manager) {
+
+                //     message = {
+                //         ...message,
+                //         operation: {
+                //             ...message.operation,
+                //             // add manger smart contrac parameters to operation
+                //             transaction: {
+                //                 ...message.operation.transaction,
+                //                 parameters_manager: {
+                //                     set_delegate: 'tz1...',
+                //                     cancel_delegate: true,
+                //                     transfer: {
+                //                         destination: 'tz1...',
+                //                         amount: 100
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
+
                 break;
 
                 // TODO: refactor use pack data function, instead of preapply parsing
@@ -181,7 +206,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
 
                 // add origination to operation
                 message.operation.origination = {
-                    source: operation.source,                    
+                    source: operation.source,
                     manager_pubkey: operation.manager_pubkey,
                     balance: parseInt(operation.balance),
                     fee: parseInt(operation.fee),

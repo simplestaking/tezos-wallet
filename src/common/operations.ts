@@ -16,6 +16,17 @@ export interface TransactionOperationMetadata extends BaseOperationMetadata {
     amount: string
     destination: string
     parameters?: Record<string, any>
+//     parameters_manager?: TransactionParametersManager
+
+// }
+
+// export interface TransactionParametersManager extends BaseOperationMetadata {
+//     set_delegate?: string,
+//     cancel_delegate?: boolean,
+//     transfer?: {
+//         destination: string,
+//         amount: number
+//     }
 }
 
 export interface OriginationOperationMetadata extends BaseOperationMetadata {

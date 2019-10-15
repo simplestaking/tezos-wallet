@@ -1,7 +1,7 @@
 import { of } from 'rxjs'
 import { tap } from 'rxjs/operators';
 
-import { Config, initializeWallet, originateContract, pendingOperation, confirmOperation } from '../src'
+import { Config, initializeWallet, originateContract, transaction, pendingOperation, confirmOperation } from '../src'
 
 // support for node.js
 import './node'
@@ -40,11 +40,45 @@ walletObservable.pipe(
         type: wallet.type,
     })),
 
-    // originate contract
-    originateContract(stateWallet => ({
-        to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
-        amount: '0.001',
-        fee: '0.01'
+    // transfer tokens from smart kontrakt to implicit
+    transaction(stateWallet => ({
+        to: 'KT1MJSg8YrnjSewrWGYL3e8XfqtLAG5WU4Hg',
+        amount: '0',
+        fee: '0.02941',
+
+        // TODO
+        // parameters_manager: {
+        //     set_delegate: 'tz1...',
+        //     cancel_delegate: true,
+        //     transfer: {
+        //         destination: 'tz1...',
+        //         amount: 100
+        //     }
+        // }
+
+        
+        // parameters: {
+        //     "entrypoint": "do",
+        //     "value":
+        //         [{ "prim": "DROP" },
+        //         { "prim": "NIL", "args": [{ "prim": "operation" }] },
+        //         {
+        //             "prim": "PUSH",
+        //             "args":
+        //                 [{ "prim": "key_hash" },
+        //                 {
+        //                     "bytes": "005f450441f41ee11eee78a31d1e1e55627c783bd6"
+        //                 }]
+        //         },
+        //         { "prim": "IMPLICIT_ACCOUNT" },
+        //         {
+        //             "prim": "PUSH",
+        //             "args":
+        //                 [{ "prim": "mutez" }, { "int": "11" }]
+        //         },
+        //         { "prim": "UNIT" }, { "prim": "TRANSFER_TOKENS" },
+        //         { "prim": "CONS" }]
+        // },
     })),
 
     // originate contract
