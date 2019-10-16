@@ -125,7 +125,7 @@ walletObservable.pipe(
         fee: '0.02941',
 
         parameters_manager: {
-            cancel_delegate: false,
+            cancel_delegate: true,
         }
 
         parameters: {

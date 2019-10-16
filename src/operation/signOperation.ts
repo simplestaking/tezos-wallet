@@ -170,8 +170,8 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                                     ...message.operation.transaction,
                                     parameters_manager: {
                                         transfer: {
-                                            destination: state.transaction.parameters_manager.transfer.destination,
-                                            amount: parseInt(state.transaction.parameters_manager.transfer.amount)
+                                            destination: parameters_manager.transfer.destination,
+                                            amount: parseInt(parameters_manager.transfer.amount)
                                         }
                                     }
                                 }
@@ -188,7 +188,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                                 transaction: {
                                     ...message.operation.transaction,
                                     parameters_manager: {
-                                        set_delegate: state.transaction.parameters_manager.set_delegate,
+                                        set_delegate: parameters_manager.set_delegate,
                                     }
                                 }
                             }
