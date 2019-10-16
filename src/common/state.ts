@@ -173,6 +173,16 @@ export type Transaction = {
     to: string
     parameters?: Record<string, any>
     testRun?: boolean
+    parameters_manager?: TransactionParametersManager
+}
+
+export type TransactionParametersManager = {
+    set_delegate?: string
+    cancel_delegate?: boolean
+    transfer?: {
+        destination: string
+        amount: string
+    }
 }
 
 export type ValidationResult = {

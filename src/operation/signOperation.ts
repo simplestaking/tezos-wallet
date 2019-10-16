@@ -112,6 +112,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
         throw new TypeError('[signOperationTrezor] Operations not available in state');
     }
 
+
     // set basic config
     let message: TrezorMessage = {
         path: state.wallet.path || '',
@@ -157,27 +158,59 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
 
                 // TODO: 
                 // app params for manager smart contract management
-                // if (operation.parameters_manager) {
+                if (state.transaction.parameters_manager) {
+                    const parameters_manager = state.transaction.parameters_manager
+                    if (parameters_manager.transfer) {
+                        message = {
+                            ...message,
+                            operation: {
+                            ...message.operation,
+                            // add manger smart contrac parameters to operation
+                                transaction: {
+                                    ...message.operation.transaction,
+                                    parameters_manager: {
+                                        transfer: {
+                                            destination: state.transaction.parameters_manager.transfer.destination,
+                                            amount: parseInt(state.transaction.parameters_manager.transfer.amount)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
 
-                //     message = {
-                //         ...message,
-                //         operation: {
-                //             ...message.operation,
-                //             // add manger smart contrac parameters to operation
-                //             transaction: {
-                //                 ...message.operation.transaction,
-                //                 parameters_manager: {
-                //                     set_delegate: 'tz1...',
-                //                     cancel_delegate: true,
-                //                     transfer: {
-                //                         destination: 'tz1...',
-                //                         amount: 100
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
+                    if (parameters_manager.set_delegate) {
+                        message = {
+                            ...message,
+                            operation: {
+                            ...message.operation,
+                            // add manger smart contrac parameters to operation
+                                transaction: {
+                                    ...message.operation.transaction,
+                                    parameters_manager: {
+                                        set_delegate: state.transaction.parameters_manager.set_delegate,
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (parameters_manager.cancel_delegate) {
+                        message = {
+                            ...message,
+                            operation: {
+                            ...message.operation,
+                            // add manger smart contrac parameters to operation
+                                transaction: {
+                                    ...message.operation.transaction,
+                                    parameters_manager: {
+                                        cancel_delegate: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
 
                 break;
 
