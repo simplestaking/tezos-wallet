@@ -67,6 +67,37 @@ export function concatKeys(this: void, privateKey: Uint8Array, publicKey: Uint8A
     return concated;
 }
 
+/**
+ * Convert publicKeyHash to buffer
+ * @param publicKeyHash 
+ * @param encoded 
+ */
+export function publicKeyHash2buffer(publicKeyHash: string): { originated: number, hash: Uint8Array } {
+    switch (publicKeyHash.substr(0, 3)) {
+        case 'tz1':
+            return {
+                originated: 0,
+                hash: concatKeys(new Uint8Array([0]), base58CheckDecode(prefix.tz1, publicKeyHash)),
+            };
+        case 'tz2':
+            return {
+                originated: 0,
+                hash: concatKeys(new Uint8Array([1]), base58CheckDecode(prefix.tz2, publicKeyHash)),
+            };
+        case 'tz3':
+            return {
+                originated: 0,
+                hash: concatKeys(new Uint8Array([2]), base58CheckDecode(prefix.tz3, publicKeyHash)),
+            };
+        case 'KT1':
+            return {
+                originated: 1,
+                hash: concatKeys(base58CheckDecode(prefix.KT1, publicKeyHash), new Uint8Array([0])),
+            };
+        default:
+            throw new Error('Wrong Tezos publicKeyHash address');
+    }
+}
 
 
 /**

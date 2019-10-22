@@ -145,6 +145,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'transaction': {
                 validateTransactionOperation(operation);
 
+                console.warn('[signOperation] transaction: ', operation)
                 // add transaction to operation
                 message.operation.transaction = {
                     source: operation.source,
@@ -158,80 +159,63 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
 
                 // TODO: 
                 // app params for manager smart contract management
-                if (state.transaction.parameters_manager) {
-                    const parameters_manager = state.transaction.parameters_manager
-                    if (parameters_manager.transfer) {
-                        message = {
-                            ...message,
-                            operation: {
-                            ...message.operation,
-                            // add manger smart contrac parameters to operation
-                                transaction: {
-                                    ...message.operation.transaction,
-                                    parameters_manager: {
-                                        transfer: {
-                                            destination: parameters_manager.transfer.destination,
-                                            amount: parseInt(parameters_manager.transfer.amount)
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
+                // if (state.transaction.parameters_manager) {
+                //     const parameters_manager = state.transaction.parameters_manager
 
-                    if (parameters_manager.set_delegate) {
-                        message = {
-                            ...message,
-                            operation: {
-                            ...message.operation,
-                            // add manger smart contrac parameters to operation
-                                transaction: {
-                                    ...message.operation.transaction,
-                                    parameters_manager: {
-                                        set_delegate: parameters_manager.set_delegate,
-                                    }
-                                }
-                            }
-                        }
-                    }
+                //     // add parameters for smart contract
+                //     if (parameters_manager.transfer) {
+                //         message = {
+                //             ...message,
+                //             operation: {
+                //             ...message.operation,
+                //                 transaction: {
+                //                     ...message.operation.transaction,
+                //                     parameters_manager: {
+                //                         transfer: {
+                //                             destination: parameters_manager.transfer.destination,
+                //                             amount: parseInt(parameters_manager.transfer.amount)
+                //                         }
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
 
-                    if (parameters_manager.cancel_delegate) {
-                        message = {
-                            ...message,
-                            operation: {
-                            ...message.operation,
-                            // add manger smart contrac parameters to operation
-                                transaction: {
-                                    ...message.operation.transaction,
-                                    parameters_manager: {
-                                        cancel_delegate: true,
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
+                //     // add parameters for smart contract
+                //     if (parameters_manager.set_delegate) {
+                //         message = {
+                //             ...message,
+                //             operation: {
+                //             ...message.operation,
+                //                 transaction: {
+                //                     ...message.operation.transaction,
+                //                     parameters_manager: {
+                //                         set_delegate: parameters_manager.set_delegate,
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+
+                //     // add parameters for smart contract
+                //     if (parameters_manager.cancel_delegate) {
+                //         message = {
+                //             ...message,
+                //             operation: {
+                //             ...message.operation,
+                //             transaction: {
+                //                 ...message.operation.transaction,
+                //                     parameters_manager: {
+                //                         cancel_delegate: true,
+                //                     }
+                //                 }
+                //             }
+                //         }
+                //     }
+                // }
 
                 break;
 
-                // TODO: refactor use pack data function, instead of preapply parsing
-                // use FF bit to find if we have parameters
-                // if (operation.parameters) {
-
-                //     message = {
-                //         ...message,
-                //         operation: {
-                //             ...message.operation,
-                //             // add parameters to operation
-                //             transaction: {
-                //                 ...message.operation.transaction,
-                //                 parameters: sodium.from_hex(
-                //                     state.operation.slice(state.operation.indexOf('000000d'),state.operation.length)
-                //                     )
-                //             }
-                //         }
-                //     }    
-                // }
             }
 
             case 'origination': {

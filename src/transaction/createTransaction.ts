@@ -1,7 +1,9 @@
 import { Observable, of, throwError } from "rxjs";
 import { map, tap, catchError, flatMap, switchMap } from "rxjs/operators";
 
-import { State, Transaction, OperationMetadata, parseAmount, TransactionOperationMetadata } from "../common";
+import * as sodium from 'libsodium-wrappers';
+import { State, Transaction, OperationMetadata, parseAmount, TransactionOperationMetadata, publicKeyHash2buffer } from "../common";
+
 import { counter, managerKey, StateCounter, StateManagerKey } from "../contract";
 import { operation, StateOperations, validateOperation, StateOperation, StateSignOperation, StatePreapplyOperation, StateInjectionOperation } from "../operation";
 import { constants, StateConstants, head, StateHead } from "../head";
@@ -79,7 +81,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.transaction.fee).toString(),
         // extra gas is for safety 
-        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10300",
+        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "30000",
         storage_limit: "0",
         counter: (++state.counter).toString()
       })
@@ -92,14 +94,93 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
       // extra gas is for safety 
-      // gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "10400", 
-      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "26283",
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "30000",
       storage_limit: "0",
       counter: (++state.counter).toString()
     };
 
     if (state.transaction.parameters) {
       transaction.parameters = state.transaction.parameters;
+    }
+
+    // add params for smart contract manager
+    if (state.transaction.parameters_manager) {
+      const parameters_manager = state.transaction.parameters_manager;
+
+      // add params for transfer from KT1 -> tz
+      if (parameters_manager.transfer) {
+
+        // check for destination and amount params
+        if (parameters_manager.transfer.destination && parameters_manager.transfer.amount) {
+
+          const destination = sodium.to_hex(publicKeyHash2buffer(parameters_manager.transfer.destination).hash);
+          const amount = parseAmount(parameters_manager.transfer.amount).toString();
+
+          transaction.parameters = {
+            "entrypoint": "do",
+            "value":
+              [{ "prim": "DROP" },
+              { "prim": "NIL", "args": [{ "prim": "operation" }] },
+              {
+                "prim": "PUSH",
+                "args":
+                  [{ "prim": "key_hash" },
+                  {
+                    "bytes": destination
+                  }]
+              },
+              { "prim": "IMPLICIT_ACCOUNT" },
+              {
+                "prim": "PUSH",
+                "args":
+                  [{ "prim": "mutez" }, { "int": amount }]
+              },
+              { "prim": "UNIT" }, { "prim": "TRANSFER_TOKENS" },
+              { "prim": "CONS" }]
+          };
+        }
+      }
+
+      // add params for delegation set 
+      if (parameters_manager.set_delegate) {
+
+        const delegate = sodium.to_hex(publicKeyHash2buffer(parameters_manager.set_delegate).hash);
+
+        transaction.parameters = {
+          "entrypoint": "do",
+          "value":
+            [{ "prim": "DROP" },
+            { "prim": "NIL", "args": [{ "prim": "operation" }] },
+            {
+              "prim": "PUSH",
+              "args":
+                [{ "prim": "key_hash" },
+                {
+                  "bytes": delegate
+                }]
+            },
+            { "prim": "SOME" },
+            { "prim": "SET_DELEGATE" },
+            { "prim": "CONS" }]
+        };
+
+      }
+
+      // add params for delegation cancel
+      if (parameters_manager.hasOwnProperty('cancel_delegate')) {
+
+        transaction.parameters = {
+          "entrypoint": "do",
+          "value":
+            [{ "prim": "DROP" },
+            { "prim": "NIL", "args": [{ "prim": "operation" }] },
+            { "prim": "NONE", "args": [{ "prim": "key_hash" }] },
+            { "prim": "SET_DELEGATE" },
+            { "prim": "CONS" }]
+        };
+
+      }
+
     }
 
     operations.push(transaction);
@@ -113,7 +194,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
   // run operation on node and calculate its gas consumption and storage size
   flatMap(state => {
 
-    return (state.transaction.testRun ? validateOperation() : of(state)) as  Observable<T & StateTransaction & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations>;
+    return (state.transaction.testRun ? validateOperation() : of(state)) as Observable<T & StateTransaction & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations>;
   }),
 
   // create operation 

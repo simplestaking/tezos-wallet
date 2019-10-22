@@ -35,3 +35,6 @@ Initial release supporting Tezos:
 
 ### 1.2.5
 - Support for new trezor-connect 8.0.6
+
+### 1.2.6
+- Added support for manger.tz 
