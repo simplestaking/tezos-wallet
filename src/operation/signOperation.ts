@@ -157,62 +157,34 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     storage_limit: parseInt(operation.storage_limit)
                 }
 
-                // TODO: 
                 // app params for manager smart contract management
-                // if (state.transaction.parameters_manager) {
-                //     const parameters_manager = state.transaction.parameters_manager
+                if (state.transaction && state.transaction.parameters_manager) {
+                    const parameters_manager = state.transaction.parameters_manager
 
-                //     // add parameters for smart contract
-                //     if (parameters_manager.transfer) {
-                //         message = {
-                //             ...message,
-                //             operation: {
-                //             ...message.operation,
-                //                 transaction: {
-                //                     ...message.operation.transaction,
-                //                     parameters_manager: {
-                //                         transfer: {
-                //                             destination: parameters_manager.transfer.destination,
-                //                             amount: parseInt(parameters_manager.transfer.amount)
-                //                         }
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
+                    // add parameters for transfer
+                    if (parameters_manager.transfer) {
+                        message.operation.transaction.parameters_manager = {
+                            transfer: {
+                                destination: parameters_manager.transfer.destination,
+                                amount: parseInt(parameters_manager.transfer.amount)
+                            }
+                        }
+                    }
 
-                //     // add parameters for smart contract
-                //     if (parameters_manager.set_delegate) {
-                //         message = {
-                //             ...message,
-                //             operation: {
-                //             ...message.operation,
-                //                 transaction: {
-                //                     ...message.operation.transaction,
-                //                     parameters_manager: {
-                //                         set_delegate: parameters_manager.set_delegate,
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
+                    // add parameters to set delegate
+                    if (parameters_manager.set_delegate) {
+                        message.operation.transaction.parameters_manager = {
+                            set_delegate: parameters_manager.set_delegate,
+                        }
+                    }
 
-                //     // add parameters for smart contract
-                //     if (parameters_manager.cancel_delegate) {
-                //         message = {
-                //             ...message,
-                //             operation: {
-                //             ...message.operation,
-                //             transaction: {
-                //                 ...message.operation.transaction,
-                //                     parameters_manager: {
-                //                         cancel_delegate: true,
-                //                     }
-                //                 }
-                //             }
-                //         }
-                //     }
-                // }
+                    // add parameters to cancel delegation
+                    if (parameters_manager.cancel_delegate) {
+                        message.operation.transaction.parameters_manager = {
+                            cancel_delegate: true,
+                        }
+                    }
+                }
 
                 break;
 

@@ -16,6 +16,8 @@ export interface TransactionOperationMetadata extends BaseOperationMetadata {
     amount: string
     destination: string
     parameters?: Record<string, any>
+    parameters_manager?: ParametersManager
+
 }
 
 export interface OriginationOperationMetadata extends BaseOperationMetadata {
@@ -57,6 +59,17 @@ export type FeeBalanceUpdate = {
     delegate: string,
     level: number,
     change: string // stringified number
+};
+
+export type ParametersManager = {
+    set_delegate?: string;
+    cancel_delegate?: boolean;
+    transfer?: ParametersManagerTransfer
+};
+
+export type ParametersManagerTransfer = {
+    destination: string;
+    amount: number;
 };
 
 export type BalanceUpdate = ContractBalanceUpdate | FeeBalanceUpdate;
@@ -102,6 +115,7 @@ export type TrezorTransactionOperation = {
     counter: number
     gas_limit: number
     storage_limit: number
+    parameters_manager?: ParametersManager
 }
 
 export type TrezorOriginationOperation = {
