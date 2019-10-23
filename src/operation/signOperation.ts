@@ -6,7 +6,7 @@ import {
     State, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, SignOperation
 } from "../common";
 
-import { base58CheckDecode, concatKeys, bs58checkEncode, prefix } from "../common";
+import { base58CheckDecode, concatKeys, bs58checkEncode, prefix, parseAmount } from "../common";
 import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from '../common';
 
 import { StateHead } from '../head';
@@ -145,7 +145,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'transaction': {
                 validateTransactionOperation(operation);
 
-                console.warn('[signOperation] transaction: ', operation)
+                console.log('[signOperation] transaction: ', operation)
                 // add transaction to operation
                 message.operation.transaction = {
                     source: operation.source,
@@ -166,7 +166,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                         message.operation.transaction.parameters_manager = {
                             transfer: {
                                 destination: parameters_manager.transfer.destination,
-                                amount: parseInt(parameters_manager.transfer.amount)
+                                amount: parseAmount(parameters_manager.transfer.amount)
                             }
                         }
                     }
