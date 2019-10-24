@@ -38,3 +38,6 @@ Initial release supporting Tezos:
 
 ### 1.2.6
 - Added support for manger.tz 
+
+### 1.2.7
+- Added support for KT to KT transfer

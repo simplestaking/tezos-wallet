@@ -6,57 +6,6 @@ import { Config, initializeWallet, originateContract, transaction, pendingOperat
 // support for node.js
 import './node'
 
-import * as bs58check from 'bs58check';
-
-const prefix = {
-    B: new Uint8Array([1, 52]),
-    tz1: new Uint8Array([6, 161, 159]),
-    tz2: new Uint8Array([6, 161, 161]),
-    tz3: new Uint8Array([6, 161, 164]),
-    KT1: new Uint8Array([2, 90, 121]),
-    edpk: new Uint8Array([13, 15, 37, 217]),
-    sppk: new Uint8Array([3, 254, 226, 86]),
-    p2pk: new Uint8Array([3, 178, 139, 127]),
-};
-
-const bs58checkDecode = (prefix: Uint8Array, enc: string): Uint8Array => {
-    return bs58check.decode(enc).slice(prefix.length);
-};
-
-const concatArray = (first: Uint8Array, second: Uint8Array): Uint8Array => {
-    const result = new Uint8Array(first.length + second.length);
-    result.set(first);
-    result.set(second, first.length);
-    return result;
-};
-
-// convert publicKeyHash to buffer
-const publicKeyHash2buffer = (publicKeyHash: string): { originated: number, hash: Uint8Array } => {
-    switch (publicKeyHash.substr(0, 3)) {
-        case 'tz1':
-            return {
-                originated: 0,
-                hash: concatArray(new Uint8Array([0]), bs58checkDecode(prefix.tz1, publicKeyHash)),
-            };
-        case 'tz2':
-            return {
-                originated: 0,
-                hash: concatArray(new Uint8Array([1]), bs58checkDecode(prefix.tz2, publicKeyHash)),
-            };
-        case 'tz3':
-            return {
-                originated: 0,
-                hash: concatArray(new Uint8Array([2]), bs58checkDecode(prefix.tz3, publicKeyHash)),
-            };
-        case 'KT1':
-            return {
-                originated: 1,
-                hash: concatArray(bs58checkDecode(prefix.KT1, publicKeyHash), new Uint8Array([0])),
-            };
-        default:
-            throw new Error('Wrong Tezos publicKeyHash address');
-    }
-};
 
 console.log('[+] tezos wallet client')
 //(<any>window).__TREZOR_CONNECT_SRC = 'http://localhost:8088/'
@@ -69,8 +18,8 @@ const wallet: Config = {
         name: 'mainnet',
         display: 'Mainnet',
         url: 'https://mainnet.simplestaking.com:3000',
-        tzscan: {
-            url: 'http://tzstats.com/account.',
+        tzstats: {
+            url: 'http://tzstats.com/account/',
         }
     },
     type: 'web',
@@ -96,16 +45,16 @@ walletObservable.pipe(
 
     // transfer tokens from smart kontrakt to implicit
     transaction(stateWallet => ({
-        to: 'KT1MJSg8YrnjSewrWGYL3e8XfqtLAG5WU4Hg',
-        amount: '0.001',
-        fee: '0.001',
-
-        // parameters_manager: {
-        //     transfer: {
-        //         destination: 'tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA',
-        //         amount: '0.001',
-        //     }
-        // },
+        to: 'KT1Jr8K4woJx7XA1xAjFU2YeorHviTa18ns5',
+        amount: '0',
+        fee: '0.01',
+        parameters_manager: {
+            transfer: {
+                //destination: 'tz1ho86qZyxtHbedZku7qdCHaQPpFi6qs6Ti',
+                destination: 'KT1H3KG698mndrxgurnY7GDbnY3DE5AKypNP',
+                amount: '0.001',
+            }
+        },
     })),
 
     // wait until operation is confirmed & moved from mempool to head

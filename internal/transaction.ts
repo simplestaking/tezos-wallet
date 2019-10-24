@@ -10,18 +10,18 @@ console.log('[+] tezos wallet client')
 
 // wallet used to create transaction with small tez amount
 const wallet: Config = {
-    secretKey: 'edsk4Kr6FgbaKmJCiSAxsGNp8F9digNG2ZftB1FXYuymcSUn1jLcEw',
-    publicKey: 'edpktz95bLQpor3a6PKMjeCXA7cAXk5AobbRZdoDELDdr93jruErKw',
-    publicKeyHash: 'tz1L1YBz3nDNypeHPbSXECZbLdYVyJaGhv7w',
+    secretKey: 'edsk3hEtniBGLP2wqYnc1Lix1hhV74eEenRBTfxjHTRHP59R7BapMW',
+    publicKey: 'edpkth42B7j7rvLeZWmufj28a7sEdbMBb9y16qgQmGHYGX4hPis9V4',
+    publicKeyHash: 'tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA',
     node: {
         name: 'mainnet',
         display: 'Mainnet',
-        url: 'http://zeronet-node.tzscan.io',
-        tzscan: {
-            url: 'http://zeronet.tzscan.io/',
+        url: 'https://mainnet.simplestaking.com:3000',
+        tzstats: {
+            url: 'http://tzstats.com/account/'
         }
     },
-    type: 'web',
+    type: 'web'
 }
 
 const walletObservable = of([])
@@ -42,14 +42,14 @@ walletObservable.pipe(
 
     // originate contract
     transaction(stateWallet => ({
-        to: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
+        to: 'tz1ho86qZyxtHbedZku7qdCHaQPpFi6qs6Ti',
         amount: '0.001',
         fee: '0.01'
     })),
 
     // originate contract
     tap(state => pendingOperation(stateWallet => ({
-        publicKeyHash: 'tz1QBgNh18pFRAHhfkdqGcn84jDU8eyjNtwD',
+        publicKeyHash: 'tz1ho86qZyxtHbedZku7qdCHaQPpFi6qs6Ti',
     }))
     ),
 

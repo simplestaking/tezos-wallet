@@ -92,7 +92,7 @@ export function publicKeyHash2buffer(publicKeyHash: string): { originated: numbe
         case 'KT1':
             return {
                 originated: 1,
-                hash: concatKeys(base58CheckDecode(prefix.KT1, publicKeyHash), new Uint8Array([0])),
+                hash: concatKeys(new Uint8Array([1]),concatKeys(base58CheckDecode(prefix.KT1, publicKeyHash), new Uint8Array([0]))),
             };
         default:
             throw new Error('Wrong Tezos publicKeyHash address');

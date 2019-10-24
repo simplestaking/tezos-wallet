@@ -81,7 +81,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         source: state.wallet.publicKeyHash,
         fee: parseAmount(state.transaction.fee).toString(),
         // extra gas is for safety 
-        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "30000",
+        gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "50000",
         storage_limit: "0",
         counter: (++state.counter).toString()
       })
@@ -94,7 +94,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
       // extra gas is for safety 
-      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "30000",
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "50000",
       storage_limit: "0",
       counter: (++state.counter).toString()
     };
@@ -116,28 +116,55 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
           const destination = sodium.to_hex(publicKeyHash2buffer(parameters_manager.transfer.destination).hash);
           const amount = parseAmount(parameters_manager.transfer.amount).toString();
 
-          transaction.parameters = {
-            "entrypoint": "do",
-            "value":
-              [{ "prim": "DROP" },
-              { "prim": "NIL", "args": [{ "prim": "operation" }] },
+          // use different parametrs for implicit / smart contract address
+          transaction.parameters =
+            publicKeyHash2buffer(parameters_manager.transfer.destination).originated ?
+              // smart contract address
+              { 
+                "entrypoint": "do",
+              "value":
+                [ { "prim": "DROP" },
+                  { "prim": "NIL", "args": [ { "prim": "operation" } ] },
+                  { "prim": "PUSH",
+                    "args":
+                      [ { "prim": "address" },
+                        { "bytes":
+                            destination } ] },
+                  { "prim": "CONTRACT", "args": [ { "prim": "unit" } ] },
+                  [ { "prim": "IF_NONE",
+                      "args":
+                        [ [ [ { "prim": "UNIT" }, { "prim": "FAILWITH" } ] ],
+                          [] ] } ],
+                  { "prim": "PUSH",
+                    "args": [ { "prim": "mutez" }, { "int": amount } ] },
+                  { "prim": "UNIT" }, { "prim": "TRANSFER_TOKENS" },
+                  { "prim": "CONS" } ]
+                 }
+              :
+              // implicit address
               {
-                "prim": "PUSH",
-                "args":
-                  [{ "prim": "key_hash" },
+                "entrypoint": "do",
+                "value":
+                  [{ "prim": "DROP" },
+                  { "prim": "NIL", "args": [{ "prim": "operation" }] },
                   {
-                    "bytes": destination
-                  }]
-              },
-              { "prim": "IMPLICIT_ACCOUNT" },
-              {
-                "prim": "PUSH",
-                "args":
-                  [{ "prim": "mutez" }, { "int": amount }]
-              },
-              { "prim": "UNIT" }, { "prim": "TRANSFER_TOKENS" },
-              { "prim": "CONS" }]
-          };
+                    "prim": "PUSH",
+                    "args":
+                      [{ "prim": "key_hash" },
+                      {
+                        "bytes": destination
+                      }]
+                  },
+                  { "prim": "IMPLICIT_ACCOUNT" },
+                  {
+                    "prim": "PUSH",
+                    "args":
+                      [{ "prim": "mutez" }, { "int": amount }]
+                  },
+                  { "prim": "UNIT" }, { "prim": "TRANSFER_TOKENS" },
+                  { "prim": "CONS" }]
+              }
+            console.log('[+] transaction parameres ', transaction.parameters )
         }
       }
 

@@ -17,7 +17,7 @@ const wallet: Config = {
         name: 'mainnet',
         display: 'Mainnet',
         url: 'http://zeronet-node.tzscan.io',
-        tzscan: {
+        tzstats: {
             url: 'http://zeronet.tzscan.io/',
         }
     },
