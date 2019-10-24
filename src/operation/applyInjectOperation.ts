@@ -49,7 +49,7 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
   // inject operation
   injectOperations(),
 
-  tap((state) => console.log("[+] operation: " + state.wallet.node.tzscan.url + state.injectionOperation))
+  tap((state) => console.log("[+] operation: " + state.wallet.node.tzstats.url + state.injectionOperation))
 );
 
 

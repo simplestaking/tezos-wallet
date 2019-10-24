@@ -12,17 +12,16 @@ import { initializeWallet, activateWallet, confirmOperation, getWallet, transact
 
 const config = {
     transaction: {
-        to: 'tz1L1YBz3nDNypeHPbSXECZbLdYVyJaGhv7w',
+        to: 'tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA',
         // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
-        amount: '5',
-        fee: '0.01',
+        fee: '0.1',
     },
     node: {
-        name: 'zeronet',
-        display: 'Zeronet',
-        url: 'http://zeronet-node.tzscan.io',
-        tzscan: {
-            url: 'http://zeronet.tzscan.io/',
+        name: 'babylon',
+        display: 'Babylon',
+        url: 'https://alphanet.simplestaking.com:3000',
+        tzstats: {
+            url: 'http://babylonnet.tzstats.com/account.',
         }
     },
     type: 'web',

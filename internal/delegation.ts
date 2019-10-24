@@ -43,7 +43,6 @@ walletObservable.pipe(
     // originate contract
     setDelegation(stateWallet => ({
         to: 'tz1boot2oCjTjUN6xDNoVmtCLRdh8cc92P1u',
-        amount: '0.001',
         fee: '0.01'
     })),
 
