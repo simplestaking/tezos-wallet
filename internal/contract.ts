@@ -42,48 +42,48 @@ walletObservable.pipe(
 
     // originate contract
     transaction(stateWallet => ({
-        to: 'KT1BEcAucv2jTZWycBDXUc75RbsQEgpGa631',
+        to: 'KT1Ueoy8N2k45A5JVS5SSRNAA6oP4hweHR3o',
         amount: '0',
         fee: '0.1',
 
-        // parameters: {
-        //     "entrypoint": "setRole",
-        //     "value": {
-        //         "prim": "Pair",
-        //         "args":
-        //             [{
-        //                 "prim": "Pair",
-        //                 "args": [{
-        //                     "prim": "Pair",
-        //                     "args":
-        //                         [{ "prim": "True" },
-        //                         { "prim": "True" }]
-        //                 },
-        //                 {
-        //                     "prim": "Pair",
-        //                     "args":
-        //                         [{ "prim": "True" },
-        //                         { "prim": "True" }]
-        //                 }]
-        //             },
-        //             { "string": "tz1MGtVUsRN2duS21pLgSUuAhuW1hhQmLXKP" }]
-        //     }
-        // },
+        parameters: {
+            "entrypoint": "setRole",
+            "value": {
+                "prim": "Pair",
+                "args":
+                    [{
+                        "prim": "Pair",
+                        "args": [{
+                            "prim": "Pair",
+                            "args":
+                                [{ "prim": "False" },
+                                { "prim": "False" }]
+                        },
+                        {
+                            "prim": "Pair",
+                            "args":
+                                [{ "prim": "False" },
+                                { "prim": "True" }]
+                        }]
+                    },
+                    { "string": "tz1PayTZoKjNyofxFQxkzhcv9RCdyW7Q64Wc" }]
+            }
+        },
 
-        parameters:
-            { "entrypoint": "updateRole",
-              "value":
-                { "prim": "Pair",
-                  "args":
-                    [ { "prim": "Pair",
-                        "args":
-                          [ { "prim": "Pair",
-                              "args":
-                                [ { "prim": "True" }, { "prim": "True" } ] },
-                            { "prim": "Pair",
-                              "args":
-                                [ { "prim": "True" }, { "prim": "True" } ] } ] },
-                      { "string": "tz1MGtVUsRN2duS21pLgSUuAhuW1hhQmLXKP" } ] } },
+        // parameters:
+        //     { "entrypoint": "updateRole",
+        //       "value":
+        //         { "prim": "Pair",
+        //           "args":
+        //             [ { "prim": "Pair",
+        //                 "args":
+        //                   [ { "prim": "Pair",
+        //                       "args":
+        //                         [ { "prim": "True" }, { "prim": "False" } ] },
+        //                     { "prim": "Pair",
+        //                       "args":
+        //                         [ { "prim": "True" }, { "prim": "True" } ] } ] },
+        //               { "string": "tz1cbQ4Nsst6cUBnZryFsJc5zaWaaoPwYyif" } ] } },
     })),
     
  
