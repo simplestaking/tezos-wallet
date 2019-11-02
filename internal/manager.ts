@@ -43,7 +43,7 @@ walletObservable.pipe(
         type: 'web'
     })),
 
-    // transfer tokens from smart kontrakt to implicit
+    // transfer tokens from smart contract to implicit
     transaction(stateWallet => ({
         to: 'KT1Jr8K4woJx7XA1xAjFU2YeorHviTa18ns5',
         amount: '0',

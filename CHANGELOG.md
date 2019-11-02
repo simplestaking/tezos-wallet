@@ -41,3 +41,6 @@ Initial release supporting Tezos:
 
 ### 1.2.7
 - Added support for KT to KT transfer
+
+### 1.2.8
+- Fixed issue with fee for inactive accounts

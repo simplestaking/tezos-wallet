@@ -13,7 +13,6 @@ import { initializeWallet, activateWallet, confirmOperation, getWallet, transact
 const config = {
     transaction: {
         to: 'tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA',
-        // to: 'tz1UX1CrhjPSEkV8qUZuYnDiNuJtmwTA1j2p',
         fee: '0.1',
     },
     node: {
@@ -21,7 +20,7 @@ const config = {
         display: 'Babylon',
         url: 'https://alphanet.simplestaking.com:3000',
         tzstats: {
-            url: 'http://babylonnet.tzstats.com/account.',
+            url: 'http://babylonnet.tzstats.com/account/',
         }
     },
     type: 'web',
@@ -101,7 +100,7 @@ utils.ready().then(() => {
             catchError((error: RpcError) => {
 
                 // ignore activation error and proceed if already activated
-                return error.response && error.response[0].id === 'proto.005-PsBABY5H.operation.invalid_activation' ?
+                return error.response && error.response[0].id === 'proto.005-PsBabyM1.operation.invalid_activation' ?
                     of({ ...error.state }) :
                     throwError(error)
             }),
@@ -114,10 +113,10 @@ utils.ready().then(() => {
             // send xtz
             transaction(stateWallet => ({
                 to: config.transaction.to,
-                amount: (stateWallet.getWallet.balance / 1000000 / 10).toString(),
+                amount: (stateWallet.getWallet.balance / 1000000 / 2).toString(),
                 // amount: 0.1,
                 fee: config.transaction.fee,
-                testRun: false
+                // testRun: false
             })),
 
             catchError((error) => {
