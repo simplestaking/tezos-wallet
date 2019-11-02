@@ -138,7 +138,7 @@ export type Mempool = {
 export type OriginatedContract = {
     fee: string
     amount: string
-    to: string
+    script: Record<string, any>
     testRun?: boolean
 }
 

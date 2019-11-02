@@ -202,9 +202,8 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     counter: parseInt(operation.counter),
                     gas_limit: parseInt(operation.gas_limit),
                     storage_limit: parseInt(operation.storage_limit),
-                    delegate: operation.delegate
-                    // find encodig format http://doc.tzalpha.net/api/p2p.html
-                    //script: Buffer.from(JSON.stringify(operation.script), 'utf8' ),
+                    // send encoded bytes
+                    //script: operation.script,
                 }
 
             }

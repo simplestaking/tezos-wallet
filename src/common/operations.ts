@@ -24,7 +24,8 @@ export interface OriginationOperationMetadata extends BaseOperationMetadata {
     kind: 'origination'
     manager_pubkey: string
     balance: string
-    delegate: string
+    delegate?: string
+    script: Record<string, any>
 }
 
 export interface DelegationOperationMetadata extends BaseOperationMetadata {
@@ -122,7 +123,7 @@ export type TrezorOriginationOperation = {
     source: string
     manager_pubkey: string
     balance: number
-    delegate: string
+    // script: string
     fee: number
     counter: number
     gas_limit: number
