@@ -44,3 +44,6 @@ Initial release supporting Tezos:
 
 ### 1.2.8
 - Fixed issue with fee for inactive accounts
+
+### 1.3
+- Fixed origination

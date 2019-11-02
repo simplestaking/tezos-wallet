@@ -57,7 +57,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
   counter(),
 
   // get contract managerKey
-  managerKey(),
+  // managerKey(),
 
   // prepare config for operation
   map(state => {
@@ -82,22 +82,21 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
         counter: (++state.counter).toString(),
       })
     }
-
+    
     const originationOperation: OriginationOperationMetadata = {
       kind: "origination",
       source: state.wallet.publicKeyHash,
       fee: parseAmount(state.originateContract.fee).toString(),
       balance: parseAmount(state.originateContract.amount).toString(),
       // extra gas is for safety 
-      gas_limit: withTestRun? state.constants.hard_gas_limit_per_operation : "10300",
-      storage_limit: "257",
+      gas_limit: state.constants.hard_gas_limit_per_operation,
+      storage_limit: state.constants.hard_storage_limit_per_operation,
       counter: (++state.counter).toString(),
-      manager_pubkey: state.manager_key,
       script: state.originateContract.script,
     };
 
     operations.push(originationOperation);
-
+    
     return {
       ...state as any,
       operations: operations

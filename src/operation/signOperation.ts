@@ -196,7 +196,6 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                 // add origination to operation
                 message.operation.origination = {
                     source: operation.source,
-                    manager_pubkey: operation.manager_pubkey,
                     balance: parseInt(operation.balance),
                     fee: parseInt(operation.fee),
                     counter: parseInt(operation.counter),
