@@ -5,12 +5,12 @@
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
-    "build": "tsc -p .",
-    "dev": "tsc -p dev.tsconfig.json",
+    "build": "tsc -p tsconfig.prod.json",
+    "dev": "tsc -p tsconfig.dev.json",
     "docs": "typedoc --out ./docs/ ./src/index.ts --mode file --theme markdown --name tezos-wallet",
     "watch": "tsc -w",
     "v": "tsc -w",
-    "watch:dev": "tsc -w -p dev.tsconfig.json"
+    "watch:dev": "tsc -w -p tsconfig.dev.json"
   },
   "files": [
     "docs/**/*",

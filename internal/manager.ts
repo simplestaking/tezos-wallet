@@ -8,7 +8,7 @@ import './node'
 
 
 console.log('[+] tezos wallet client')
-//(<any>window).__TREZOR_CONNECT_SRC = 'http://localhost:8088/'
+
 // wallet used to create transaction with small tez amount
 const wallet: Config = {
     secretKey: 'edsk3hEtniBGLP2wqYnc1Lix1hhV74eEenRBTfxjHTRHP59R7BapMW',
