@@ -47,3 +47,6 @@ Initial release supporting Tezos:
 
 ### 1.3
 - Fixed origination
+
+### 1.3
+- Fixed issue with storage limit 

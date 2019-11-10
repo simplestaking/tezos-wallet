@@ -42,14 +42,14 @@ walletObservable.pipe(
 
     // originate contract
     transaction(stateWallet => ({
-        to: 'tz1ho86qZyxtHbedZku7qdCHaQPpFi6qs6Ti',
-        amount: '0.001',
+        to: 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
+        amount: '1',
         fee: '0.01'
     })),
 
     // originate contract
     tap(state => pendingOperation(stateWallet => ({
-        publicKeyHash: 'tz1ho86qZyxtHbedZku7qdCHaQPpFi6qs6Ti',
+        publicKeyHash: 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
     }))
     ),
 
