@@ -9,7 +9,8 @@ import './node'
 console.log('[+] tezos wallet client')
 
 // read smart contact script
-let smartContractScript = require('./contracts/catalog.json');
+// let smartContractScript = require('./contracts/catalog.json');
+let smartContractScript = require('./contracts/catalog_read.json');
 
 // wallet used to create transaction with small tez amount
 const wallet: Config = {
@@ -45,8 +46,8 @@ walletObservable.pipe(
 
     // originate new smart contract
     originateContract(stateWallet => ({
-        amount: "100",
-        fee: "0.3",
+        amount: "5",
+        fee: "1.3",
         script: smartContractScript,                                 
     })),
 
