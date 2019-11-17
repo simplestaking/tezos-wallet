@@ -94,7 +94,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
       amount: parseAmount(state.transaction.amount).toString(),
       fee: parseAmount(state.transaction.fee).toString(),
       // extra gas is for safety 
-      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "50000",
+      gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : "800000",
       storage_limit: "257",
       counter: (++state.counter).toString()
     };

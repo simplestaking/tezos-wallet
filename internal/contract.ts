@@ -40,53 +40,92 @@ walletObservable.pipe(
         type: wallet.type,
     })),
 
-    // originate contract
+    // call entry point 
     transaction(stateWallet => ({
-        to: 'KT1Ueoy8N2k45A5JVS5SSRNAA6oP4hweHR3o',
+        //to: 'KT1Ueoy8N2k45A5JVS5SSRNAA6oP4hweHR3o',
+        to: 'KT1NuhJLGviTo9C5fQMNZ7WrQKaYxGmbYH4V',
         amount: '0',
         fee: '0.1',
 
-        parameters: {
-            "entrypoint": "setRole",
-            "value": {
-                "prim": "Pair",
-                "args":
-                    [{
-                        "prim": "Pair",
-                        "args": [{
-                            "prim": "Pair",
-                            "args":
-                                [{ "prim": "False" },
-                                { "prim": "False" }]
-                        },
-                        {
-                            "prim": "Pair",
-                            "args":
-                                [{ "prim": "False" },
-                                { "prim": "True" }]
-                        }]
-                    },
-                    { "string": "tz1PayTZoKjNyofxFQxkzhcv9RCdyW7Q64Wc" }]
-            }
-        },
-
+        // //setRole
         // parameters:
-        //     { "entrypoint": "updateRole",
-        //       "value":
+        //     {
+        //         "entrypoint": "setRole",
+        //         "value":
+        //         {
+        //             "prim": "Pair",
+        //             "args":
+        //                 [{
+        //                     "prim": "Pair",
+        //                     "args":
+        //                         [{
+        //                             "prim": "Pair",
+        //                             "args":
+        //                                 [{
+        //                                     "string":
+        //                                         "tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA"
+        //                                 },
+        //                                 { "prim": "True" }]
+        //                         },
+        //                         {
+        //                             "prim": "Pair",
+        //                             "args":
+        //                                 [{ "prim": "True" }, { "prim": "True" }]
+        //                         }]
+        //                 },
+        //                 { "prim": "True" }]
+        //         }
+        //     },
+
+        // // create data
+        // parameters: {
+        //     "entrypoint": "createData",
+        //     "value": { "string": "abcd" }
+        // },
+        
+        // // requestDataPublication
+        // parameters:
+        // { "entrypoint": "requestDataPublication",
+        //   "value":
+        //     { "prim": "Pair",
+        //       "args":
+        //         [ { "string": "abcd" },
+        //           { "string": "tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA" } ] } },
+        
+        // // allowDataPublication
+        // parameters:
+        //     { "entrypoint": "allowDataPublication",
+        //       "value": { "string": "abcd" } },
+
+        // // createMetadata
+        // parameters: {
+        //      "entrypoint": "createMetadata",
+        //     "value":
         //         { "prim": "Pair",
-        //           "args":
+        //         "args":
         //             [ { "prim": "Pair",
         //                 "args":
-        //                   [ { "prim": "Pair",
-        //                       "args":
-        //                         [ { "prim": "True" }, { "prim": "False" } ] },
-        //                     { "prim": "Pair",
-        //                       "args":
-        //                         [ { "prim": "True" }, { "prim": "True" } ] } ] },
-        //               { "string": "tz1cbQ4Nsst6cUBnZryFsJc5zaWaaoPwYyif" } ] } },
+        //                 [ { "string": "some_keywords_are_typed+here" },
+        //                     { "string": "abcd" } ] },
+        //             { "string": "some_metadata" } ] }
+        //      },
+
+        // buyData
+        parameters:{ 
+            "entrypoint": "buyData",
+            "value":
+            { "prim": "Pair",
+              "args":
+                [ { "prim": "Pair",
+                    "args":
+                      [ { "string": "abcd" },
+                        { "string": "sigXdjIf34Jfc" } ] },
+                  { "string": "transaction_id_2" } ] } 
+        },
+
     })),
-    
- 
+
+
     // wait until operation is confirmed & moved from mempool to head
     confirmOperation(stateWallet => ({
         injectionOperation: stateWallet.injectionOperation,
@@ -94,6 +133,6 @@ walletObservable.pipe(
 
 
 ).subscribe(
-        data => console.log('[+] ok'),
-        error => console.error('[-] error', error)
-    )
+    data => console.log('[+] ok'),
+    error => console.dir(error, { depth: null, colors: true })
+)
