@@ -48,5 +48,8 @@ Initial release supporting Tezos:
 ### 1.3
 - Fixed origination
 
-### 1.3
+### 1.3.1
 - Fixed issue with storage limit 
+
+### 1.3.2
+- Added newWallet and changed default gas fees 

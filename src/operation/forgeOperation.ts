@@ -37,16 +37,16 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
 
   forgeOperationAtomic(),
 
-  // tap(state => {
-  //   console.log('#### Forged operation', state.operation)
-  //   console.log('Size', state.operation.length)
-  // }),
+  tap(state => {
+    console.log('#### Forged operation', state.operation)
+    console.log('Size', state.operation.length)
+  }),
 
   updateFeesForOperation(),
 
-  // tap(state => {
-  //   console.log('#### Re-Forged operation', state.operation)
-  // }),
+  tap(state => {
+    console.log('#### Re-Forged operation', state.operation)
+  }),
 
   // add signature to state     
   flatMap(state => {

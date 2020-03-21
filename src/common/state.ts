@@ -26,6 +26,7 @@ export interface State {
     transaction?: Transaction
     validatedOperations?: ValidationResult
     wallet: Wallet
+    newWallet?: NewWallet
 };
 
 export type ActivatedWallet = {
@@ -200,7 +201,13 @@ export type Wallet = {
     type?: 'web' | 'TREZOR_T' | 'TREZOR_P'
 }
 
-
 export type WalletDetail = {
     balance: number
+}
+
+export type NewWallet = {
+    mnemonic: string,
+    secretKey: string,
+    publicKey: string,
+    publicKeyHash: string,
 }
