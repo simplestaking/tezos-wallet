@@ -50,22 +50,22 @@ walletObservable.pipe(
     newWallet(),
 
     // originate contract
-    transaction(stateWallet => ({
-        to: stateWallet.newWallet ? stateWallet.newWallet.publicKeyHash : 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
-        amount: '0.01',
-        fee: '0.01'
-    })),
+    // transaction(stateWallet => ({
+    //     to: stateWallet.newWallet ? stateWallet.newWallet.publicKeyHash : 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
+    //     amount: '0.01',
+    //     fee: '0.01'
+    // })),
 
-    // originate contract
-    tap(state => pendingOperation(stateWallet => ({
-        publicKeyHash: stateWallet.newWallet ? stateWallet.newWallet.publicKeyHash : 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
-    }))
-    ),
+    // // originate contract
+    // tap(state => pendingOperation(stateWallet => ({
+    //     publicKeyHash: stateWallet.newWallet ? stateWallet.newWallet.publicKeyHash : 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
+    // }))
+    // ),
 
-    // wait until operation is confirmed & moved from mempool to head
-    confirmOperation(stateWallet => ({
-        injectionOperation: stateWallet.injectionOperation,
-    })),
+    // // wait until operation is confirmed & moved from mempool to head
+    // confirmOperation(stateWallet => ({
+    //     injectionOperation: stateWallet.injectionOperation,
+    // })),
 
 
 ).subscribe(

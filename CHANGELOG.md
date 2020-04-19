@@ -1,4 +1,4 @@
-# 1.0.0
+## 1.0.0
 Initial release supporting Tezos:
 - contract origination
 - delegation
@@ -18,7 +18,7 @@ Initial release supporting Tezos:
 ### 1.1.2
 - fixed manager_pubkey handling for Trezor Connect
 
-### 1.2
+## 1.2
 - Support for new trezor-connect 7.0.1
 
 ### 1.2.1
@@ -45,7 +45,7 @@ Initial release supporting Tezos:
 ### 1.2.8
 - Fixed issue with fee for inactive accounts
 
-### 1.3
+## 1.3
 - Fixed origination
 
 ### 1.3.1
@@ -53,3 +53,6 @@ Initial release supporting Tezos:
 
 ### 1.3.2
 - Added newWallet and changed default gas fees 
+
+### 1.3.3
+- Added support for new 2.3.0 firmware
