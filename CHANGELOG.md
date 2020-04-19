@@ -56,3 +56,6 @@ Initial release supporting Tezos:
 
 ### 1.3.3
 - Added support for new 2.3.0 firmware
+
+### 1.3.4
+- Fixed build
