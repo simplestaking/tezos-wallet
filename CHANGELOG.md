@@ -59,3 +59,6 @@ Initial release supporting Tezos:
 
 ### 1.3.4
 - Fixed build
+
+### 1.3.5
+- Fixed cache issue
