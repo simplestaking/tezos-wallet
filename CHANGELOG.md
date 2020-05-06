@@ -62,3 +62,6 @@ Initial release supporting Tezos:
 
 ### 1.3.5
 - Fixed cache issue
+
+### 1.3.6
+- Fixed issue with pending unread message (trezor/trezord-go#154)
