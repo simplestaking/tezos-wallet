@@ -68,3 +68,6 @@ Initial release supporting Tezos:
 
 ### 1.3.7
 - Fixed issue with wrong protocol version
+
+### 1.3.8
+- Fixed issue with trailing slash in getWallet url

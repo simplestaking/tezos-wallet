@@ -16,7 +16,7 @@ export const getWallet = <T extends State>() => (source: Observable<T>) =>
 
     // get contract info balance 
     rpc<T>(state => ({
-      url: `/chains/main/blocks/head/context/contracts/${state.wallet.publicKeyHash}/`,
+      url: `/chains/main/blocks/head/context/contracts/${state.wallet.publicKeyHash}`,
       path: 'getWallet'
     }))
    
