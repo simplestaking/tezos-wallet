@@ -64,7 +64,7 @@ const preapplyOperations = <T extends State & StateHead & StateSignOperation>() 
     url: '/chains/main/blocks/head/helpers/preapply/operations',
     path: 'preapply',
     payload: [{
-      protocol: state.head.protocol,
+      protocol: state.head.metadata.next_protocol,
       branch: state.head.hash,
       contents: state.operations,
       signature: state.signOperation.signature
