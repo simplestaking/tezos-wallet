@@ -39,6 +39,7 @@ export type StateTransaction = {
  * then(state => console.log('amount transfered'))
  *
  */
+declare const require: any;
 
 export const transaction = <T extends State>(selector: (state: T) => Transaction[]) => (source: Observable<T>) => source.pipe(
   map((state) => (
