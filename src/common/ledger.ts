@@ -13,7 +13,8 @@ export type PublicKeyData = {
 }
 
 export type LedgerState = {
-  keys: PublicKeyData[]
+  keys: PublicKeyData[],
+  transportHolder?: { transport: Transport | undefined };
 }
 
 export class LedgerUtils {
@@ -34,42 +35,62 @@ export class LedgerUtils {
     TZ: new Uint8Array([3, 99, 29]),
     KT: new Uint8Array([2, 90, 121])
   };
-  private readonly DEFAULT_PATH: string= '44\'/1729\'/0\'/0\'';
+  private readonly DEFAULT_PATH: string = '44\'/1729\'/0\'/0\'';
   transport: Transport | undefined;
 
-  async getAddress(): Promise<PublicKeyData | undefined> {
-    const derivationPath = (path: string): boolean => {
-      const m = path.match(/^44'\/1729('\/[0-9]+)+'$/g);
-      return !!(m || path === '44\'/1729\'');
+  async getAddress(transportHolder: { transport: Transport | undefined }): Promise<LedgerState> {
+    const derivationPath = (derPath: string): boolean => {
+      const m = derPath.match(/^44'\/1729('\/[0-9]+)+'$/g);
+      return !!(m || derPath === '44\'/1729\'');
+    };
+    const noResponse = {
+      keys: [{ publicKey: undefined, publicKeyHash: undefined }],
+      transport: undefined
     };
 
     const path: string = this.DEFAULT_PATH;
     if (derivationPath(path)) {
       try {
-        const pk = await this.getPublicAddress(path);
+        console.log(transportHolder);
+        const pk = await this.getPublicAddress(path, transportHolder);
+        this.transport.close();
         return {
-          publicKey: pk,
-          publicKeyHash: this.pk2pkh(pk)
+          keys: [
+            {
+              publicKey: pk,
+              publicKeyHash: this.pk2pkh(pk)
+            }
+          ],
         };
       } catch (e) {
-        throw e;
+        console.error(e);
       }
     } else {
       console.warn('Invalid derivation path');
     }
+    return noResponse;
   }
 
-  async requestLedgerSignature(op: string): Promise<string> {
-    return await this.signOperation('03' + op, this.DEFAULT_PATH);
+  async requestLedgerSignature(op: string, transportHolder: { transport: Transport | undefined }): Promise<string> {
+    const signature = await this.signOperation('03' + op, transportHolder);
+    this.transport.close();
+    return signature;
   }
 
-  private async getPublicAddress(path: string): Promise<string> {
+  private async getPublicAddress(path: string, transportHolder: { transport: Transport | undefined }): Promise<string> {
     await this.transportCheck();
+    transportHolder.transport = this.transport;
     const xtz = new Tezos(this.transport);
     const result = await xtz
       .getAddress(path, true)
-      .then((res: any) => LedgerUtils.sanitize(res))
-      .catch((e: any) => { throw e; });
+      .then((res: any) => {
+        return LedgerUtils.sanitize(res);
+      })
+      .catch((e: any) => {
+        this.transport.close();
+        transportHolder.transport = this.transport;
+        throw e;
+      });
     return this.hex2pk(result.publicKey);
   }
 
@@ -95,6 +116,7 @@ export class LedgerUtils {
     }
     if (!this.transport) {
       try {
+        console.log('setting new transport');
         this.transport = await TransportWebHID.create();
         console.log('Transport is now set to use WebHID!');
       } catch (e) {
@@ -105,16 +127,20 @@ export class LedgerUtils {
     }
   }
 
-  private async signOperation(op: string, path: string): Promise<string> {
+  private async signOperation(op: string, transportHolder: { transport: Transport | undefined }): Promise<string> {
     if (!(['03', '05'] as any).includes(op.slice(0, 2))) {
       throw new Error('Invalid prefix');
     }
     await this.transportCheck();
     const xtz = new Tezos(this.transport);
     const result = await xtz
-      .signOperation(path, op)
+      .signOperation(this.DEFAULT_PATH, op)
       .then((res: any) => LedgerUtils.sanitize(res))
-      .catch((e: any) => console.warn(e));
+      .catch((e: any) => {
+        this.transport.close();
+        transportHolder.transport = this.transport;
+        throw e;
+      });
 
     return (result && result.signature) ? result.signature : '';
   }

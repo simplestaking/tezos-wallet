@@ -1,6 +1,6 @@
 import * as sodium from 'libsodium-wrappers';
 import { Observable, of, throwError } from 'rxjs';
-import { flatMap, tap } from 'rxjs/operators';
+import { concatMap, flatMap, tap } from 'rxjs/operators';
 
 import { OperationMetadata, rpc, State } from '../common';
 import { head, StateHead } from '../head';
@@ -11,7 +11,9 @@ import { managerKey, StateManagerKey } from '../contract/getContractManagerKey';
 import { signLedgerOperation, signOperation, signOperationTrezor } from './signOperation';
 import { operation, StateOperations } from './operation';
 
-// import {StateManagerKey, StateSignOperation, StateCounter} from '..';
+
+import { localForger } from '@taquito/local-forging';
+
 
 export type StateOperation = {
   operation: string
@@ -21,7 +23,7 @@ export type StateOperation = {
 /**
  * Forge operation in blocchain.
  * Converts operation into binary format and signs operation using script or Trezor
- * 
+ *
  * @throws LowFeeError [[LowFeeError]]
  */
 export const forgeOperation = <T extends State & StateOperations>() => (source: Observable<T>) => source.pipe(
@@ -35,7 +37,7 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
   // get contract managerKey
   managerKey(),
 
-  forgeOperationAtomic(),
+  forgeOperationInternal(),
 
   tap(state => {
     console.log('#### Forged operation', state.operation)
@@ -63,11 +65,28 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
 
 /**
  * Converts operation to binary format on node
- * 
+ */
+export const forgeOperationInternal = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
+  concatMap(async state => {
+    let params = {
+      branch: state.head.hash,
+      contents: state.operations,
+    };
+    console.log('params');
+    console.log(params);
+    console.log('params');
+    const hash = await localForger.forge(params);
+    return { ...state, operation: hash };
+  }),
+) as Observable<T & StateOperation>
+
+
+/**
+ * Converts operation to binary format on node
+ *
  * @url /chains/[chainId]/blocks/[headHash]/helpers/forge/operations
  */
 export const forgeOperationAtomic = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
-
   // create operation
   rpc<T>(state => ({
     url: `/chains/${state.head.chain_id}/blocks/${state.head.hash}/helpers/forge/operations`,
@@ -83,7 +102,7 @@ export const forgeOperationAtomic = <T extends State & StateHead & StateOperatio
 /**
  * Estimates minimal fee for the operation and compares provided defined fees with minimal
  * If provided fee is insuficient its overriden
- * 
+ *
  * When fee is modified operation has to be re-forged so signature is matching operation content
  */
 const updateFeesForOperation = <T extends State & StateHead & StateCounter & StateManagerKey & StateOperation & StateOperations>() => (source: Observable<T>) => source.pipe(
@@ -107,7 +126,7 @@ const updateFeesForOperation = <T extends State & StateHead & StateCounter & Sta
       // depends on gas limit and operation byte size in blockchain
       // 64 bytes is for signature appended to operation
       const operationByteSize = sodium.from_hex(state.operation).length + 64;
-      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + operationByteSize;      
+      const estimatedFee = 100 + parseInt(operation.gas_limit) * 0.1 + operationByteSize;
       const fee = parseFloat(operation.fee);
 
       console.log(`[+] fees: Estimated operation size is "${operationByteSize}" bytes`)

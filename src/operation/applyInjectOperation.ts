@@ -1,11 +1,11 @@
-import { Observable, throwError, of } from "rxjs";
-import { tap, flatMap } from "rxjs/operators";
+import { Observable, of, throwError } from 'rxjs';
+import { flatMap, tap } from 'rxjs/operators';
 
 import { counter } from '../contract';
-import { State, PreapplyOperation, InjectionOperation, rpc } from "../common";
+import { InjectionOperation, PreapplyOperation, rpc, State } from '../common';
 import { StateHead } from '../head';
-import { StateOperations } from "./operation";
-import { StateSignOperation } from "./signOperation";
+import { StateOperations } from './operation';
+import { StateSignOperation } from './signOperation';
 
 export type StatePreapplyOperation = {
   preapply: PreapplyOperation
@@ -58,18 +58,16 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
  */
 const preapplyOperations = <T extends State & StateHead & StateSignOperation>() => (source: Observable<T>) => source.pipe(
 
-  rpc<T>((state) => {
-    return ({
-      url: '/chains/main/blocks/head/helpers/preapply/operations',
-      path: 'preapply',
-      payload: [{
-        protocol: state.head.metadata.next_protocol,
-        branch: state.head.hash,
-        contents: state.operations,
-        signature: state.signOperation.signature
-      }]
-    });
-  })
+  rpc<T>((state) => ({
+    url: '/chains/main/blocks/head/helpers/preapply/operations',
+    path: 'preapply',
+    payload: [{
+      protocol: state.head.metadata.next_protocol,
+      branch: state.head.hash,
+      contents: state.operations,
+      signature: state.signOperation.signature,
+    }],
+  })),
 ) as Observable<T & StatePreapplyOperation>
 
 
