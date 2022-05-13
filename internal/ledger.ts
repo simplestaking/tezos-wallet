@@ -1,10 +1,8 @@
-import { of } from 'rxjs';
 
 // support for node.js
 // @ts-ignore
 import './node';
 import { tap } from 'rxjs/operators';
-import { getLedgerWallet } from '../src';
 import { signLedgerOperation } from '../src';
 
 console.log('[+] tezos-wallet client');

@@ -5,4 +5,3 @@ export * from './delegate';
 export * from './operation';
 export * from './transaction';
 export * from './wallet';
-export * from './wallet/getLedgerWallet';

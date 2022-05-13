@@ -39,8 +39,6 @@ export type StateTransaction = {
  * then(state => console.log('amount transfered'))
  *
  */
-declare const require: any;
-
 export const transaction = <T extends State>(selector: (state: T) => Transaction[]) => (source: Observable<T>) => source.pipe(
   map((state) => (
     {
@@ -50,7 +48,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         webSocket: state.ws?.enabled
           ? webSocket({
             url: state.wallet.node.wsUrl,
-            WebSocketCtor: isNodeJs() ? require('ws') : state.ws.browserWebSocketCtor,
+            WebSocketCtor: state.ws.browserWebSocketCtor,
           })
           : null,
       },
@@ -250,7 +248,3 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
     state.ws?.webSocket?.complete();
   }),
 );
-
-function isNodeJs(): boolean {
-  return !!(typeof module !== 'undefined' && module.exports && typeof require !== 'undefined' && require.resolve);
-};

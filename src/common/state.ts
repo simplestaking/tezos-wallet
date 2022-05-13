@@ -219,5 +219,5 @@ export type NewWallet = {
 export type WebSocketState = {
     enabled: boolean;
     webSocket?: WebSocketSubject<any>;
-    browserWebSocketCtor?: WebSocket;
+    browserWebSocketCtor?: WebSocket | any;
 }
