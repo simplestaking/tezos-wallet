@@ -111,7 +111,7 @@ export const originateContract = <T extends State>(selector: (state: T) => Origi
   // create operation 
   operation(),
 
-  tap<T & StatePreapplyOperation>(state => {
+  tap(state => {
     const origination = state.preapply[0].contents.filter(op => op.kind === "origination")[0];
 
     origination && console.log(`[+] Originated contract address: "${origination.metadata.operation_result.originated_contracts}"`);

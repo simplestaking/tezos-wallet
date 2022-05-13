@@ -71,3 +71,7 @@ Initial release supporting Tezos:
 
 ### 1.3.8
 - Fixed issue with trailing slash in getWallet url
+
+### 1.4.1
+- Support for the ledger
+- Support for websocket communication

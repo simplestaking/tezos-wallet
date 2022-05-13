@@ -11,8 +11,8 @@ import { managerKey, StateManagerKey } from '../contract/getContractManagerKey';
 import { signLedgerOperation, signOperation, signOperationTrezor } from './signOperation';
 import { operation, StateOperations } from './operation';
 
-
 import { localForger } from '@taquito/local-forging';
+import { OperationContents } from '@taquito/rpc';
 
 
 export type StateOperation = {
@@ -70,11 +70,8 @@ export const forgeOperationInternal = <T extends State & StateHead & StateOperat
   concatMap(async state => {
     let params = {
       branch: state.head.hash,
-      contents: state.operations,
+      contents: state.operations as OperationContents[],
     };
-    console.log('params');
-    console.log(params);
-    console.log('params');
     const hash = await localForger.forge(params);
     return { ...state, operation: hash };
   }),

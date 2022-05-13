@@ -14,9 +14,9 @@ export type StateConstants = {
  */
 export const constants = <T extends State>() => (source: Observable<T>) => source.pipe(
 
-    // get head
-    rpc<T>((state: T) => ({
-      url: '/chains/main/blocks/head/context/constants',
-      path: 'constants',
-    }))
-  ) as Observable<T & StateConstants>
+  // get head
+  rpc<T>((state: T) => ({
+    url: '/chains/main/blocks/head/context/constants',
+    path: 'constants',
+  }))
+) as Observable<T & StateConstants>

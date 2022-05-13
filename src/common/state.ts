@@ -3,6 +3,7 @@ import { OperationMetadata, OperationValidationResult } from "./operations";
 import { TezosNode } from './config';
 import { RpcParams } from './rpc';
 import { LedgerState } from './ledger';
+import { WebSocketSubject } from 'rxjs/webSocket';
 
 
 export interface State {
@@ -29,6 +30,7 @@ export interface State {
     validatedOperations?: ValidationResult
     wallet: Wallet
     newWallet?: NewWallet
+    ws?: WebSocketState;
 };
 
 export type ActivatedWallet = {
@@ -212,4 +214,10 @@ export type NewWallet = {
     secretKey: string,
     publicKey: string,
     publicKeyHash: string,
+}
+
+export type WebSocketState = {
+    enabled: boolean;
+    webSocket?: WebSocketSubject<any>;
+    browserWebSocketCtor?: WebSocket;
 }

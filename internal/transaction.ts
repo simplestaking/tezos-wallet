@@ -5,7 +5,7 @@ import { Config, initializeWallet, transaction } from '../src';
 // support for node.js
 // @ts-ignore
 import './node';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 console.log('[+] tezos wallet client');
 
@@ -27,6 +27,7 @@ const wallet: Config = {
     name: 'testnet',
     display: 'Testnet',
     url: 'http://116.202.128.230:18732',
+    wsUrl: 'ws://116.202.128.230:4444/rpc',
     tzstats: {
       url: 'http://116.202.128.230:18732/account/'
     }
@@ -57,7 +58,8 @@ walletObservable.pipe(
     ...state,
     ledger: {
       transportHolder: { transport: undefined }
-    }
+    },
+    ws: { enabled: true },
   })),
   transaction(stateWallet => ([
     {
@@ -66,7 +68,7 @@ walletObservable.pipe(
       amount: '0.5',
       fee: '0.01',
     },
-  ])),
+  ]))
 
   // // originate contract
   // tap(state => pendingOperation(stateWallet => ({
