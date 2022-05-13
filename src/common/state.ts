@@ -23,7 +23,7 @@ export interface State {
     rpc?: RpcParams
     setDelegate?: SetDelegate
     signOperation?: SignOperation
-    transaction?: Transaction
+    transactions?: Transaction[]
     validatedOperations?: ValidationResult
     wallet: Wallet
     newWallet?: NewWallet
@@ -191,14 +191,14 @@ export type ValidationResult = {
 }
 
 export type Wallet = {
-    mnemonic?: string
-    path?: string
+    mnemonic?: string,
+    path?: string,
     node: TezosNode,
-    publicKey?: string
-    publicKeyHash: string
-    secret?: string
-    secretKey?: string
-    type?: 'web' | 'TREZOR_T' | 'TREZOR_P'
+    publicKey?: string,
+    publicKeyHash: string,
+    secret?: string,
+    secretKey?: string,
+    type?: 'web' | 'TREZOR_T' | 'TREZOR_P' | 'LEDGER',
 }
 
 export type WalletDetail = {

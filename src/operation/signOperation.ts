@@ -1,16 +1,27 @@
 import * as sodium from 'libsodium-wrappers';
-import { of, throwError, Observable } from "rxjs";
-import { map, tap, flatMap } from "rxjs/operators";
+import { from, of, throwError } from 'rxjs';
+import { flatMap, map, tap } from 'rxjs/operators';
 
 import {
-    State, TrezorRevealOperation, TrezorTransactionOperation, TrezorOriginationOperation, TrezorDelegationOperation, SignOperation
-} from "../common";
-
-import { base58CheckDecode, concatKeys, bs58checkEncode, prefix, parseAmount } from "../common";
-import { validateRevealOperation, validateTransactionOperation, validateOriginationOperation } from '../common';
+    base58CheckDecode,
+    bs58checkEncode,
+    concatKeys, OperationMetadata,
+    parseAmount,
+    prefix,
+    SignOperation,
+    State,
+    TrezorDelegationOperation,
+    TrezorOriginationOperation,
+    TrezorRevealOperation,
+    TrezorTransactionOperation,
+    validateOriginationOperation,
+    validateRevealOperation,
+    validateTransactionOperation
+} from '../common';
 
 import { StateHead } from '../head';
 import { StateOperation } from '../operation';
+import { LedgerService } from './ledger.service';
 
 export interface TrezorMessage {
     path: string
@@ -121,7 +132,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
     }
 
     // add operations to message 
-    state.operations.map((operation) => {
+    state.operations.map((operation: OperationMetadata) => {
 
         console.log('[+][signOperationTrezor] operation', operation)
 
@@ -158,15 +169,15 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                 }
 
                 // app params for manager smart contract management
-                if (state.transaction && state.transaction.parameters_manager) {
-                    const parameters_manager = state.transaction.parameters_manager
+                if (operation.parameters_manager) {
+                    const parameters_manager = operation.parameters_manager
 
                     // add parameters for transfer
                     if (parameters_manager.transfer) {
                         message.operation.transaction.parameters_manager = {
                             transfer: {
                                 destination: parameters_manager.transfer.destination,
-                                amount: parseAmount(parameters_manager.transfer.amount)
+                                amount: parseAmount(parameters_manager.transfer.amount.toString())
                             }
                         }
                     }
@@ -204,7 +215,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
                     // send encoded bytes
                     //script: operation.script,
                 }
-
+                break;
             }
 
             case 'delegation': {
@@ -259,4 +270,57 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             } as T & State & StateHead & StateOperation & StateSignOperation
         ))
     )
+}
+
+/**
+ * Sign operation using hardware Ledger wallet
+ * @param state transaction state
+ * @throws TypeError when operation is not available
+ */
+export function signLedgerOperation<T extends State & StateHead & StateOperation>(state: T) {
+
+    // TODO: change secretKey name to privateKey
+
+    if (typeof state.operation !== 'string') {
+        throw new TypeError('[signOperation] Operation not available in state');
+    }
+
+    if (typeof state.wallet.publicKey === 'undefined') {
+        console.warn('[signOperation] Public key not available in wallet. Using empty string.');
+    }
+
+    if (typeof state.wallet.secretKey === 'undefined') {
+        console.warn('[signOperation] Secret key not available in wallet. Using empty string.');
+    }
+    const ledgerService = new LedgerService();
+    // const signature = await ledgerService.requestLedgerSignature(state.operation);
+    // const signedOperationContents = state.operation + signature;
+    // const operationHash = bs58checkEncode(
+    //   prefix.operation,
+    //   // blake2b
+    //   sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
+    // );
+
+    // add signed operation to state
+    return from(ledgerService.requestLedgerSignature(state.operation)).pipe(
+      map(signature => {
+          let newVar = {
+              signature: bs58checkEncode(prefix.edsig, Buffer.from(signature, 'hex')),
+              signedOperationContents: state.operation + signature,
+              operationHash: bs58checkEncode(
+                prefix.operation,
+                // blake2b
+                sodium.crypto_generichash(32, sodium.from_hex(state.operation + signature)),
+              )
+          };
+          console.log(JSON.stringify(newVar));
+          return newVar;
+      }),
+      map(signOperation => (
+        {
+            ...state as any,
+            signOperation
+        } as T & State & StateHead & StateOperation & StateSignOperation
+      ))
+    );
 }

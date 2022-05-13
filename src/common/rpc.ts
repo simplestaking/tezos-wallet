@@ -14,7 +14,7 @@ export interface RpcParams {
  * Returns state object with rpc result under property defined in rpc parameters
  * 
  * @param selector method returning rpc parameters
- * 
+ *
  * @throws RpcError
  */
 export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (source: Observable<T>): Observable<T> => source.pipe(

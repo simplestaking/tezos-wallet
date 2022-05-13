@@ -48,7 +48,7 @@ walletObservable.pipe(
     originateContract(stateWallet => ({
         amount: "5",
         fee: "2",
-        script: smartContractScript,                                 
+        script: smartContractScript,
     })),
 
 
