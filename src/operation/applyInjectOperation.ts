@@ -1,13 +1,11 @@
 import { Observable, throwError, of } from "rxjs";
 import { tap, flatMap } from "rxjs/operators";
 
-import { counter } from "../contract/getContractCounter";
+import { counter } from '../contract';
 import { State, PreapplyOperation, InjectionOperation, rpc } from "../common";
 import { StateHead } from '../head';
 import { StateOperations } from "./operation";
 import { StateSignOperation } from "./signOperation";
-
-// import {StateCounter} from '..';
 
 export type StatePreapplyOperation = {
   preapply: PreapplyOperation
@@ -60,16 +58,18 @@ export const applyAndInjectOperation = <T extends State & StateHead & StateOpera
  */
 const preapplyOperations = <T extends State & StateHead & StateSignOperation>() => (source: Observable<T>) => source.pipe(
 
-  rpc<T>((state) => ({
-    url: '/chains/main/blocks/head/helpers/preapply/operations',
-    path: 'preapply',
-    payload: [{
-      protocol: state.head.metadata.next_protocol,
-      branch: state.head.hash,
-      contents: state.operations,
-      signature: state.signOperation.signature
-    }]
-  }))
+  rpc<T>((state) => {
+    return ({
+      url: '/chains/main/blocks/head/helpers/preapply/operations',
+      path: 'preapply',
+      payload: [{
+        protocol: state.head.metadata.next_protocol,
+        branch: state.head.hash,
+        contents: state.operations,
+        signature: state.signOperation.signature
+      }]
+    });
+  })
 ) as Observable<T & StatePreapplyOperation>
 
 
@@ -79,9 +79,11 @@ const preapplyOperations = <T extends State & StateHead & StateSignOperation>() 
  * @url /injection/operation
  */
 const injectOperations = <T extends State & StateHead & StateOperations & StateSignOperation>() => (source: Observable<T>) => source.pipe(
-  rpc<T>((state) => ({
-    url: '/injection/operation',
-    path: 'injectionOperation',
-    payload: `"${state.signOperation.signedOperationContents}"`
-  }))
+  rpc<T>((state) => {
+    return ({
+      url: '/injection/operation',
+      path: 'injectionOperation',
+      payload: `"${state.signOperation.signedOperationContents}"`
+    });
+  })
 ) as Observable<T & StateInjectionOperation>

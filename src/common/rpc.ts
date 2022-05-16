@@ -1,7 +1,7 @@
 import { Observable, throwError } from 'rxjs';
-import { map, filter, catchError, flatMap } from 'rxjs/operators';
+import { catchError, flatMap, map } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
-import { State } from '../common';
+import { State } from './state';
 
 export interface RpcParams {
     path: string
@@ -14,7 +14,7 @@ export interface RpcParams {
  * Returns state object with rpc result under property defined in rpc parameters
  * 
  * @param selector method returning rpc parameters
- * 
+ *
  * @throws RpcError
  */
 export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (source: Observable<T>): Observable<T> => source.pipe(
@@ -60,7 +60,7 @@ export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (sou
                     return throwError({ ...error, state })
                 })
             )
-    })
+    }),
     // tap(state => console.log('[rpc][response] : ', state))
 );
 

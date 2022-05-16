@@ -8,8 +8,8 @@
     "outDir": "./lib", /* Redirect output structure to the directory. */
     "rootDir": "./src", /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     /* Strict Type-Checking Options */
-    "strict": true, /* Enable all strict type-checking options. */
     "alwaysStrict": true,
+    "skipLibCheck": true,
     /* Module Resolution Options */
     "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
     //"allowSyntheticDefaultImports": true,
@@ -22,5 +22,9 @@
   },
   "include": [
     "src/index.ts"
+  ],
+  "files": [
+//    "internal/transaction.ts",
+//    "internal/ledger.ts",
   ]
 }

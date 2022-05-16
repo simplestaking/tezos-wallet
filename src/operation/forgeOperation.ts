@@ -1,15 +1,15 @@
 import * as sodium from 'libsodium-wrappers';
-import { Observable, throwError, of } from "rxjs";
-import { flatMap, tap, map } from "rxjs/operators";
+import { Observable, of, throwError } from 'rxjs';
+import { flatMap, tap } from 'rxjs/operators';
 
-import { State, rpc, OperationMetadata } from "../common";
-import { head, StateHead } from "../head";
+import { OperationMetadata, rpc, State } from '../common';
+import { head, StateHead } from '../head';
 // prevent circular dependency
 import { counter, StateCounter } from '../contract/getContractCounter';
-import { managerKey, StateManagerKey } from "../contract/getContractManagerKey";
+import { managerKey, StateManagerKey } from '../contract/getContractManagerKey';
 
-import { signOperationTrezor, signOperation } from "./signOperation";
-import { StateOperations, operation } from "./operation";
+import { signLedgerOperation, signOperation, signOperationTrezor } from './signOperation';
+import { operation, StateOperations } from './operation';
 
 // import {StateManagerKey, StateSignOperation, StateCounter} from '..';
 
@@ -48,12 +48,12 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
     console.log('#### Re-Forged operation', state.operation)
   }),
 
-  // add signature to state     
+  // add signature to state
   flatMap(state => {
-
     if (state.wallet.type === 'TREZOR_T') {
       return signOperationTrezor(state);
-
+    } else if (state.wallet.type === 'LEDGER') {
+      return signLedgerOperation(state);
     } else {
       return signOperation(state);
     }

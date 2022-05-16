@@ -3,7 +3,7 @@ export interface Config {
     publicKey: string,
     publicKeyHash: string,
     node: TezosNode,
-    type: 'web' | 'TREZOR_T' | 'TREZOR_P',
+    type: 'web' | 'TREZOR_T' | 'TREZOR_P' | 'LEDGER',
     path?: string,
 }
 
