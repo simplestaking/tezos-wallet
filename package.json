@@ -19,15 +19,13 @@
   ],
   "dependencies": {
     "@ledgerhq/hw-transport-node-hid": "^6.27.1",
-    "@ledgerhq/hw-transport-u2f": "^5.19.0",
     "@ledgerhq/hw-transport-webhid": "^6.27.1",
-    "@ledgerhq/hw-transport-webusb": "^6.27.1",
     "@obsidiansystems/hw-app-xtz": "^4.72.3",
     "babel-polyfill": "^6.26.0",
     "bip39": "2.5.0",
     "bs58check": "2.1.1",
+    "blakejs": "^1.1.0",
     "buffer": "~5.2.1",
-    "ledgers.js": "^1.0.10",
     "libsodium": "0.7.3",
     "libsodium-wrappers": "0.7.3",
     "trezor-connect": "8.1.2"

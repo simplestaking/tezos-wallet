@@ -5,7 +5,8 @@ import { flatMap, map, tap } from 'rxjs/operators';
 import {
     base58CheckDecode,
     bs58checkEncode,
-    concatKeys, OperationMetadata,
+    concatKeys,
+    OperationMetadata,
     parseAmount,
     prefix,
     SignOperation,
@@ -21,7 +22,7 @@ import {
 
 import { StateHead } from '../head';
 import { StateOperation } from '../operation';
-import { LedgerService } from './ledger.service';
+import { LedgerUtils } from '../common/ledger';
 
 export interface TrezorMessage {
     path: string
@@ -131,7 +132,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
         operation: {}
     }
 
-    // add operations to message 
+    // add operations to message
     state.operations.map((operation: OperationMetadata) => {
 
         console.log('[+][signOperationTrezor] operation', operation)
@@ -141,7 +142,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
             case 'reveal': {
                 validateRevealOperation(operation);
 
-                // add reveal to operation 
+                // add reveal to operation
                 message.operation.reveal = {
                     source: operation.source,
                     public_key: operation.public_key,
@@ -279,8 +280,6 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
  */
 export function signLedgerOperation<T extends State & StateHead & StateOperation>(state: T) {
 
-    // TODO: change secretKey name to privateKey
-
     if (typeof state.operation !== 'string') {
         throw new TypeError('[signOperation] Operation not available in state');
     }
@@ -292,30 +291,17 @@ export function signLedgerOperation<T extends State & StateHead & StateOperation
     if (typeof state.wallet.secretKey === 'undefined') {
         console.warn('[signOperation] Secret key not available in wallet. Using empty string.');
     }
-    const ledgerService = new LedgerService();
-    // const signature = await ledgerService.requestLedgerSignature(state.operation);
-    // const signedOperationContents = state.operation + signature;
-    // const operationHash = bs58checkEncode(
-    //   prefix.operation,
-    //   // blake2b
-    //   sodium.crypto_generichash(32, sodium.from_hex(signedOperationContents)),
-    // );
-
     // add signed operation to state
-    return from(ledgerService.requestLedgerSignature(state.operation)).pipe(
-      map(signature => {
-          let newVar = {
-              signature: bs58checkEncode(prefix.edsig, Buffer.from(signature, 'hex')),
-              signedOperationContents: state.operation + signature,
-              operationHash: bs58checkEncode(
-                prefix.operation,
-                // blake2b
-                sodium.crypto_generichash(32, sodium.from_hex(state.operation + signature)),
-              )
-          };
-          console.log(JSON.stringify(newVar));
-          return newVar;
-      }),
+    return from(new LedgerUtils().requestLedgerSignature(state.operation)).pipe(
+      map(signature => ({
+          signature: bs58checkEncode(prefix.edsig, Buffer.from(signature, 'hex')),
+          signedOperationContents: state.operation + signature,
+          operationHash: bs58checkEncode(
+            prefix.operation,
+            // blake2b
+            sodium.crypto_generichash(32, sodium.from_hex(state.operation + signature)),
+          )
+      })),
       map(signOperation => (
         {
             ...state as any,

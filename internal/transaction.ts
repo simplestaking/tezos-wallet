@@ -15,9 +15,12 @@ const wallet: Config = {
   // publicKey: 'edpkth42B7j7rvLeZWmufj28a7sEdbMBb9y16qgQmGHYGX4hPis9V4',
   // publicKeyHash: 'tz1WCojrEZWrjenejUZmG8QNsMtKPELx2TFA',
 
-  secretKey: 'edsk48vvey4bjEQjmJ16iFun9tLKs3A5Qmx5iTida3fakpqSVw1qLQ',
-  publicKey: 'edpkvPepgUwmic1rNCnHqe4kht8R5mbMLDBRHVWP5d19nmUbYQv9gy',
-  publicKeyHash: 'tz1YqZPuie4xLmFakAYHKRwgQMLsA4BCRkpu',
+  // secretKey: 'edsk48vvey4bjEQjmJ16iFun9tLKs3A5Qmx5iTida3fakpqSVw1qLQ',
+  // publicKey: 'edpkvPepgUwmic1rNCnHqe4kht8R5mbMLDBRHVWP5d19nmUbYQv9gy',
+  // publicKeyHash: 'tz1YqZPuie4xLmFakAYHKRwgQMLsA4BCRkpu',
+  secretKey: '',
+  publicKey: 'edpkvZCHFVcXpBTVpD3ZANuZ7mPTfs62TUzcmpjTr1ZYhwaZdf3fer',
+  publicKeyHash: 'tz1fm6a28VahUmoGkRV2RwuBMhtYNztkrtJy',
 
   node: {
     name: 'testnet',
@@ -27,7 +30,7 @@ const wallet: Config = {
       url: 'http://116.202.128.230:18732/account/'
     }
   },
-  type: 'web',
+  type: 'LEDGER',
 };
 
 const walletObservable = of([]);
@@ -50,7 +53,7 @@ walletObservable.pipe(
   // originate contract
   transaction(stateWallet => ([
     {
-      to: 'tz1fm6a28VahUmoGkRV2RwuBMhtYNztkrtJy',
+      to: 'tz1YqZPuie4xLmFakAYHKRwgQMLsA4BCRkpu',
       // to: stateWallet.newWallet ? stateWallet.newWallet.publicKeyHash : 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
       amount: '0.005',
       fee: '0.01'

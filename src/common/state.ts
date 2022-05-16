@@ -2,6 +2,7 @@ import { OperationMetadata, OperationValidationResult } from "./operations";
 
 import { TezosNode } from './config';
 import { RpcParams } from './rpc';
+import { LedgerState } from './ledger';
 
 
 export interface State {
@@ -10,6 +11,7 @@ export interface State {
     constants?: HeadConstants
     counter?: number
     getWallet?: WalletDetail
+    ledger?: LedgerState;
     head?: Head
     injectionOperation?: InjectionOperation
     manager_key?: string
