@@ -5,7 +5,7 @@ import { StateHead } from '../head';
 import { StateOperations } from './operation';
 import { flatMap } from 'rxjs/operators';
 import { signOperationTrezor, signOperation, StateSignOperation } from './signOperation';
-import { forgeOperationAtomic } from './forgeOperation';
+import { forgeOperationInternal } from './forgeOperation';
 
 export type StateValidatedOperations = {
   validatedOperations: ValidationResult
@@ -19,7 +19,7 @@ export type StateValidatedOperations = {
  */
 export const validateOperation = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
 
-  forgeOperationAtomic(),
+  forgeOperationInternal(),
 
   // add signature to state     
   flatMap(state => {

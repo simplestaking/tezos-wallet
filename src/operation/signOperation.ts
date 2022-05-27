@@ -17,7 +17,7 @@ import {
     TrezorTransactionOperation,
     validateOriginationOperation,
     validateRevealOperation,
-    validateTransactionOperation
+    validateTransactionOperation,
 } from '../common';
 
 import { StateHead } from '../head';
@@ -279,20 +279,7 @@ export function signOperationTrezor<T extends State & StateHead & StateOperation
  * @throws TypeError when operation is not available
  */
 export function signLedgerOperation<T extends State & StateHead & StateOperation>(state: T) {
-
-    if (typeof state.operation !== 'string') {
-        throw new TypeError('[signOperation] Operation not available in state');
-    }
-
-    if (typeof state.wallet.publicKey === 'undefined') {
-        console.warn('[signOperation] Public key not available in wallet. Using empty string.');
-    }
-
-    if (typeof state.wallet.secretKey === 'undefined') {
-        console.warn('[signOperation] Secret key not available in wallet. Using empty string.');
-    }
-    // add signed operation to state
-    return from(new LedgerUtils().requestLedgerSignature(state.operation)).pipe(
+    return from(new LedgerUtils().requestLedgerSignature(state.operation, state.ledger.transportHolder)).pipe(
       map(signature => ({
           signature: bs58checkEncode(prefix.edsig, Buffer.from(signature, 'hex')),
           signedOperationContents: state.operation + signature,
@@ -300,13 +287,13 @@ export function signLedgerOperation<T extends State & StateHead & StateOperation
             prefix.operation,
             // blake2b
             sodium.crypto_generichash(32, sodium.from_hex(state.operation + signature)),
-          )
+          ),
       })),
       map(signOperation => (
         {
             ...state as any,
-            signOperation
+            signOperation,
         } as T & State & StateHead & StateOperation & StateSignOperation
-      ))
+      )),
     );
 }

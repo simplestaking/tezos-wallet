@@ -1,20 +1,19 @@
 import { State } from '../common';
 import { from, Observable } from 'rxjs';
-import { map, mergeMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import 'babel-polyfill';
 import { LedgerState, LedgerUtils } from '../common/ledger';
-// @ts-ignore
-import Tezos from '@obsidiansystems/hw-app-xtz';
+import type Transport from '@ledgerhq/hw-transport';
 
 
-export const getLedgerWallet = <T extends State>() => (source: Observable<any>): Observable<T & State & LedgerState> => source.pipe(
-  mergeMap(state =>
-    from(new LedgerUtils().getAddress()).pipe(
-      map(keyData => ({
+export const getLedgerWallet = <T extends State>(selector: (params: State) => { transport: Transport | undefined }) => (source: Observable<any>): Observable<State> => source.pipe(
+  switchMap(state => {
+    const transportHolder = selector(state);
+    return from(new LedgerUtils().getAddress(transportHolder)).pipe(
+      map(ledgerState => ({
         ...state,
-        ledger: { keys: [keyData] }
+        ledger: ledgerState,
       } as T & State)),
-    )
-  )
+    );
+  }),
 ) as Observable<T & State & LedgerState>;
-

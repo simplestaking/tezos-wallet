@@ -5,6 +5,7 @@ import { Config, initializeWallet, transaction } from '../src';
 // support for node.js
 // @ts-ignore
 import './node';
+import { map } from 'rxjs/operators';
 
 console.log('[+] tezos wallet client');
 
@@ -51,13 +52,20 @@ walletObservable.pipe(
   // newWallet(),
 
   // originate contract
+
+  map((state: any) => ({
+    ...state,
+    ledger: {
+      transportHolder: { transport: undefined }
+    }
+  })),
   transaction(stateWallet => ([
     {
       to: 'tz1YqZPuie4xLmFakAYHKRwgQMLsA4BCRkpu',
       // to: stateWallet.newWallet ? stateWallet.newWallet.publicKeyHash : 'tz1N4wqm7mqCFECjh8HUNHLyxfL73ay981LH',
-      amount: '0.005',
-      fee: '0.01'
-    }
+      amount: '0.5',
+      fee: '0.01',
+    },
   ])),
 
   // // originate contract
