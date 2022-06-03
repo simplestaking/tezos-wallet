@@ -81,7 +81,7 @@ const injectOperations = <T extends State & StateHead & StateOperations & StateS
     return ({
       url: '/injection/operation',
       path: 'injectionOperation',
-      payload: `"${state.signOperation.signedOperationContents}"`
+      payload: `"${state.signOperation.signedOperationContents}"`,
     });
-  })
+  }),
 ) as Observable<T & StateInjectionOperation>

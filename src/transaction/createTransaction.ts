@@ -7,6 +7,7 @@ import { OperationMetadata, parseAmount, publicKeyHash2buffer, State, Transactio
 import { counter, managerKey, StateCounter, StateManagerKey } from '../contract';
 import { operation, StateOperations, validateOperation } from '../operation';
 import { constants, head, StateConstants, StateHead } from '../head';
+import { webSocket } from 'rxjs/webSocket';
 
 // import {StateInjectionOperation, StatePreapplyOperation, StateSignOperation, StateOperation, StateHead } from '..'
 
@@ -17,13 +18,13 @@ export type StateTransaction = {
 
 /**
  * Send amount to another wallet
- * 
+ *
  * Fully covers send useace and get transaction to blockchain
  * @param selector method returning transaction obejct
- * 
+ *
  * @operation reveal operation when wallet is not activated yet
  * @operation transaction operation
- * 
+ *
  * @example
  * of({}).
  * initializeWallet(state => { ...wallet }).
@@ -36,14 +37,23 @@ export type StateTransaction = {
  *  injectionOperation: state.injectionOperation,
  * })).
  * then(state => console.log('amount transfered'))
- * 
+ *
  */
-export const transaction = <T extends State>(selector: (state: T) => Transaction[]) => (source: Observable<T>) => source.pipe(
 
+export const transaction = <T extends State>(selector: (state: T) => Transaction[]) => (source: Observable<T>) => source.pipe(
   map((state) => (
     {
       ...state as State,
-      transactions: selector(state)
+      ws: {
+        ...state.ws,
+        webSocket: state.ws?.enabled
+          ? webSocket({
+            url: state.wallet.node.wsUrl,
+            WebSocketCtor: isNodeJs() ? require('ws') : state.ws.browserWebSocketCtor,
+          })
+          : null,
+      },
+      transactions: selector(state),
     } as T & StateTransaction
   )),
 
@@ -84,7 +94,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
           // extra gas is for safety
           gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : '50000',
           storage_limit: '257',
-          counter: (++state.counter).toString()
+          counter: (++state.counter).toString(),
         });
       }
 
@@ -97,7 +107,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
         // extra gas is for safety
         gas_limit: withTestRun ? state.constants.hard_gas_limit_per_operation : '50000',
         storage_limit: '257',
-        counter: (++state.counter).toString()
+        counter: (++state.counter).toString(),
       };
 
       if (stateTransaction.parameters) {
@@ -132,22 +142,22 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
                           [{ 'prim': 'address' },
                             {
                               'bytes':
-                              destination
-                            }]
+                              destination,
+                            }],
                       },
                       { 'prim': 'CONTRACT', 'args': [{ 'prim': 'unit' }] },
                       [{
                         'prim': 'IF_NONE',
                         'args':
                           [[[{ 'prim': 'UNIT' }, { 'prim': 'FAILWITH' }]],
-                            []]
+                            []],
                       }],
                       {
                         'prim': 'PUSH',
-                        'args': [{ 'prim': 'mutez' }, { 'int': amount }]
+                        'args': [{ 'prim': 'mutez' }, { 'int': amount }],
                       },
                       { 'prim': 'UNIT' }, { 'prim': 'TRANSFER_TOKENS' },
-                      { 'prim': 'CONS' }]
+                      { 'prim': 'CONS' }],
                 }
                 :
                 // implicit address
@@ -161,17 +171,17 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
                         'args':
                           [{ 'prim': 'key_hash' },
                             {
-                              'bytes': destination
-                            }]
+                              'bytes': destination,
+                            }],
                       },
                       { 'prim': 'IMPLICIT_ACCOUNT' },
                       {
                         'prim': 'PUSH',
                         'args':
-                          [{ 'prim': 'mutez' }, { 'int': amount }]
+                          [{ 'prim': 'mutez' }, { 'int': amount }],
                       },
                       { 'prim': 'UNIT' }, { 'prim': 'TRANSFER_TOKENS' },
-                      { 'prim': 'CONS' }]
+                      { 'prim': 'CONS' }],
                 };
             console.log('[+] transaction parameres ', transaction.parameters);
           }
@@ -192,12 +202,12 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
                   'args':
                     [{ 'prim': 'key_hash' },
                       {
-                        'bytes': delegate
-                      }]
+                        'bytes': delegate,
+                      }],
                 },
                 { 'prim': 'SOME' },
                 { 'prim': 'SET_DELEGATE' },
-                { 'prim': 'CONS' }]
+                { 'prim': 'CONS' }],
           };
 
         }
@@ -212,7 +222,7 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
                 { 'prim': 'NIL', 'args': [{ 'prim': 'operation' }] },
                 { 'prim': 'NONE', 'args': [{ 'prim': 'key_hash' }] },
                 { 'prim': 'SET_DELEGATE' },
-                { 'prim': 'CONS' }]
+                { 'prim': 'CONS' }],
           };
 
         }
@@ -223,8 +233,8 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
 
     return {
       ...state as any,
-      operations: operations
-    } as T & StateTransaction & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations
+      operations: operations,
+    } as T & StateTransaction & StateCounter & StateHead & StateConstants & StateManagerKey & StateOperations;
   }),
 
   // run operation on node and calculate its gas consumption and storage size
@@ -233,6 +243,13 @@ export const transaction = <T extends State>(selector: (state: T) => Transaction
   }),
 
   // create operation
-  operation()
-)
+  operation(),
 
+  tap((state: State) => {
+    state.ws?.webSocket?.complete();
+  }),
+);
+
+function isNodeJs(): boolean {
+  return !!(typeof module !== 'undefined' && module.exports && typeof require !== 'undefined' && require.resolve);
+};
