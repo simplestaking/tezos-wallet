@@ -8,11 +8,11 @@
     "outDir": "./lib", /* Redirect output structure to the directory. */
     "rootDir": "./src", /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
     /* Strict Type-Checking Options */
-    "strict": true, /* Enable all strict type-checking options. */
+    "strict": false, /* Enable all strict type-checking options. */
     "alwaysStrict": true,
     /* Module Resolution Options */
     "moduleResolution": "node", /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    //"allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": "./src", /* Base directory to resolve non-absolute module names. */
     "typeRoots": [
       "@types/",

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="fe41684c-7f6e-4276-85ac-7034a98a998a" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/common/ledger.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/wallet/getLedgerWallet.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/rpc.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/rpc.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/common/state.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/common/state.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operation/forgeOperation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/operation/forgeOperation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operation/signOperation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/operation/signOperation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/operation/validateOperation.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/operation/validateOperation.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/transaction/createTransaction.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/transaction/createTransaction.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/wallet/index.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/wallet/index.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tsconfig.prod.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.prod.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/internal/node.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/operation/validateOperation.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/internal/originate.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/common/config.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/operation/applyInjectOperation.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/package.json" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/operation/forgeOperation.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/operation/signOperation.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/internal/transaction.ts" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/tsconfig.json" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="28kB15iRFeiixWOWiKH5rOPqJoG" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="autoscrollFromSource" value="true" />
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/lib2015" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="settings.editor.selected.configurable" value="settings.typescriptcompiler" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2021.1.1\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+    <property name="two.files.diff.last.used.folder" value="$PROJECT_DIR$/lib2015" />
+    <property name="vue.rearranger.settings.migration" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\Tezedge\tezos-wallet\src\internal" />
+      <recent name="D:\Tezedge\tezos-wallet\src\operation" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="D:\Tezedge\tezos-wallet\src\wallet" />
+      <recent name="D:\Tezedge\tezos-wallet" />
+      <recent name="D:\Tezedge\tezos-wallet\src" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Node.js.transaction.js">
+    <configuration name="ledger" type="NodeJSConfigurationType" path-to-node="node" node-parameters="--require ts-node/register" path-to-js-file="lib/internal/ledger.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration name="transaction.js" type="NodeJSConfigurationType" path-to-node="node" nameIsGenerated="true" node-parameters="--require ts-node/register" path-to-js-file="lib/internal/transaction.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="build" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Node.js.transaction.js" />
+      <item itemvalue="Node.js.ledger" />
+      <item itemvalue="npm.build" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="npm.build" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="fe41684c-7f6e-4276-85ac-7034a98a998a" name="Changes" comment="" />
+      <created>1651750484475</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1651750484475</updated>
+      <workItem from="1651750486289" duration="7501000" />
+      <workItem from="1651825731454" duration="6783000" />
+      <workItem from="1651837404751" duration="3736000" />
+      <workItem from="1652078766106" duration="4032000" />
+      <workItem from="1652086173895" duration="5130000" />
+      <workItem from="1652161938595" duration="10000" />
+      <workItem from="1652181683433" duration="21024000" />
+      <workItem from="1652341180126" duration="7008000" />
+      <workItem from="1652423741228" duration="12495000" />
+      <workItem from="1652694058337" duration="16380000" />
+      <workItem from="1652867393535" duration="4207000" />
+      <workItem from="1652938966252" duration="993000" />
+      <workItem from="1652939972975" duration="11746000" />
+      <workItem from="1653032475772" duration="2766000" />
+      <workItem from="1653287829606" duration="775000" />
+      <workItem from="1653310205384" duration="853000" />
+      <workItem from="1653370744225" duration="7847000" />
+      <workItem from="1653457068581" duration="599000" />
+      <workItem from="1653559128497" duration="9289000" />
+      <workItem from="1653569434388" duration="2283000" />
+      <workItem from="1653660094495" duration="501000" />
+      <workItem from="1654066961299" duration="26665000" />
+      <workItem from="1654239263015" duration="9148000" />
+      <workItem from="1654256740738" duration="6108000" />
+      <workItem from="1654504419416" duration="9363000" />
+      <workItem from="1654537920112" duration="32000" />
+      <workItem from="1654537964251" duration="6876000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

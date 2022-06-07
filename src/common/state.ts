@@ -2,6 +2,8 @@ import { OperationMetadata, OperationValidationResult } from "./operations";
 
 import { TezosNode } from './config';
 import { RpcParams } from './rpc';
+import { LedgerState } from './ledger';
+import { WebSocketSubject } from 'rxjs/webSocket';
 
 
 export interface State {
@@ -10,6 +12,7 @@ export interface State {
     constants?: HeadConstants
     counter?: number
     getWallet?: WalletDetail
+    ledger?: LedgerState;
     head?: Head
     injectionOperation?: InjectionOperation
     manager_key?: string
@@ -23,10 +26,11 @@ export interface State {
     rpc?: RpcParams
     setDelegate?: SetDelegate
     signOperation?: SignOperation
-    transaction?: Transaction
+    transactions?: Transaction[]
     validatedOperations?: ValidationResult
     wallet: Wallet
     newWallet?: NewWallet
+    ws?: WebSocketState;
 };
 
 export type ActivatedWallet = {
@@ -191,14 +195,14 @@ export type ValidationResult = {
 }
 
 export type Wallet = {
-    mnemonic?: string
-    path?: string
+    mnemonic?: string,
+    path?: string,
     node: TezosNode,
-    publicKey?: string
-    publicKeyHash: string
-    secret?: string
-    secretKey?: string
-    type?: 'web' | 'TREZOR_T' | 'TREZOR_P'
+    publicKey?: string,
+    publicKeyHash: string,
+    secret?: string,
+    secretKey?: string,
+    type?: 'web' | 'TREZOR_T' | 'TREZOR_P' | 'LEDGER',
 }
 
 export type WalletDetail = {
@@ -210,4 +214,10 @@ export type NewWallet = {
     secretKey: string,
     publicKey: string,
     publicKeyHash: string,
+}
+
+export type WebSocketState = {
+    enabled: boolean;
+    webSocket?: WebSocketSubject<any>;
+    browserWebSocketCtor?: WebSocket | any;
 }

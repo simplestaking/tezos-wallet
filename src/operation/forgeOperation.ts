@@ -1,6 +1,6 @@
 import * as sodium from 'libsodium-wrappers';
 import { Observable, throwError, of } from "rxjs";
-import { flatMap, tap, map } from "rxjs/operators";
+import { concatMap, flatMap, tap, map } from "rxjs/operators";
 
 import { State, rpc, OperationMetadata } from "../common";
 import { head, StateHead } from "../head";
@@ -8,10 +8,12 @@ import { head, StateHead } from "../head";
 import { counter, StateCounter } from '../contract/getContractCounter';
 import { managerKey, StateManagerKey } from "../contract/getContractManagerKey";
 
-import { signOperationTrezor, signOperation } from "./signOperation";
-import { StateOperations, operation } from "./operation";
+import { signLedgerOperation, signOperation, signOperationTrezor } from './signOperation';
+import { StateOperations } from './operation';
 
-// import {StateManagerKey, StateSignOperation, StateCounter} from '..';
+import { localForger } from '@taquito/local-forging';
+import { OperationContents } from '@taquito/rpc';
+
 
 export type StateOperation = {
   operation: string
@@ -35,7 +37,7 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
   // get contract managerKey
   managerKey(),
 
-  forgeOperationAtomic(),
+  forgeOperationInternal(),
 
   tap(state => {
     console.log('#### Forged operation', state.operation)
@@ -53,12 +55,28 @@ export const forgeOperation = <T extends State & StateOperations>() => (source: 
 
     if (state.wallet.type === 'TREZOR_T') {
       return signOperationTrezor(state);
-
+    } else if (state.wallet.type === 'LEDGER') {
+      return signLedgerOperation(state);
     } else {
       return signOperation(state);
     }
   })
 )
+
+
+/**
+ * Converts operation to binary format on node
+ */
+export const forgeOperationInternal = <T extends State & StateHead & StateOperations>() => (source: Observable<T>) => source.pipe(
+  concatMap(async state => {
+    let params = {
+      branch: state.head.hash,
+      contents: state.operations as OperationContents[],
+    };
+    const hash = await localForger.forge(params);
+    return { ...state, operation: hash };
+  }),
+) as Observable<T & StateOperation>
 
 
 /**

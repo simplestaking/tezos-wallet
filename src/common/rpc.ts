@@ -1,7 +1,7 @@
 import { Observable, throwError } from 'rxjs';
-import { map, filter, catchError, flatMap } from 'rxjs/operators';
+import { catchError, filter, flatMap, map } from 'rxjs/operators';
 import { ajax } from 'rxjs/ajax';
-import { State } from '../common';
+import { State } from './state';
 
 export interface RpcParams {
     path: string
@@ -19,22 +19,38 @@ export interface RpcParams {
  */
 export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (source: Observable<T>): Observable<T> => source.pipe(
 
-    //exec calback function
+    //exec callback function
     map(state => ({
-        ...state as any,
+        ...state as State,
         rpc: selector(state)
     })),
-
-    flatMap(state => {
+    flatMap((state: State) => {
+      if (!state.rpc.payload && state.ws && state.ws.webSocket && !state.ws.webSocket.closed) {
+        const id = Math.floor(Math.random() * 1000000000000);
+        const body = state.rpc.payload ? { params: { body: state.rpc.payload } } : undefined;
+        state.ws.webSocket.next({
+          jsonrpc: '2.0',
+          method: state.rpc.url,
+          id,
+          ...body,
+        });
+        return state.ws.webSocket.asObservable().pipe(
+          filter(response => response.id === id),
+          map(response => ({
+            ...state,
+            [state.rpc.path]: response.result,
+          } as T & State)),
+        );
+      }
 
         return state.rpc.payload !== undefined ?
-            // post 
+            // post
             ajax.post(state.wallet.node.url + state.rpc.url, state.rpc.payload, { 'Content-Type': 'application/json' }).pipe(
                 // without response do not run it
                 // filter(event => event.response),
                 // use only response
                 map(event => (
-                    { ...state, [state.rpc.path]: event.response }
+                    { ...state, [state.rpc.path]: event.response } as T & State
                 )),
                 // catchError
                 catchError(error => {
@@ -45,13 +61,13 @@ export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (sou
                 })
             )
             :
-            // get 
+            // get
             ajax.get(state.wallet.node.url + state.rpc.url, { 'Content-Type': 'application/json' }).pipe(
                 // without response do not run it
                 // filter(event => event.response),
                 // use only response
                 map(event => (
-                    { ...state, [state.rpc.path]: event.response }
+                    { ...state, [state.rpc.path]: event.response } as T & State
                 )),
                 // catchError
                 catchError(error => {
@@ -60,7 +76,7 @@ export const rpc = <T extends State>(selector: (params: T) => RpcParams) => (sou
                     return throwError({ ...error, state })
                 })
             )
-    })
+    }),
     // tap(state => console.log('[rpc][response] : ', state))
 );
 
