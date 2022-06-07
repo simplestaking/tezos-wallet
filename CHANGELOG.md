@@ -75,3 +75,6 @@ Initial release supporting Tezos:
 ### 1.4.1
 - Support for the ledger
 - Support for websocket communication
+
+### 2.0.0
+- Bug fixes

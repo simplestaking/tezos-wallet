@@ -1,8 +1,8 @@
 {
   "name": "tezos-wallet",
-  "version": "1.4.1",
+  "version": "2.0.0",
   "description": "Tezos wallet simplifies communication with Tezos nodes and significantly reduces burden of working with Tezos network.",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
   "types": "./lib/index.d.ts",
   "scripts": {
     "build": "tsc -p tsconfig.prod.json",
@@ -30,7 +30,8 @@
     "buffer": "~5.2.1",
     "libsodium": "0.7.3",
     "libsodium-wrappers": "0.7.3",
-    "trezor-connect": "8.1.2"
+    "trezor-connect": "8.1.2",
+    "ws": "^8.7.0"
   },
   "peerDependencies": {
     "rxjs": "~6.3.2"

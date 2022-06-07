@@ -1,5 +1,4 @@
 import 'babel-polyfill';
-import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import TransportWebHID from '@ledgerhq/hw-transport-webhid';
 import * as Bs58check from 'bs58check';
 import type Transport from '@ledgerhq/hw-transport';
@@ -106,22 +105,25 @@ export class LedgerUtils {
   private async setTransport(): Promise<void> {
     if (!this.transport) {
       try {
-        this.transport = await TransportNodeHid.create();
-        console.log('Transport is now set to use NodeHID!');
-      } catch (e) {
-        this.transport = undefined;
-        console.warn('Couldn\'t set NodeHID as transport!');
-        console.error(e);
-      }
-    }
-    if (!this.transport) {
-      try {
-        console.log('setting new transport');
         this.transport = await TransportWebHID.create();
         console.log('Transport is now set to use WebHID!');
       } catch (e) {
         this.transport = undefined;
         console.warn('Couldn\'t set WebHID as transport!');
+        console.error(e);
+      }
+    }
+    if (!this.transport) {
+      try {
+        this.transport = await import('@ledgerhq/hw-transport-node-hid')
+          .then(async (module): Promise<any> => {
+            const TransportNodeHid = module.default;
+            return await TransportNodeHid.create();
+          });
+        console.log('Transport is now set to use NodeHID!');
+      } catch (e) {
+        this.transport = undefined;
+        console.warn('Couldn\'t set NodeHID as transport!');
         console.error(e);
       }
     }

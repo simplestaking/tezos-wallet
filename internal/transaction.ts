@@ -27,7 +27,7 @@ const wallet: Config = {
     name: 'testnet',
     display: 'Testnet',
     url: 'http://116.202.128.230:18732',
-    wsUrl: 'ws://116.202.128.230:4444/rpc',
+    wsUrl: 'ws://116.202.128.230:4927/rpc',
     tzstats: {
       url: 'http://116.202.128.230:18732/account/'
     }
@@ -59,7 +59,10 @@ walletObservable.pipe(
     ledger: {
       transportHolder: { transport: undefined }
     },
-    ws: { enabled: true },
+    ws: {
+      enabled: true,
+      browserWebSocketCtor: require('ws')
+    },
   })),
   transaction(stateWallet => ([
     {

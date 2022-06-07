@@ -1,10 +1,9 @@
-import { of } from 'rxjs'
-import { tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
-import { Config, initializeWallet, transaction, pendingOperation, confirmOperation, validateOriginationOperation, originateContract } from '../src'
+import { Config, confirmOperation, initializeWallet, originateContract } from '../src';
 
 // support for node.js
-import './node'
+import './node';
 
 console.log('[+] tezos wallet client')
 
