@@ -10,7 +10,8 @@
     "docs": "typedoc --out ./docs/ ./src/index.ts --mode file --theme markdown --name tezos-wallet",
     "watch": "tsc -w",
     "v": "tsc -w",
-    "watch:dev": "tsc -w -p tsconfig.dev.json"
+    "watch:dev": "tsc -w -p tsconfig.dev.json",
+    "test": "node_modules/.bin/mocha -w"
   },
   "files": [
     "docs/**/*",
@@ -41,6 +42,7 @@
     "@types/libsodium-wrappers": "^0.7.0",
     "@types/node": "^10.12.11",
     "@types/w3c-web-hid": "^1.0.3",
+    "mocha": "^10.0.0",
     "rxjs": "6.3.2",
     "ts-node": "^7.0.1",
     "typedoc": "^0.15.0",
