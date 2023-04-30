@@ -46,7 +46,7 @@
     "rxjs": "6.3.2",
     "ts-node": "^7.0.1",
     "typedoc": "^0.15.0",
-    "typedoc-plugin-markdown": "~1.1.19",
+    "typedoc-plugin-markdown": "~3.15.3",
     "typescript": "3.9.4",
     "xmlhttprequest-ssl": "1.5.5"
   },
